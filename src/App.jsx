@@ -11,7 +11,23 @@ function App() {
           <Route path="/admin" element={<AdminPage />} />
           <Route
             path="/*"
-            element={<h1>404, Page Not Found</h1>}/>
+            element={
+              <div className="flex flex-col items-center justify-center w-full h-[100vh] bg-[#FEF9F2] text-[#7E60BF]">
+                <h1 className="text-[10rem] font-bold leading-none">404</h1>
+                <p className="text-2xl mt-4 text-[#7E60BF] font-semibold">
+                  Oops! We can't seem to find the page you're looking for.
+                </p>
+                <p className="text-lg text-[#E4B1F0] mt-2">
+                  It may have been moved or no longer exists.
+                </p>
+                <Link to="/">
+                  <button className="mt-8 px-8 py-4 bg-[#7E60BF] text-[#FEF9F2] font-semibold rounded-lg shadow-lg hover:bg-[#E4B1F0] transition ease-in-out duration-300">
+                    Back to Home
+                  </button>
+                </Link>
+              </div>
+            }
+          />
         </Routes>
       </Router>
     </>
@@ -19,7 +35,6 @@ function App() {
 }
 
 export default App;
-
 
 // 60% - #FEF9F2
 // 30% - #7E60BF
