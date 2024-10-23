@@ -6,6 +6,7 @@ import Rooms from "./admincomponents/rooms";
 import Users from "./admincomponents/users";
 import Feedback from "./admincomponents/feedback";
 import Gallery from "./admincomponents/gallery";
+import { FaBookmark, FaClipboardList, FaBed, FaUsers, FaComments, FaImage } from "react-icons/fa";
 
 export default function AdminPage() {
   return (
@@ -15,38 +16,44 @@ export default function AdminPage() {
         <div className="flex flex-col space-y-6">
           <Link
             to="bookings"
-            className="text-2xl hover:text-[#E4B1F0] transition-colors duration-300"
+            className="flex items-center text-2xl hover:text-[#E4B1F0] transition-colors duration-300"
           >
+            <FaClipboardList className="mr-2" />
             Bookings
           </Link>
           <Link
             to="categories"
-            className="text-2xl hover:text-[#E4B1F0] transition-colors duration-300"
+            className="flex items-center text-2xl hover:text-[#E4B1F0] transition-colors duration-300"
           >
+            <FaBookmark className="mr-2" />
             Categories
           </Link>
           <Link
             to="rooms"
-            className="text-2xl hover:text-[#E4B1F0] transition-colors duration-300"
+            className="flex items-center text-2xl hover:text-[#E4B1F0] transition-colors duration-300"
           >
+            <FaBed className="mr-2" />
             Rooms
           </Link>
           <Link
             to="users"
-            className="text-2xl hover:text-[#E4B1F0] transition-colors duration-300"
+            className="flex items-center text-2xl hover:text-[#E4B1F0] transition-colors duration-300"
           >
+            <FaUsers className="mr-2" />
             Users
           </Link>
           <Link
             to="feedback"
-            className="text-2xl hover:text-[#E4B1F0] transition-colors duration-300"
+            className="flex items-center text-2xl hover:text-[#E4B1F0] transition-colors duration-300"
           >
+            <FaComments className="mr-2" />
             Feedback
           </Link>
           <Link
             to="gallery"
-            className="text-2xl hover:text-[#E4B1F0] transition-colors duration-300"
+            className="flex items-center text-2xl hover:text-[#E4B1F0] transition-colors duration-300"
           >
+            <FaImage className="mr-2" />
             Gallery Items
           </Link>
         </div>
@@ -60,11 +67,11 @@ export default function AdminPage() {
         <hr className="my-8 border-t-2 border-[#7E60BF]" />
         <Routes>
           <Route path="bookings" element={<Bookings />} />
-          <Route path="/categories" element={<Categories />} />
-          <Route path="/rooms" element={<Rooms />} />
-          <Route path="/users" element={<Users />} />
-          <Route path="/feedback" element={<Feedback />} />
-          <Route path="/gallery" element={<Gallery />} />
+          <Route path="categories" element={<Categories />} />
+          <Route path="rooms" element={<Rooms />} />
+          <Route path="users" element={<Users />} />
+          <Route path="feedback" element={<Feedback />} />
+          <Route path="gallery" element={<Gallery />} />
         </Routes>
       </div>
     </div>
