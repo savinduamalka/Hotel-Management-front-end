@@ -1,9 +1,12 @@
 import React from 'react'
+import './loginPage.css'
 
 export default function LoginPage() {
   return (
-    <div>
-      <img src="tower.jpg" alt="" />
+    <div className='image'>
+      <div>
+       
+      </div>
     </div>
   )
 }
