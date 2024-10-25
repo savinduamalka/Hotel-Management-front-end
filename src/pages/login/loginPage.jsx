@@ -7,7 +7,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
 
   function handleLogin(e) {
-    e.preventDefault(); // Prevent form submission from reloading the page
+    e.preventDefault();
     axios
       .post("http://localhost:3000/api/users/login", {
         email: email,
@@ -17,11 +17,11 @@ export default function LoginPage() {
         console.log(res.data);
         localStorage.setItem("token", res.data.token);
         const token = localStorage.getItem("token");
-        if(res.data.detailsofuser.type === "admin") {
-            window.location.href = "/admin";
-          } else {
-            window.location.href = "/";
-          }
+        if (res.data.detailsofuser.type === "admin") {
+          window.location.href = "/admin";
+        } else {
+          window.location.href = "/";
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -30,11 +30,18 @@ export default function LoginPage() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-center bg-cover image">
-      <div className="w-[450px] bg-white bg-opacity-20 backdrop-blur-lg rounded-lg p-10 shadow-lg">
+      <div className="text-center mb-10 text-[#FEF9F2]">
+        <h1 className="text-5xl font-bold">Welcome Back! ආයුබෝවන්</h1>
+        <h2 className="mt-2 text-2xl">Blue Horizon - Galle</h2>
+      </div>
+      <div className="w-[480px] bg-white bg-opacity-25 backdrop-blur-md rounded-lg p-12 shadow-2xl">
         <h1 className="text-4xl font-bold text-center text-[#FEF9F2] mb-8">
           Login
         </h1>
-        <form className="flex flex-col items-center space-y-5" onSubmit={handleLogin}>
+        <form
+          className="flex flex-col items-center space-y-5"
+          onSubmit={handleLogin}
+        >
           <input
             type="email"
             placeholder="Email"
