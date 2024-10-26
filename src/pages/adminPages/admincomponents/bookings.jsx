@@ -1,45 +1,44 @@
-import React from 'react'
-
-const bookings = [
-  {
-    bookingId: 'B001',
-    roomId: 'R101',
-    email: 'john.doe@example.com',
-    startDate: '2024-11-01',
-    endDate: '2024-11-05',
-    status: 'Confirmed',
-    reason: 'Vacation',
-  },
-  {
-    bookingId: 'B002',
-    roomId: 'R102',
-    email: 'jane.smith@example.com',
-    startDate: '2024-11-03',
-    endDate: '2024-11-07',
-    status: 'Pending',
-    reason: 'Business',
-  },
-  {
-    bookingId: 'B003',
-    roomId: 'R103',
-    email: 'robert.brown@example.com',
-    startDate: '2024-11-10',
-    endDate: '2024-11-15',
-    status: 'Cancelled',
-    reason: 'Personal',
-  },
-  {
-    bookingId: 'B004',
-    roomId: 'R104',
-    email: 'linda.white@example.com',
-    startDate: '2024-11-05',
-    endDate: '2024-11-09',
-    status: 'Confirmed',
-    reason: 'Wedding',
-  },
-];
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 export default function Bookings() {
+  const [bookings, setBookings] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    if (token) {
+      if (!isLoaded) {
+        axios.get("http://localhost:3000/api/booking", {
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json",
+          },
+        })
+        .then((res) => {
+          console.log(res); 
+          setBookings(res.data.list);
+          setIsLoaded(true);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      }
+    }
+  }, [isLoaded, token]);
+
+  if (!token) {
+    return (
+      <a
+        href="/login"
+        className="bg-[#7E60BF] text-[#FEF9F2] px-4 py-2 rounded hover:bg-[#6A4FA0] transition duration-300"
+        style={{ fontSize: "18px" }}
+      >
+        Login
+      </a>
+    );
+  }
+
   return (
     <div className="bg-[#FEF9F2] p-8">
       <h1 className="text-3xl font-bold text-[#7E60BF] mb-6">Admin Bookings</h1>
@@ -56,17 +55,42 @@ export default function Bookings() {
           </tr>
         </thead>
         <tbody>
-          {bookings.map((booking, index) => (
-            <tr key={index} className={`text-[#7E60BF] text-center ${index % 2 === 0 ? 'bg-[#F7ECFC]' : 'bg-[#FEF9F2]'}`}>
-              <td className="py-3 px-5 border-b border-[#E4B1F0]">{booking.bookingId}</td>
-              <td className="py-3 px-5 border-b border-[#E4B1F0]">{booking.roomId}</td>
-              <td className="py-3 px-5 border-b border-[#E4B1F0]">{booking.email}</td>
-              <td className="py-3 px-5 border-b border-[#E4B1F0]">{booking.startDate}</td>
-              <td className="py-3 px-5 border-b border-[#E4B1F0]">{booking.endDate}</td>
-              <td className={`py-3 px-5 border-b border-[#E4B1F0] ${booking.status === 'Confirmed' ? 'text-green-600' : booking.status === 'Pending' ? 'text-yellow-600' : 'text-red-600'}`}>
+          {Array.isArray(bookings) && bookings.map((booking, index) => (
+            <tr
+              key={booking.bookingId}
+              className={`text-[#7E60BF] text-center ${
+                index % 2 === 0 ? "bg-[#F7ECFC]" : "bg-[#FEF9F2]"
+              }`}
+            >
+              <td className="py-3 px-5 border-b border-[#E4B1F0]">
+                {booking.bookingId}
+              </td>
+              <td className="py-3 px-5 border-b border-[#E4B1F0]">
+                {booking.roomId}
+              </td>
+              <td className="py-3 px-5 border-b border-[#E4B1F0]">
+                {booking.email}
+              </td>
+              <td className="py-3 px-5 border-b border-[#E4B1F0]">
+                {booking.startDate}
+              </td>
+              <td className="py-3 px-5 border-b border-[#E4B1F0]">
+                {booking.endDate}
+              </td>
+              <td
+                className={`py-3 px-5 border-b border-[#E4B1F0] ${
+                  booking.status === "Confirmed"
+                    ? "text-green-600"
+                    : booking.status === "Pending"
+                    ? "text-yellow-600"
+                    : "text-red-600"
+                }`}
+              >
                 {booking.status}
               </td>
-              <td className="py-3 px-5 border-b border-[#E4B1F0]">{booking.reason}</td>
+              <td className="py-3 px-5 border-b border-[#E4B1F0]">
+                {booking.reason}
+              </td>
             </tr>
           ))}
         </tbody>
