@@ -4,26 +4,25 @@ import React, { useEffect, useState } from "react";
 export default function Bookings() {
   const [bookings, setBookings] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState({});
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    if (token) {
-      if (!isLoaded) {
-        axios.get("http://localhost:3000/api/booking", {
+    if (token && !isLoaded) {
+      axios
+        .get("http://localhost:3000/api/booking", {
           headers: {
             Authorization: "Bearer " + token,
             "Content-Type": "application/json",
           },
         })
         .then((res) => {
-          console.log(res); 
           setBookings(res.data.list);
           setIsLoaded(true);
         })
         .catch((err) => {
           console.log(err);
         });
-      }
     }
   }, [isLoaded, token]);
 
@@ -39,6 +38,37 @@ export default function Bookings() {
     );
   }
 
+  function updateStatus(bookingId) {
+  const newStatus = selectedStatus[bookingId] || "Pending";
+    
+    axios
+        .put(
+            `http://localhost:3000/api/booking/${bookingId}`,
+            { status: newStatus },
+            {
+                headers: {
+                    Authorization: "Bearer " + token,
+                    "Content-Type": "application/json",
+                },
+            }
+        )
+        .then(() => {
+            // Update booking list to reflect the changed status
+            setBookings((prevBookings) =>
+                prevBookings.map((booking) =>
+                    booking.bookingId === bookingId
+                        ? { ...booking, status: newStatus }
+                        : booking
+                )
+            );
+            setSelectedStatus((prev) => ({ ...prev, [bookingId]: newStatus }));
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+}
+
+
   return (
     <div className="bg-[#FEF9F2] p-8">
       <h1 className="text-3xl font-bold text-[#7E60BF] mb-6">Admin Bookings</h1>
@@ -52,47 +82,71 @@ export default function Bookings() {
             <th className="py-4 px-6 border-b border-[#E4B1F0]">End Date</th>
             <th className="py-4 px-6 border-b border-[#E4B1F0]">Status</th>
             <th className="py-4 px-6 border-b border-[#E4B1F0]">Reason</th>
+            <th className="py-4 px-6 border-b border-[#E4B1F0]">Action</th>
           </tr>
         </thead>
         <tbody>
-          {Array.isArray(bookings) && bookings.map((booking, index) => (
-            <tr
-              key={booking.bookingId}
-              className={`text-[#7E60BF] text-center ${
-                index % 2 === 0 ? "bg-[#F7ECFC]" : "bg-[#FEF9F2]"
-              }`}
-            >
-              <td className="py-3 px-5 border-b border-[#E4B1F0]">
-                {booking.bookingId}
-              </td>
-              <td className="py-3 px-5 border-b border-[#E4B1F0]">
-                {booking.roomId}
-              </td>
-              <td className="py-3 px-5 border-b border-[#E4B1F0]">
-                {booking.email}
-              </td>
-              <td className="py-3 px-5 border-b border-[#E4B1F0]">
-                {booking.startDate}
-              </td>
-              <td className="py-3 px-5 border-b border-[#E4B1F0]">
-                {booking.endDate}
-              </td>
-              <td
-                className={`py-3 px-5 border-b border-[#E4B1F0] ${
-                  booking.status === "Confirmed"
-                    ? "text-green-600"
-                    : booking.status === "Pending"
-                    ? "text-yellow-600"
-                    : "text-red-600"
+          {Array.isArray(bookings) &&
+            bookings.map((booking, index) => (
+              <tr
+                key={booking.bookingId}
+                className={`text-[#7E60BF] text-center ${
+                  index % 2 === 0 ? "bg-[#F7ECFC]" : "bg-[#FEF9F2]"
                 }`}
               >
-                {booking.status}
-              </td>
-              <td className="py-3 px-5 border-b border-[#E4B1F0]">
-                {booking.reason}
-              </td>
-            </tr>
-          ))}
+                <td className="py-3 px-5 border-b border-[#E4B1F0]">
+                  {booking.bookingId}
+                </td>
+                <td className="py-3 px-5 border-b border-[#E4B1F0]">
+                  {booking.roomId}
+                </td>
+                <td className="py-3 px-5 border-b border-[#E4B1F0]">
+                  {booking.email}
+                </td>
+                <td className="py-3 px-5 border-b border-[#E4B1F0]">
+                  {booking.startDate}
+                </td>
+                <td className="py-3 px-5 border-b border-[#E4B1F0]">
+                  {booking.endDate}
+                </td>
+                <td
+                  className={`py-3 px-5 border-b border-[#E4B1F0] ${
+                    booking.status === "Confirmed"
+                      ? "text-green-600"
+                      : booking.status === "Pending"
+                      ? "text-yellow-600"
+                      : "text-red-600"
+                  }`}
+                >
+                  {booking.status}
+                </td>
+                <td className="py-3 px-5 border-b border-[#E4B1F0]">
+                  {booking.reason}
+                </td>
+                <td className="py-3 px-5 border-b border-[#E4B1F0]">
+                  <select
+                    className="p-2 border border-[#E4B1F0] rounded"
+                    value={selectedStatus[booking.bookingId] || booking.status}
+                    onChange={(e) =>
+                      setSelectedStatus((prev) => ({
+                        ...prev,
+                        [booking.bookingId]: e.target.value,
+                      }))
+                    }
+                  >
+                    <option value="Pending">Pending</option>
+                    <option value="Confirmed">Confirmed</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
+                  <button
+                    onClick={() => updateStatus(booking.bookingId)}
+                    className="ml-2 px-3 py-1 bg-[#7E60BF] text-white rounded hover:bg-[#6A4FA0] transition duration-300"
+                  >
+                    Update
+                  </button>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>
