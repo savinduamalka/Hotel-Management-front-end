@@ -40,29 +40,37 @@ export default function Rooms() {
   }
 
   return (
-    <div>
-      <table>
+    <div className="bg-[#FEF9F2] p-8">
+      <h1 className="text-3xl font-bold text-[#7E60BF] mb-6">Room List</h1>
+      <table className="min-w-full bg-white border border-[#7E60BF] shadow-lg rounded-lg">
         <thead>
-          <tr>
-            <th>Room Id</th>
-            <th>Category</th>
-            <th>Max Guest</th>
-            <th>Available</th>
-            <th>Images</th>
-            <th>Description</th>
-            <th>Notes</th>
+          <tr className="bg-[#7E60BF] text-white text-lg">
+            <th className="py-4 px-6 border-b border-[#E4B1F0]">Room ID</th>
+            <th className="py-4 px-6 border-b border-[#E4B1F0]">Category</th>
+            <th className="py-4 px-6 border-b border-[#E4B1F0]">Max Guest</th>
+            <th className="py-4 px-6 border-b border-[#E4B1F0]">Available</th>
+            <th className="py-4 px-6 border-b border-[#E4B1F0]">Images</th>
+            <th className="py-4 px-6 border-b border-[#E4B1F0]">Description</th>
+            <th className="py-4 px-6 border-b border-[#E4B1F0]">Notes</th>
           </tr>
         </thead>
         <tbody>
           {room.map((room, index) => (
-            <tr key={index}>
-              <td>{room.RoomId}</td>
-              <td>{room.category}</td>
-              <td>{room.maxGuest}</td>
-              <td>{room.available ? "Yes" : "No"}</td>
-              <td>{room.images}</td>
-              <td>{room.description}</td>
-              <td>{room.notes}</td>
+            <tr
+              key={index}
+              className={`text-[#7E60BF] text-center ${
+                index % 2 === 0 ? "bg-[#F7ECFC]" : "bg-[#FEF9F2]"
+              }`}
+            >
+              <td className="py-3 px-5 border-b border-[#E4B1F0]">{room.RoomId}</td>
+              <td className="py-3 px-5 border-b border-[#E4B1F0]">{room.category}</td>
+              <td className="py-3 px-5 border-b border-[#E4B1F0]">{room.maxGuest}</td>
+              <td className="py-3 px-5 border-b border-[#E4B1F0]">
+                {room.available ? "Yes" : "No"}
+              </td>
+              <td className="py-3 px-5 border-b border-[#E4B1F0]">{room.images}</td>
+              <td className="py-3 px-5 border-b border-[#E4B1F0]">{room.description}</td>
+              <td className="py-3 px-5 border-b border-[#E4B1F0]">{room.notes}</td>
             </tr>
           ))}
         </tbody>
