@@ -5,10 +5,19 @@ export default function Categories() {
   const [categories, setCategories] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
+  const token=localStorage.getItem("token");
+
   useEffect(
     () => {
-    if (!isLoaded) {
-      axios.get('http://localhost:3000/api/categories')
+    if (token && !isLoaded) {
+      axios.get('http://localhost:3000/api/categories',
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json",
+          },
+        }
+      )
         .then((res) => {
           setCategories(res.data.categories);
           setIsLoaded(true);
@@ -19,8 +28,19 @@ export default function Categories() {
     }
   }, [isLoaded]);
 
+  if (!token) {
+    return (
+      <a
+        href="/login"
+        className="bg-[#7E60BF] text-[#FEF9F2] px-4 py-2 rounded hover:bg-[#6A4FA0] transition duration-300"
+        style={{ fontSize: "18px" }}
+      >
+        Login
+      </a>
+    );
+  }
+
   function deleteCategory(name) {
-    const token = localStorage.getItem("token");
     axios.delete("http://localhost:3000/api/categories/" + name,
       {
         headers: {
