@@ -27,6 +27,18 @@ export default function Feedback() {
     }
   }, [isLoaded]);
 
+  if (!token) {
+    return (
+      <a
+        href="/login"
+        className="bg-[#7E60BF] text-[#FEF9F2] px-4 py-2 rounded hover:bg-[#6A4FA0] transition duration-300"
+        style={{ fontSize: "18px" }}
+      >
+        Login
+      </a>
+    );
+  }
+  
   return (
     <div>
     </div>
