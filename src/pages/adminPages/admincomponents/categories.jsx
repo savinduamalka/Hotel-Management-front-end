@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FaTrash, FaEdit } from "react-icons/fa";
+import toast from "react-hot-toast";
 
 export default function Categories() {
   const [categories, setCategories] = useState([]);
@@ -48,6 +49,7 @@ export default function Categories() {
         },
       })
       .then(() => {
+        toast.success('Successfully deleted!');
         setIsLoaded(false);
       })
       .catch((err) => {
