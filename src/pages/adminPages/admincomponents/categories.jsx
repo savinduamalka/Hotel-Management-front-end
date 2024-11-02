@@ -1,23 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { FaTrash, FaEdit } from "react-icons/fa";
 
 export default function Categories() {
   const [categories, setCategories] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const token=localStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
-  useEffect(
-    () => {
+  useEffect(() => {
     if (token && !isLoaded) {
-      axios.get('http://localhost:3000/api/categories',
-        {
+      axios
+        .get("http://localhost:3000/api/categories", {
           headers: {
             Authorization: "Bearer " + token,
             "Content-Type": "application/json",
           },
-        }
-      )
+        })
         .then((res) => {
           setCategories(res.data.categories);
           setIsLoaded(true);
@@ -41,14 +40,13 @@ export default function Categories() {
   }
 
   function deleteCategory(name) {
-    axios.delete("http://localhost:3000/api/categories/" + name,
-      {
+    axios
+      .delete("http://localhost:3000/api/categories/" + name, {
         headers: {
           Authorization: "Bearer " + token,
-          "Content-Type": "application/json"
-        }
-      }
-    )
+          "Content-Type": "application/json",
+        },
+      })
       .then(() => {
         setIsLoaded(false);
       })
@@ -56,7 +54,7 @@ export default function Categories() {
         console.log(err);
       });
   }
-  
+
 
   return (
     <div className="flex justify-center p-10">
@@ -75,25 +73,33 @@ export default function Categories() {
           {categories.map((category, index) => (
             <tr
               key={index}
-              className={`${index % 2 === 0 ? 'bg-[#FEF9F2]' : 'bg-[#E4B1F0]'} hover:bg-[#F1E4F6]`}
+              className={`${
+                index % 2 === 0 ? "bg-[#FEF9F2]" : "bg-[#E4B1F0]"
+              } hover:bg-[#F1E4F6]`}
             >
               <td className="p-4">
-                <img src={category.image} alt={category.name} width="50" className="rounded" />
+                <img
+                  src={category.image}
+                  alt={category.name}
+                  width="50"
+                  className="rounded"
+                />
               </td>
-              <td className="p-4 font-semibold text-[#7E60BF]">{category.name}</td>
+              <td className="p-4 font-semibold text-[#7E60BF]">
+                {category.name}
+              </td>
               <td className="p-4 text-[#6A4FA0]">{category.price}</td>
               <td className="p-4">{category.features}</td>
               <td className="p-4">{category.description}</td>
-              <td className="p-4">
+              <td className="flex justify-center gap-2 p-4">
                 <button
-                  onClick={
-                    () => {
-                      deleteCategory(category.name)
-                    }
-                  }
-                  className="px-3 py-1 bg-[#7E60BF] text-white rounded hover:bg-[#6A4FA0] transition duration-300"
+                  onClick={() => deleteCategory(category.name)}
+                  className="px-3 py-1 bg-[#7E60BF] text-white rounded hover:bg-[#6A4FA0] transition duration-300 flex items-center"
                 >
-                  Delete
+                  <FaTrash />
+                </button>
+                <button className="px-3 py-1 bg-[#4F72B2] text-white rounded hover:bg-[#3B5998] transition duration-300 flex items-center">
+                  <FaEdit />
                 </button>
               </td>
             </tr>
