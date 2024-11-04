@@ -1,11 +1,11 @@
 import React from "react";
 import { Link, Route, Routes } from "react-router-dom";
-import Bookings from "./admincomponents/bookings";
-import Categories from "./admincomponents/categories";
-import Rooms from "./admincomponents/rooms";
-import Users from "./admincomponents/users";
-import Feedback from "./admincomponents/feedback";
-import Gallery from "./admincomponents/gallery";
+import Bookings from "../bookingFolder/bookings";
+import Categories from "../categoryFolder/categories";
+import Rooms from "../roomsFolder/rooms";
+import Users from "../usersFolder/users";
+import Feedback from "../feedbackFolder/feedback";
+import Gallery from "../galleryFolder/gallery";
 import { FaBookmark, FaClipboardList, FaBed, FaUsers, FaComments, FaImage } from "react-icons/fa";
 
 export default function AdminPage() {
