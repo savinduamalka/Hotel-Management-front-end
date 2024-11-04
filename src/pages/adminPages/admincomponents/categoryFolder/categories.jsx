@@ -12,7 +12,7 @@ export default function Categories() {
   useEffect(() => {
     if (token && !isLoaded) {
       axios
-        .get("http://localhost:3000/api/categories", {
+        .get(import.meta.env.VITE_BACKEND_URL + "api/categories", {
           headers: {
             Authorization: "Bearer " + token,
             "Content-Type": "application/json",
@@ -42,7 +42,7 @@ export default function Categories() {
 
   function deleteCategory(name) {
     axios
-      .delete("http://localhost:3000/api/categories/" + name, {
+      .delete(import.meta.env.VITE_BACKEND_URL +"api/categories/" + name, {
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",

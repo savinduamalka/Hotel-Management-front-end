@@ -10,7 +10,7 @@ export default function Rooms() {
   useEffect(() => {
     if (token && !isLoaded) {
       axios
-        .get("http://localhost:3000/api/room/", {
+        .get(import.meta.env.VITE_BACKEND_URL + "api/room/", {
           headers: {
             Authorization: "Bearer " + token,
             "Content-Type": "application/json",

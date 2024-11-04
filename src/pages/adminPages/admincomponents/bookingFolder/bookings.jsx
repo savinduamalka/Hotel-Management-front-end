@@ -10,7 +10,7 @@ export default function Bookings() {
   useEffect(() => {
     if (token && !isLoaded) {
       axios
-        .get("http://localhost:3000/api/booking", {
+        .get(import.meta.env.VITE_BACKEND_URL + "api/booking", {
           headers: {
             Authorization: "Bearer " + token,
             "Content-Type": "application/json",
@@ -43,7 +43,7 @@ export default function Bookings() {
     
     axios
         .put(
-            `http://localhost:3000/api/booking/${bookingId}`,
+          import.meta.env.VITE_BACKEND_URL + `api/booking/${bookingId}`,
             { status: newStatus },
             {
                 headers: {
