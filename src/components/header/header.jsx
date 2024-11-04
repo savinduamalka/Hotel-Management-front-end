@@ -11,7 +11,7 @@ function Header() {
           Discover the Beauty of Galle's Coastline
         </p>
       </div>
-      <UserProfile img="https://i.pravatar.cc/150?img=3" name="Savindu Amalka" />
+      <UserProfile img="" name="" />
     </header>
   );
 }
