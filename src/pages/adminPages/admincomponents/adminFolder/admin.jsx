@@ -7,6 +7,7 @@ import Users from "../usersFolder/users";
 import Feedback from "../feedbackFolder/feedback";
 import Gallery from "../galleryFolder/gallery";
 import { FaBookmark, FaClipboardList, FaBed, FaUsers, FaComments, FaImage } from "react-icons/fa";
+import AddCategory from "../categoryFolder/addCategory";
 
 export default function AdminPage() {
   return (
@@ -66,9 +67,10 @@ export default function AdminPage() {
           Manage bookings, rooms, categories, and more.
         </p>
         <hr className="my-8 border-t-2 border-[#7E60BF]" />
-        <Routes>
+        <Routes path="/*">
           <Route path="bookings" element={<Bookings />} />
           <Route path="categories" element={<Categories />} />
+          <Route path="add-category" element={<AddCategory />} />
           <Route path="rooms" element={<Rooms />} />
           <Route path="users" element={<Users />} />
           <Route path="feedback" element={<Feedback />} />
