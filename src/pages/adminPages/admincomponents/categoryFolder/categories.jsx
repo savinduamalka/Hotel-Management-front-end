@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FaTrash, FaEdit } from "react-icons/fa";
+import { IoIosAdd } from "react-icons/io";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export default function Categories() {
   const [categories, setCategories] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const navigate = useNavigate();
 
   const token = localStorage.getItem("token");
 
@@ -42,14 +45,14 @@ export default function Categories() {
 
   function deleteCategory(name) {
     axios
-      .delete(import.meta.env.VITE_BACKEND_URL +"api/categories/" + name, {
+      .delete(import.meta.env.VITE_BACKEND_URL + "api/categories/" + name, {
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
         },
       })
       .then(() => {
-        toast.success('Successfully deleted!');
+        toast.success("Successfully deleted!");
         setIsLoaded(false);
       })
       .catch((err) => {
@@ -57,9 +60,19 @@ export default function Categories() {
       });
   }
 
+  function handlePlus() {
+    navigate("/admin/add-category");
+  }
 
   return (
     <div className="flex justify-center p-10">
+      <button
+        className="bg-[#7E60BF] w-[60px] h-[60px] rounded-full text-4xl text-white flex justify-center items-center fixed bottom-5 right-5 shadow-lg hover:bg-[#6A4FA0] transition duration-300"
+        onClick={handlePlus}
+      >
+        <IoIosAdd />
+      </button>
+
       <table className="w-4/5 text-center border-collapse rounded-lg shadow-lg overflow-hidden bg-[#F8FAFC]">
         <thead>
           <tr className="bg-[#7E60BF] text-white">
