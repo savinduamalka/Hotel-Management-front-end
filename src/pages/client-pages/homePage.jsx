@@ -1,10 +1,14 @@
 import React from "react";
 import Header from "../../components/header/header";
+import NavBar from "../../pages/client-pages/navBar";
+
 
 export default function HomePage() {
   return (
     <div>
+      <NavBar />
       <Header />
+      
       <div className="flex flex-col items-center w-full h-screen bg-[#FEF9F2]">
         <div className="bg-white border border-[#E4B1F0] shadow-lg h-[180px] w-[750px] rounded-lg flex flex-col justify-evenly items-center mt-[100px] p-6">
           <h2 className="text-[#7E60BF] text-[24px] font-bold">Guest Entry</h2>
