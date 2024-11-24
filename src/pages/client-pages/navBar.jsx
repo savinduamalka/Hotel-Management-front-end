@@ -17,22 +17,22 @@ export default function NavbarDefault() {
   const navList = (
     <ul className="flex flex-col items-center gap-4 lg:flex-row lg:gap-6">
       <li>
-        <a href="#" className="text-[#FEF9F2] hover:text-[#E4B1F0] font-medium">
+        <a href="/" className="text-[#FEF9F2] hover:text-[#E4B1F0] font-medium">
           Home
         </a>
       </li>
       <li>
-        <a href="#" className="text-[#FEF9F2] hover:text-[#E4B1F0] font-medium">
+        <a href="/gallery" className="text-[#FEF9F2] hover:text-[#E4B1F0] font-medium">
           Gallery
         </a>
       </li>
       <li>
-        <a href="#" className="text-[#FEF9F2] hover:text-[#E4B1F0] font-medium">
+        <a href="/aboutus" className="text-[#FEF9F2] hover:text-[#E4B1F0] font-medium">
           About us
         </a>
       </li>
       <li>
-        <a href="#" className="text-[#FEF9F2] hover:text-[#E4B1F0] font-medium">
+        <a href="/contacts" className="text-[#FEF9F2] hover:text-[#E4B1F0] font-medium">
           Contact us
         </a>
       </li>
