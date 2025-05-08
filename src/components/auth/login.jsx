@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
 export default function LoginPage({ isOpen, onClose }) {
@@ -6,6 +6,7 @@ export default function LoginPage({ isOpen, onClose }) {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const modalRef = useRef(null);
 
   useEffect(() => {
     // Reset form when modal opens/closes or isOpen changes
@@ -14,8 +15,29 @@ export default function LoginPage({ isOpen, onClose }) {
       setPassword("");
       setError("");
       setIsLoading(false);
+
+      // Prevent body scrolling when modal is open
+      document.body.style.overflow = 'hidden';
+
+      // Focus trap and escape key handler
+      const handleEscape = (e) => {
+        if (e.key === 'Escape') onClose();
+      };
+
+      document.addEventListener('keydown', handleEscape);
+      return () => {
+        document.body.style.overflow = 'auto';
+        document.removeEventListener('keydown', handleEscape);
+      };
     }
-  }, [isOpen]);
+  }, [isOpen, onClose]);
+
+  // Handle clicks outside the modal
+  const handleBackdropClick = (e) => {
+    if (modalRef.current && !modalRef.current.contains(e.target)) {
+      onClose();
+    }
+  };
 
   function handleLogin(e) {
     e.preventDefault();
@@ -49,17 +71,20 @@ export default function LoginPage({ isOpen, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
+      className="fixed inset-0 z-[9999] flex items-center justify-center overflow-y-auto bg-black bg-opacity-75 p-4"
+      onClick={handleBackdropClick}
+      aria-modal="true"
+      role="dialog"
     >
       {/* Card Container */}
-      <div className="relative w-full max-w-xs mx-2 overflow-hidden bg-white shadow-2xl sm:mx-4 sm:max-w-md md:max-w-lg lg:max-w-md rounded-xl">
+      <div
+        ref={modalRef}
+        className="relative w-full max-w-xs mx-2 my-8 overflow-hidden bg-white shadow-2xl sm:mx-4 sm:max-w-md md:max-w-lg lg:max-w-md rounded-xl"
+      >
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute z-20 text-gray-600 top-3 right-3 hover:text-gray-900"
+          className="absolute z-20 p-1 text-gray-600 rounded-full top-3 right-3 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
           aria-label="Close login modal"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
