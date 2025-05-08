@@ -1,6 +1,5 @@
 import { useState } from "react";
-import uploadMedia from "../../../../utiles/mediaUpload";
-import {getDownloadURL} from "firebase/storage"
+import uploadMedia from "../../../../utils/mediaUpload";
 import axios from "axios"
 export default function AddCategoryForm() {
   const [name, setName] = useState("");
@@ -34,10 +33,7 @@ export default function AddCategoryForm() {
     console.log(featuresArray);
   
     uploadMedia(image)
-      .then((snapshot) => {
-        return getDownloadURL(snapshot.ref);
-      })
-      .then((url) => {
+      .then((url) => { 
         const categoryInfo = {
           name: name,
           price: price,
@@ -46,7 +42,7 @@ export default function AddCategoryForm() {
           image: url,
         };
   
-        return axios.post(import.meta.env.VITE_BACKEND_URL + "/api/categories", categoryInfo, {
+        return axios.post(import.meta.env.VITE_BACKEND_URL + "api/categories", categoryInfo, {
           headers: {
             Authorization: "Bearer " + token,
           },
