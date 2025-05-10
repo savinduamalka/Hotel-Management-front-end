@@ -1,7 +1,6 @@
 import { Route, BrowserRouter as Router, Routes, Link } from "react-router-dom";
 import AdminPage from "./pages/adminPages/admincomponents/adminFolder/admin";
 import HomePage from "./pages/client-pages/homePage";
-import LoginPage from "./components/auth/login";
 import { Toaster } from "react-hot-toast";
 import ContactPage from "./pages/contact/contacts";
 
