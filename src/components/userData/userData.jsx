@@ -1,5 +1,17 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { Skeleton } from "@/ui/skeleton";
+
+// Helper to decode JWT
+function decodeJWT(token) {
+  try {
+    const payload = token.split(".")[1];
+    const decoded = JSON.parse(atob(payload));
+    return decoded;
+  } catch {
+    return {};
+  }
+}
 
 function UserProfile({ onLoginClick }) {
   const [name, setName] = useState('');
@@ -10,20 +22,27 @@ function UserProfile({ onLoginClick }) {
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoading(true);
-    
+
     if (!token) {
       setName('Guest');
       setImage('');
       setIsLoading(false);
     } else {
-      axios.get(import.meta.env.VITE_BACKEND_URL + "api/users", {
+      // decode token for name/email/image
+      const decoded = decodeJWT(token);
+      const fullName = (decoded.firstName || "") + " " + (decoded.lastName || "");
+      setName(fullName.trim() || "User");
+      setImage(decoded.image || ""); 
+
+      // fallback: fetch image from backend only if not present in token
+      if (!decoded.image) {
+        axios.get(import.meta.env.VITE_BACKEND_URL + "api/users", {
           headers: {
             Authorization: "Bearer " + token,
             "Content-Type": "application/json"
           },
         })
         .then((res) => {
-          setName(res.data.firstname + ' ' + res.data.lastname);
           setImage(res.data.image);
           setIsLoading(false);
         })
@@ -34,22 +53,25 @@ function UserProfile({ onLoginClick }) {
           setImage('');
           setIsLoading(false);
         });
+      } else {
+        setIsLoading(false);
+      }
     }
   }, [isChanged]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsChanged(!isChanged);
-    window.location.href = "/"; 
+    window.location.href = "/";
   };
 
   return (
     <div className="flex items-center gap-2">
       {isLoading ? (
-        <div className="flex items-center gap-2 animate-pulse">
-          <div className="w-8 h-8 rounded-full bg-white/30"></div>
-          <div className="w-16 h-3 rounded bg-white/30"></div>
-        </div>
+        <>
+          <Skeleton className="w-8 h-8 rounded-full" />
+          <Skeleton className="w-20 h-4 rounded" />
+        </>
       ) : (
         <>
           <div className="relative flex-shrink-0">
@@ -67,10 +89,8 @@ function UserProfile({ onLoginClick }) {
               </div>
             )}
           </div>
-          
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium text-white">{name || "Guest"}</span>
-            
             {name === 'Guest' ? (
               <button 
                 onClick={onLoginClick}
