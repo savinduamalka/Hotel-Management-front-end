@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import NavBar from "./navBar";
 import LoginPage from "../../components/auth/login";
+import SignupPage from "../../components/auth/signup";
 
 export default function HomePage() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
 
   const handleLoginClick = () => {
     setIsLoginModalOpen(true);
@@ -13,21 +15,42 @@ export default function HomePage() {
     setIsLoginModalOpen(false);
   };
 
+  const handleSignupClick = () => {
+    setIsSignupModalOpen(true);
+  };
+
+  const handleSignupClose = () => {
+    setIsSignupModalOpen(false);
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
-      {/* Login Modal - positioned at the top level of the DOM */}
-      <LoginPage isOpen={isLoginModalOpen} onClose={handleLoginClose} />
-      
+      {/* Login Modal */}
+      <LoginPage
+        isOpen={isLoginModalOpen}
+        onClose={handleLoginClose}
+        onSignupClick={() => {
+          setIsLoginModalOpen(false);
+          setIsSignupModalOpen(true);
+        }}
+      />
+      {/* Signup Modal */}
+      <SignupPage
+        isOpen={isSignupModalOpen}
+        onClose={handleSignupClose}
+        onLoginClick={handleLoginClick}
+      />
+
       {/* Navbar */}
       <NavBar onLoginClick={handleLoginClick} />
-      
+
       {/* Hero Section */}
-      <div 
-        className="relative min-h-screen pt-16 bg-center bg-cover md:pt-20" 
+      <div
+        className="relative min-h-screen pt-16 bg-center bg-cover md:pt-20"
         style={{ backgroundImage: `url('/bag-home.jpg')` }}
       >
         <div className="absolute inset-0 bg-black bg-opacity-40"></div>
-        
+
         <div className="container relative z-10 flex flex-col items-center justify-center h-full px-4 py-20 mx-auto sm:px-6">
           <div className="mb-12 text-center">
             <h1 className="mb-4 text-4xl font-bold leading-tight tracking-wide text-white sm:text-5xl md:text-6xl drop-shadow-lg">
@@ -37,12 +60,12 @@ export default function HomePage() {
               Galle • Sri Lanka
             </p>
           </div>
-          
+
           {/* Search Card */}
           <div className="w-full max-w-4xl mx-auto overflow-hidden transition-all duration-300 shadow-lg bg-white/95 backdrop-blur-sm rounded-xl hover:shadow-xl">
             <div className="p-4 sm:p-6 md:p-8">
               <h2 className="mb-4 text-xl font-semibold text-center text-blue-600 sm:text-2xl">Find Your Perfect Stay</h2>
-              
+
               <form className="space-y-4 md:space-y-0 md:grid md:grid-cols-8 md:gap-4 lg:gap-6">
                 <div className="md:col-span-2">
                   <label className="block mb-1 text-sm font-medium text-gray-700">Check In</label>
@@ -51,7 +74,7 @@ export default function HomePage() {
                     className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
-                
+
                 <div className="md:col-span-2">
                   <label className="block mb-1 text-sm font-medium text-gray-700">Check Out</label>
                   <input
@@ -59,7 +82,7 @@ export default function HomePage() {
                     className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
-                
+
                 <div className="md:col-span-1">
                   <label className="block mb-1 text-sm font-medium text-gray-700">Guests</label>
                   <input
@@ -69,7 +92,7 @@ export default function HomePage() {
                     className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
-                
+
                 <div className="md:col-span-1">
                   <label className="block mb-1 text-sm font-medium text-gray-700">Type</label>
                   <select className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -78,10 +101,10 @@ export default function HomePage() {
                     <option>Budget</option>
                   </select>
                 </div>
-                
+
                 <div className="md:col-span-2">
                   <label className="block mb-1 text-sm font-medium text-transparent">Search</label>
-                  <button 
+                  <button
                     type="submit"
                     className="w-full px-4 py-2 font-medium text-white transition duration-150 bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                   >
@@ -93,14 +116,14 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-      
+
       {/* Features Section */}
       <section className="px-4 py-16 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-50 to-indigo-50">
         <div className="container mx-auto">
           <h2 className="mb-10 text-2xl font-bold text-center text-blue-600 md:text-3xl">
             Explore Our Attractions
           </h2>
-          
+
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {/* Card 1 */}
             <div className="overflow-hidden transition-transform duration-300 bg-white rounded-lg shadow-md hover:shadow-lg hover:-translate-y-1">
@@ -118,7 +141,7 @@ export default function HomePage() {
                 </p>
               </div>
             </div>
-            
+
             {/* Card 2 */}
             <div className="overflow-hidden transition-transform duration-300 bg-white rounded-lg shadow-md hover:shadow-lg hover:-translate-y-1">
               <img
@@ -135,7 +158,7 @@ export default function HomePage() {
                 </p>
               </div>
             </div>
-            
+
             {/* Card 3 */}
             <div className="overflow-hidden transition-transform duration-300 bg-white rounded-lg shadow-md hover:shadow-lg hover:-translate-y-1">
               <img
@@ -155,14 +178,14 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-      
+
       {/* Testimonials Section */}
       <section className="px-4 py-16 bg-white sm:px-6 lg:px-8">
         <div className="container mx-auto">
           <h2 className="mb-8 text-2xl font-bold text-center text-blue-600 md:text-3xl">
             What Our Guests Say
           </h2>
-          
+
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {[1, 2, 3].map((i) => (
               <div key={i} className="p-6 rounded-lg shadow bg-blue-50">
@@ -189,7 +212,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-      
+
       {/* Footer */}
       <footer className="px-4 py-8 text-white bg-gradient-to-r from-blue-600 to-indigo-700 sm:px-6 lg:px-8">
         <div className="container mx-auto">
