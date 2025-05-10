@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Skeleton } from "@/ui/skeleton";
+import { Skeleton } from "../ui/skeleton";
 
 // Helper to decode JWT
 function decodeJWT(token) {
