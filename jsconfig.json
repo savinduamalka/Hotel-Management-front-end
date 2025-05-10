@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"] // Or wherever your source files are, e.g., "src/*"
+    },
+    "jsx": "react-jsx" // Important if you're using React
+  },
+  "include": ["src"] // Or the directory containing your source files
+}
