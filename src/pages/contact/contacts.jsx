@@ -7,7 +7,7 @@ const ContactPage = () => {
     <div className="flex flex-col min-h-screen bg-gray-50">
       <NavbarDefault />
       {/* Add top padding to avoid overlap with fixed navbar */}
-      <div className="flex-1 pt-24 pb-8">
+      <div className="flex-1 pt-24 flex flex-col">
         {/* Header */}
         <header className="mb-10 text-center">
           <h1 className="text-4xl font-bold text-blue-700 drop-shadow mb-2 tracking-wide sm:text-5xl md:text-6xl">
@@ -147,7 +147,7 @@ const ContactPage = () => {
         </section>
 
         {/* Footer */}
-        <footer className="px-4 py-8 mt-16 text-white bg-gradient-to-r from-blue-600 to-indigo-700 sm:px-6 lg:px-8 rounded-t-xl shadow-inner">
+        <footer className="px-4 py-8 mt-0 text-white bg-gradient-to-r from-blue-600 to-indigo-700 sm:px-6 lg:px-8 w-full shadow-inner flex-shrink-0">
           <div className="container mx-auto">
             <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
               <div>
@@ -174,14 +174,6 @@ const ContactPage = () => {
                       className="text-blue-100 transition-colors hover:text-white"
                     >
                       Gallery
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="/aboutus"
-                      className="text-blue-100 transition-colors hover:text-white"
-                    >
-                      About Us
                     </a>
                   </li>
                   <li>

@@ -33,7 +33,6 @@ export default function NavbarDefault({ onLoginClick }) {
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Gallery", path: "/gallery" },
-    { name: "About us", path: "/aboutus" },
     { name: "Contact us", path: "/contacts" }
   ];
 

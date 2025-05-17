@@ -228,7 +228,6 @@ export default function HomePage() {
               <ul className="space-y-2">
                 <li><a href="/" className="text-blue-100 transition-colors hover:text-white">Home</a></li>
                 <li><a href="/gallery" className="text-blue-100 transition-colors hover:text-white">Gallery</a></li>
-                <li><a href="/aboutus" className="text-blue-100 transition-colors hover:text-white">About Us</a></li>
                 <li><a href="/contacts" className="text-blue-100 transition-colors hover:text-white">Contact Us</a></li>
               </ul>
             </div>
