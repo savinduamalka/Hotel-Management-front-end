@@ -1,11 +1,45 @@
-import React from "react";
+import React, { useState } from "react";
 import NavbarDefault from "../client-pages/navBar";
 import SeaAnimations from "../../components/animation/seaAnimations";
+import LoginPage from "../../components/auth/login";
+import SignupPage from "../../components/auth/signup";
 
 const ContactPage = () => {
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
+
+  const handleLoginClick = () => {
+    setIsLoginModalOpen(true);
+  };
+
+  const handleLoginClose = () => {
+    setIsLoginModalOpen(false);
+  };
+
+  const handleSignupClick = () => {
+    setIsSignupModalOpen(true);
+  };
+
+  const handleSignupClose = () => {
+    setIsSignupModalOpen(false);
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
-      <NavbarDefault />
+      <LoginPage
+        isOpen={isLoginModalOpen}
+        onClose={handleLoginClose}
+        onSignupClick={() => {
+          setIsLoginModalOpen(false);
+          setIsSignupModalOpen(true);
+        }}
+      />
+      <SignupPage
+        isOpen={isSignupModalOpen}
+        onClose={handleSignupClose}
+        onLoginClick={handleLoginClick}
+      />
+      <NavbarDefault onLoginClick={handleLoginClick} />
       {/* Add top padding to avoid overlap with fixed navbar */}
       <div className="flex-1 pt-24 flex flex-col">
         {/* Header */}
