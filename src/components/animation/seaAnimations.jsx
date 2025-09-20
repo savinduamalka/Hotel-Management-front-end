@@ -1,57 +1,87 @@
 import React from "react";
 
+const wavesStyles = `
+  .waves-container {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .wave {
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    left: -50%;
+    background: radial-gradient(ellipse at center, rgba(127,219,255,0) 0%, rgba(127,219,255,0.7) 100%);
+    opacity: 0.3;
+    border-radius: 43%;
+  }
+  
+  .wave-1 {
+    bottom: -65%;
+    animation: wave 20s linear infinite;
+  }
+  
+  .wave-2 {
+    bottom: -70%;
+    animation: wave 18s linear infinite;
+    animation-delay: -5s;
+  }
+  
+  .wave-3 {
+    bottom: -75%;
+    animation: wave 16s linear infinite;
+    animation-delay: -10s;
+  }
+  
+  @keyframes wave {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+`;
+
+const bubblesStyles = `
+  .bubbles-container {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .bubble {
+    position: absolute;
+    bottom: -20px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.7);
+    animation: float linear infinite;
+  }
+  
+  @keyframes float {
+    0% {
+      transform: translateY(0) scale(1);
+      opacity: 0;
+    }
+    50% {
+      opacity: 0.8;
+    }
+    100% {
+      transform: translateY(-100vh) scale(1.2);
+      opacity: 1;
+    }
+  }
+`;
+
 // Collection of sea-themed animations that can be reused throughout the application
 export const SeaAnimations = {
   // Animated ocean waves for backgrounds
   Waves: () => {
     return (
       <div className="w-full h-full waves-container">
+        <style>{wavesStyles}</style>
         <div className="wave wave-1"></div>
         <div className="wave wave-2"></div>
         <div className="wave wave-3"></div>
-        
-        <style jsx>{`
-          .waves-container {
-            position: relative;
-            overflow: hidden;
-          }
-          
-          .wave {
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            left: -50%;
-            background: radial-gradient(ellipse at center, rgba(127,219,255,0) 0%, rgba(127,219,255,0.7) 100%);
-            opacity: 0.3;
-            border-radius: 43%;
-          }
-          
-          .wave-1 {
-            bottom: -65%;
-            animation: wave 20s linear infinite;
-          }
-          
-          .wave-2 {
-            bottom: -70%;
-            animation: wave 18s linear infinite;
-            animation-delay: -5s;
-          }
-          
-          .wave-3 {
-            bottom: -75%;
-            animation: wave 16s linear infinite;
-            animation-delay: -10s;
-          }
-          
-          @keyframes wave {
-            0% {
-              transform: rotate(0deg);
-            }
-            100% {
-              transform: rotate(360deg);
-            }
-          }
-        `}</style>
       </div>
     );
   },
@@ -60,6 +90,7 @@ export const SeaAnimations = {
   Bubbles: () => {
     return (
       <div className="w-full h-full bubbles-container">
+        <style>{bubblesStyles}</style>
         {Array.from({ length: 15 }).map((_, index) => (
           <div 
             key={index} 
@@ -73,35 +104,6 @@ export const SeaAnimations = {
             }}
           ></div>
         ))}
-        
-        <style jsx>{`
-          .bubbles-container {
-            position: relative;
-            overflow: hidden;
-          }
-          
-          .bubble {
-            position: absolute;
-            bottom: -20px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.7);
-            animation: float linear infinite;
-          }
-          
-          @keyframes float {
-            0% {
-              transform: translateY(0) scale(1);
-              opacity: 0;
-            }
-            50% {
-              opacity: 0.8;
-            }
-            100% {
-              transform: translateY(-100px) scale(1.2);
-              opacity: 0;
-            }
-          }
-        `}</style>
       </div>
     );
   },
