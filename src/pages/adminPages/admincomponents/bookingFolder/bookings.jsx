@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function Bookings() {
   const [bookings, setBookings] = useState([]);
@@ -17,11 +18,11 @@ export default function Bookings() {
           },
         })
         .then((res) => {
-          setBookings(res.data.list);
+          setBookings(res.data.bookings);
           setIsLoaded(true);
         })
         .catch((err) => {
-          console.log(err);
+          toast.error("Failed to fetch bookings.");
         });
     }
   }, [isLoaded, token]);
@@ -62,9 +63,10 @@ export default function Bookings() {
                 )
             );
             setSelectedStatus((prev) => ({ ...prev, [bookingId]: newStatus }));
+            toast.success(`Booking ${bookingId} status updated to ${newStatus}.`);
         })
         .catch((err) => {
-            console.log(err);
+            toast.error("Failed to update booking status.");
         });
 }
 
@@ -132,8 +134,7 @@ export default function Bookings() {
                         ...prev,
                         [booking.bookingId]: e.target.value,
                       }))
-                    }
-                  >
+                    >
                     <option value="Pending">Pending</option>
                     <option value="Confirmed">Confirmed</option>
                     <option value="Cancelled">Cancelled</option>

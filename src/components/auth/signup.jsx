@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { SeaAnimations } from "../animation/seaAnimations";
 import uploadMedia from "../../utils/mediaUpload"; 
+import toast from "react-hot-toast";
 
 export default function SignupPage({ isOpen, onClose, onLoginClick = () => {} }) {
   const [form, setForm] = useState({
@@ -84,21 +85,31 @@ export default function SignupPage({ isOpen, onClose, onLoginClick = () => {} })
         data
       );
       setSuccess("Account created! Please login.");
+      toast.success("Account created successfully! Please log in.");
       setIsLoading(false);
       // Immediately close signup and open login modal
       if (onClose) onClose();
       if (onLoginClick) onLoginClick();
     } catch (err) {
-      setError(
-        err?.response?.data?.message ||
-          "Signup failed. Please check your details and try again."
-      );
+      const errorMessage = err?.response?.data?.message || "Signup failed. Please check your details and try again.";
+      setError(errorMessage);
+      toast.error(errorMessage);
       setIsLoading(false);
-      console.log(err);
     }
   }
 
-  if (!isOpen) return null;
+  const passwordRequirements = (
+    <ul className="mt-1 text-xs text-gray-500 list-disc list-inside">
+      <li>At least 8 characters long</li>
+      <li>Includes both upper and lower case letters</li>
+      <li>Contains at least one numeric digit</li>
+      <li>Has at least one special character (e.g., @, #, $, %)</li>
+    </ul>
+  );
+
+  if (!isOpen) {
+    return null;
+  }
 
   return (
     <div

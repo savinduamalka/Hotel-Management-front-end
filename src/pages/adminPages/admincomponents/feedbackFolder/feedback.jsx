@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function Feedback() {
   const [feedback, setFeedback] = useState([]);
@@ -9,22 +10,16 @@ export default function Feedback() {
   useEffect(() => {
     if (token && !isLoaded) {
       axios
-        .get(import.meta.env.VITE_BACKEND_URL + "api/feedback", {
-          headers: {
-            Authorization: "Bearer " + token,
-            "Content-Type": "application/json",
-          },
-        })
+        .get(import.meta.env.VITE_BACKEND_URL + "api/feedbacks")
         .then((res) => {
-          //console.log(res);
           setFeedback(res.data.feedbacks);
           setIsLoaded(true);
         })
         .catch((err) => {
-          console.log("Error fetching feedback:", err);
+          toast.error("Failed to fetch feedback.");
         });
     }
-  }, [isLoaded, token]);
+  }, [isLoaded]);
 
   if (!token) {
     return (

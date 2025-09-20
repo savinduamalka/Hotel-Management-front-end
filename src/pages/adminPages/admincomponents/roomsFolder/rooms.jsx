@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function Rooms() {
   const [room, setRoom] = useState([]);
@@ -17,12 +18,11 @@ export default function Rooms() {
           },
         })
         .then((res) => {
-          console.log(res.data.list);
           setRoom(res.data.list);
           setIsLoaded(true);
         })
         .catch((err) => {
-          console.log(err);
+          toast.error("Failed to fetch rooms.");
         });
     }
   }, [isLoaded, token]);

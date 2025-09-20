@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { SeaAnimations } from "../animation/seaAnimations"; 
+import toast from "react-hot-toast";
 
 export default function LoginPage({ isOpen, onClose, onSignupClick }) {
   const [email, setEmail] = useState("");
@@ -40,31 +41,30 @@ export default function LoginPage({ isOpen, onClose, onSignupClick }) {
     }
   };
 
-  function handleLogin(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setIsLoading(true);
     setError("");
-
     axios
       .post(import.meta.env.VITE_BACKEND_URL + "api/users/login", {
-        email: email,
-        password: password,
+        email,
+        password,
       })
       .then((res) => {
-        console.log(res.data);
+        
         localStorage.setItem("token", res.data.token);
         if (res.data.detailsofuser.type === "admin") {
           window.location.href = "/admin";
         } else {
           window.location.href = "/";
         }
+        toast.success("Login successful!");
       })
       .catch((err) => {
-        console.log(err);
+        
         setError("Invalid email or password. Please try again.");
-        setIsLoading(false);
+        toast.error("Invalid email or password. Please try again.");
       });
-  }
+  };
 
   if (!isOpen) {
     return null;
@@ -151,7 +151,7 @@ export default function LoginPage({ isOpen, onClose, onSignupClick }) {
             </div>
           )}
 
-          <form className="space-y-3" onSubmit={handleLogin}>
+          <form className="space-y-3" onSubmit={handleSubmit}>
             <div className="space-y-1">
               <label htmlFor="email" className="block text-xs font-medium text-gray-700">
                 Email Address
@@ -188,7 +188,6 @@ export default function LoginPage({ isOpen, onClose, onSignupClick }) {
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                   <svg className="w-5 h-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                  </svg>
                 </div>
                 <input
                   id="password"

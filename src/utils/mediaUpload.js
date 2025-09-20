@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import toast from "react-hot-toast";
 
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -15,7 +16,7 @@ const BUCKET_NAME = 'images';
 
 export default async function uploadMedia(file) {
   if (!file) {
-    console.log("No file selected.");
+    toast.error("No file selected. Please choose an image to upload.");
     return Promise.reject("No file selected");
   }
 
@@ -31,7 +32,7 @@ export default async function uploadMedia(file) {
       });
 
     if (uploadError) {
-      console.error("Error uploading file to Supabase:", uploadError);
+      toast.error("Error uploading file. Please try again.");
       throw uploadError;
     }
 
@@ -40,16 +41,15 @@ export default async function uploadMedia(file) {
       .getPublicUrl(filePath);
 
     if (!publicUrlData || !publicUrlData.publicUrl) {
-      console.error("Error getting public URL from Supabase:", publicUrlData);
+      toast.error("Could not get public URL for the uploaded file.");
       throw new Error("Could not retrieve public URL for the uploaded file.");
     }
     
-    console.log("File uploaded successfully:", data);
-    console.log("Public URL:", publicUrlData.publicUrl);
+    
+    
     return publicUrlData.publicUrl;
-
   } catch (error) {
-    console.error("Error in uploadMedia function:", error);
+    toast.error("An unexpected error occurred during file upload.");
     throw error;
   }
 }

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import uploadMedia from "../../../../utils/mediaUpload";
 import axios from "axios"
+import toast from "react-hot-toast";
+
 export default function AddCategoryForm() {
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
@@ -18,19 +20,11 @@ export default function AddCategoryForm() {
     setImage(e.target.files[0]);
   };
   
-  function handleSubmit(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setIsLoading(true);
-    
-    if (!image) {
-      console.error("No image selected");
-      setIsLoading(false);
-      alert("Please select an image.");
-      return;
-    }
-  
     const featuresArray = features.split(",").map(f => f.trim());
-    console.log(featuresArray);
+    
   
     uploadMedia(image)
       .then((url) => { 
@@ -49,12 +43,19 @@ export default function AddCategoryForm() {
         });
       })
       .then((res) => {
-        console.log(res);
+        
         setIsLoading(false);
+        toast.success("Category added successfully!");
+        setName("");
+        setPrice(0);
+        setFeatures("");
+        setDescription("");
+        setImage(null);
       })
       .catch((error) => {
         console.error("Error adding category:", error);
         setIsLoading(false);
+        toast.error("Error adding category. Please try again.");
       });
   }
   

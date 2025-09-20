@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Skeleton } from "../ui/skeleton";
+import toast from "react-hot-toast";
 
 // Helper to decode JWT
 function decodeJWT(token) {
@@ -47,11 +48,11 @@ function UserProfile({ onLoginClick }) {
           setIsLoading(false);
         })
         .catch((err) => {
-          console.log(err);
           localStorage.removeItem("token");
           setName('Guest');
           setImage('');
           setIsLoading(false);
+          toast.error("Session expired. Please log in again.");
         });
       } else {
         setIsLoading(false);
@@ -63,6 +64,7 @@ function UserProfile({ onLoginClick }) {
     localStorage.removeItem("token");
     setIsChanged(!isChanged);
     window.location.href = "/";
+    toast.success("You have been logged out.");
   };
 
   return (

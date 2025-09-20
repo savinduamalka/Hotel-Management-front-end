@@ -50,7 +50,7 @@ export default function NavbarDefault({ onLoginClick }) {
   const handleBookNowSubmit = (bookingData) => {
     // TODO: Send bookingData to backend API
     // You can show a toast or confirmation here
-    // console.log('Booking submitted:', bookingData);
+    
   };
 
   return (

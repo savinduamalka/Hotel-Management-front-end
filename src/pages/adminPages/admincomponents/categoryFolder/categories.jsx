@@ -26,7 +26,7 @@ export default function Categories() {
           setIsLoaded(true);
         })
         .catch((err) => {
-          console.log(err);
+          toast.error("Failed to fetch categories.");
         });
     }
   }, [isLoaded]);
@@ -56,7 +56,7 @@ export default function Categories() {
         setIsLoaded(false);
       })
       .catch((err) => {
-        console.log(err);
+        toast.error("Failed to delete category.");
       });
   }
 
