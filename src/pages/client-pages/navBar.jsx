@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import UserProfile from "../../components/userData/userData";
 import BookNow from "../../components/bookNow/bookNow";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function NavbarDefault({ onLoginClick }) {
   const [openNav, setOpenNav] = useState(false);
@@ -13,7 +15,7 @@ export default function NavbarDefault({ onLoginClick }) {
         setOpenNav(false);
       }
     };
-    
+
     const handleScroll = () => {
       const offset = window.scrollY;
       if (offset > 50) {
@@ -22,10 +24,10 @@ export default function NavbarDefault({ onLoginClick }) {
         setScrolled(false);
       }
     };
-    
+
     window.addEventListener("resize", handleResize);
     window.addEventListener("scroll", handleScroll);
-    
+
     return () => {
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("scroll", handleScroll);
@@ -35,7 +37,7 @@ export default function NavbarDefault({ onLoginClick }) {
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Gallery", path: "/gallery" },
-    { name: "Contact us", path: "/contacts" }
+    { name: "Contact us", path: "/contacts" },
   ];
 
   const handleBookNowClick = () => {
@@ -48,27 +50,50 @@ export default function NavbarDefault({ onLoginClick }) {
   };
 
   const handleBookNowSubmit = (bookingData) => {
-    // TODO: Send bookingData to backend API
-    // You can show a toast or confirmation here
-    
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("You must be logged in to make a booking.");
+      onLoginClick();
+      return;
+    }
+
+    axios
+      .post(import.meta.env.VITE_BACKEND_URL + "api/booking", bookingData, {
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => {
+        toast.success("Booking request sent successfully!");
+        handleBookNowClose();
+      })
+      .catch((err) => {
+        toast.error(err.response?.data?.message || "Failed to send booking request.");
+      });
   };
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-        scrolled 
-          ? "bg-gradient-to-r from-blue-500/90 to-indigo-600/90 backdrop-blur-md shadow-md" 
-          : "bg-gradient-to-r from-blue-500/40 to-indigo-600/40 backdrop-blur-sm"
-      }`}>
+      <nav
+        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+          scrolled
+            ? "bg-gradient-to-r from-blue-500/90 to-indigo-600/90 backdrop-blur-md shadow-md"
+            : "bg-gradient-to-r from-blue-500/40 to-indigo-600/40 backdrop-blur-sm"
+        }`}
+      >
         <div className="container px-4 mx-auto sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Logo/Brand */}
             <div className="flex-shrink-0">
-              <a href="/" className="text-xl font-bold tracking-wide text-white md:text-2xl">
+              <a
+                href="/"
+                className="text-xl font-bold tracking-wide text-white md:text-2xl"
+              >
                 BLUE HORIZON
               </a>
             </div>
-            
+
             {/* Desktop Nav */}
             <div className="hidden md:flex md:items-center md:justify-between">
               <div className="flex items-center ml-10 space-x-4">
@@ -88,20 +113,20 @@ export default function NavbarDefault({ onLoginClick }) {
                   Book Now
                 </button>
               </div>
-              
+
               {/* UserProfile in desktop nav */}
               <div className="pl-6 ml-6 border-l border-white/30">
                 <UserProfile onLoginClick={onLoginClick} />
               </div>
             </div>
-            
+
             {/* Mobile menu button */}
             <div className="flex items-center md:hidden">
               {/* Mobile UserProfile */}
               <div className="mr-2">
                 <UserProfile onLoginClick={onLoginClick} />
               </div>
-              
+
               <button
                 onClick={() => setOpenNav(!openNav)}
                 className="inline-flex items-center justify-center p-2 text-white rounded-md hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
@@ -109,12 +134,36 @@ export default function NavbarDefault({ onLoginClick }) {
               >
                 <span className="sr-only">Open main menu</span>
                 {openNav ? (
-                  <svg className="block w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  <svg
+                    className="block w-6 h-6"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 ) : (
-                  <svg className="block w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                  <svg
+                    className="block w-6 h-6"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
                   </svg>
                 )}
               </button>
@@ -145,7 +194,11 @@ export default function NavbarDefault({ onLoginClick }) {
           </div>
         )}
       </nav>
-      <BookNow isOpen={isBookNowOpen} onClose={handleBookNowClose} onSubmit={handleBookNowSubmit} />
+      <BookNow
+        isOpen={isBookNowOpen}
+        onClose={handleBookNowClose}
+        onSubmit={handleBookNowSubmit}
+      />
     </>
   );
 }
