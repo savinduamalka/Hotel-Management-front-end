@@ -3,6 +3,7 @@ import AdminPage from "./pages/adminPages/admincomponents/adminFolder/admin";
 import HomePage from "./pages/client-pages/homePage";
 import { Toaster } from "react-hot-toast";
 import ContactPage from "./pages/contact/contacts";
+import GalleryPage from "./pages/client-pages/galleryPage";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/admin/*" element={<AdminPage />} />
           <Route path="/contacts" element={<ContactPage/>}/>
+          <Route path="/gallery" element={<GalleryPage />} />
           <Route
             path="/*"
             element={
