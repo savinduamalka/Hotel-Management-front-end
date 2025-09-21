@@ -2,10 +2,20 @@ import React, { useState } from "react";
 import NavBar from "./navBar";
 import LoginPage from "../../components/auth/login";
 import SignupPage from "../../components/auth/signup";
+import BookNow from "../../components/bookNow/bookNow";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 export default function HomePage() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
+  const [isBookNowOpen, setIsBookNowOpen] = useState(false);
+  const [checkIn, setCheckIn] = useState("");
+  const [checkOut, setCheckOut] = useState("");
+  const [guests, setGuests] = useState(2);
+  const [roomType, setRoomType] = useState("Luxury");
+  const [calculatedPrice, setCalculatedPrice] = useState(null);
+  const [nights, setNights] = useState(0);
 
   const handleLoginClick = () => {
     setIsLoginModalOpen(true);
@@ -21,6 +31,79 @@ export default function HomePage() {
 
   const handleSignupClose = () => {
     setIsSignupModalOpen(false);
+  };
+
+  const handleBookNowClick = () => {
+    setIsBookNowOpen(true);
+  };
+
+  const handleBookNowClose = () => {
+    setIsBookNowOpen(false);
+  };
+
+  const handleBookNowSubmit = (bookingData) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("You must be logged in to make a booking.");
+      handleLoginClick();
+      return;
+    }
+
+    axios
+      .post(import.meta.env.VITE_BACKEND_URL + "api/booking", bookingData, {
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => {
+        toast.success("Booking request sent successfully!");
+        handleBookNowClose();
+      })
+      .catch((err) => {
+        toast.error(err.response?.data?.message || "Failed to send booking request.");
+      });
+  };
+
+  const handleViewRates = (e) => {
+    e.preventDefault();
+
+    if (!checkIn || !checkOut) {
+      alert("Please select check-in and check-out dates.");
+      return;
+    }
+
+    const date1 = new Date(checkIn);
+    const date2 = new Date(checkOut);
+    const timeDiff = date2.getTime() - date1.getTime();
+    const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+    if (dayDiff <= 0) {
+      alert("Check-out date must be after check-in date.");
+      return;
+    }
+
+    setNights(dayDiff);
+
+    let baseRate = 0;
+    switch (roomType) {
+      case "Luxury":
+        baseRate = 8000;
+        break;
+      case "Normal":
+        baseRate = 5000;
+        break;
+      case "Budget":
+        baseRate = 2000;
+        break;
+      default:
+        baseRate = 2000;
+    }
+
+    const guestCharge = guests * 2000;
+    const total = (baseRate + guestCharge) * dayDiff;
+
+    setCalculatedPrice(total);
   };
 
   return (
@@ -39,6 +122,14 @@ export default function HomePage() {
         isOpen={isSignupModalOpen}
         onClose={handleSignupClose}
         onLoginClick={handleLoginClick}
+      />
+
+      {/* Book Now Modal */}
+      <BookNow
+        isOpen={isBookNowOpen}
+        onClose={handleBookNowClose}
+        onSubmit={handleBookNowSubmit}
+        initialData={{ checkIn, checkOut, guests, roomType }}
       />
 
       {/* Navbar */}
@@ -66,11 +157,14 @@ export default function HomePage() {
             <div className="p-4 sm:p-6 md:p-8">
               <h2 className="mb-4 text-xl font-semibold text-center text-blue-600 sm:text-2xl">Find Your Perfect Stay</h2>
 
-              <form className="space-y-4 md:space-y-0 md:grid md:grid-cols-8 md:gap-4 lg:gap-6">
+              <form onSubmit={handleViewRates} className="space-y-4 md:space-y-0 md:grid md:grid-cols-8 md:gap-4 lg:gap-6">
                 <div className="md:col-span-2">
                   <label className="block mb-1 text-sm font-medium text-gray-700">Check In</label>
                   <input
                     type="date"
+                    value={checkIn}
+                    onChange={(e) => setCheckIn(e.target.value)}
+                    required
                     className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -79,6 +173,9 @@ export default function HomePage() {
                   <label className="block mb-1 text-sm font-medium text-gray-700">Check Out</label>
                   <input
                     type="date"
+                    value={checkOut}
+                    onChange={(e) => setCheckOut(e.target.value)}
+                    required
                     className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -89,13 +186,19 @@ export default function HomePage() {
                     type="number"
                     min="1"
                     placeholder="2"
+                    value={guests}
+                    onChange={(e) => setGuests(e.target.value)}
+                    required
                     className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
                 <div className="md:col-span-1">
                   <label className="block mb-1 text-sm font-medium text-gray-700">Type</label>
-                  <select className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <select 
+                    value={roomType}
+                    onChange={(e) => setRoomType(e.target.value)}
+                    className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option>Luxury</option>
                     <option>Normal</option>
                     <option>Budget</option>
@@ -112,6 +215,27 @@ export default function HomePage() {
                   </button>
                 </div>
               </form>
+              {calculatedPrice !== null && (
+                <div className="p-5 mt-6 transition-all duration-300 ease-in-out transform bg-blue-50 rounded-lg shadow-lg hover:scale-[1.02]">
+                  <div className="flex flex-col items-center justify-between sm:flex-row">
+                    <div className="mb-4 text-center sm:text-left sm:mb-0">
+                      <p className="text-sm font-medium text-gray-500">Estimated Price</p>
+                      <p className="text-4xl font-bold text-blue-700">
+                        LKR {calculatedPrice.toLocaleString()}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        For {nights} night(s) and {guests} guest(s) in a {roomType} room.
+                      </p>
+                    </div>
+                    <button 
+                      onClick={handleBookNowClick}
+                      className="px-8 py-3 text-lg font-semibold text-white transition-transform duration-150 bg-green-500 rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 active:scale-95"
+                    >
+                      Book Now
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
