@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 
 export default function Bookings() {
   const [bookings, setBookings] = useState([]);
@@ -40,36 +40,35 @@ export default function Bookings() {
   }
 
   function updateStatus(bookingId) {
-  const newStatus = selectedStatus[bookingId] || "Pending";
-    
-    axios
-        .put(
-          import.meta.env.VITE_BACKEND_URL + `api/booking/${bookingId}`,
-            { status: newStatus },
-            {
-                headers: {
-                    Authorization: "Bearer " + token,
-                    "Content-Type": "application/json",
-                },
-            }
-        )
-        .then(() => {
-            // Update booking list to reflect the changed status
-            setBookings((prevBookings) =>
-                prevBookings.map((booking) =>
-                    booking.bookingId === bookingId
-                        ? { ...booking, status: newStatus }
-                        : booking
-                )
-            );
-            setSelectedStatus((prev) => ({ ...prev, [bookingId]: newStatus }));
-            toast.success(`Booking ${bookingId} status updated to ${newStatus}.`);
-        })
-        .catch((err) => {
-            toast.error("Failed to update booking status.");
-        });
-}
+    const newStatus = selectedStatus[bookingId] || "Pending";
 
+    axios
+      .put(
+        import.meta.env.VITE_BACKEND_URL + `api/booking/${bookingId}`,
+        { status: newStatus },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then(() => {
+        // Update booking list to reflect the changed status
+        setBookings((prevBookings) =>
+          prevBookings.map((booking) =>
+            booking.bookingId === bookingId
+              ? { ...booking, status: newStatus }
+              : booking
+          )
+        );
+        setSelectedStatus((prev) => ({ ...prev, [bookingId]: newStatus }));
+        toast.success(`Booking ${bookingId} status updated to ${newStatus}.`);
+      })
+      .catch((err) => {
+        toast.error("Failed to update booking status.");
+      });
+  }
 
   return (
     <div className="bg-[#FEF9F2] p-8">
@@ -126,25 +125,28 @@ export default function Bookings() {
                   {booking.reason}
                 </td>
                 <td className="py-3 px-5 border-b border-[#E4B1F0]">
-                  <select
-                    className="p-2 border border-[#E4B1F0] rounded"
-                    value={selectedStatus[booking.bookingId] || booking.status}
-                    onChange={(e) =>
-                      setSelectedStatus((prev) => ({
-                        ...prev,
-                        [booking.bookingId]: e.target.value,
-                      }))
+                  <>
+                    <select
+                      className="p-2 border border-[#E4B1F0] rounded"
+                      value={selectedStatus[booking.bookingId] || booking.status}
+                      onChange={(e) =>
+                        setSelectedStatus((prev) => ({
+                          ...prev,
+                          [booking.bookingId]: e.target.value,
+                        }))
+                      }
                     >
-                    <option value="Pending">Pending</option>
-                    <option value="Confirmed">Confirmed</option>
-                    <option value="Cancelled">Cancelled</option>
-                  </select>
-                  <button
-                    onClick={() => updateStatus(booking.bookingId)}
-                    className="ml-2 px-3 py-1 bg-[#7E60BF] text-white rounded hover:bg-[#6A4FA0] transition duration-300"
-                  >
-                    Update
-                  </button>
+                      <option value="Pending">Pending</option>
+                      <option value="Confirmed">Confirmed</option>
+                      <option value="Cancelled">Cancelled</option>
+                    </select>
+                    <button
+                      onClick={() => updateStatus(booking.bookingId)}
+                      className="ml-2 px-3 py-1 bg-[#7E60BF] text-white rounded hover:bg-[#6A4FA0] transition duration-300"
+                    >
+                      Update
+                    </button>
+                  </>
                 </td>
               </tr>
             ))}

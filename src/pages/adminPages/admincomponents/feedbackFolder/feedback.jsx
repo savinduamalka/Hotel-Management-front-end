@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 export default function Feedback() {
   const [feedback, setFeedback] = useState([]);
@@ -10,7 +11,7 @@ export default function Feedback() {
   useEffect(() => {
     if (token && !isLoaded) {
       axios
-        .get(import.meta.env.VITE_BACKEND_URL + "api/feedbacks")
+        .get(import.meta.env.VITE_BACKEND_URL + "api/feedback")
         .then((res) => {
           setFeedback(res.data.feedbacks);
           setIsLoaded(true);
@@ -23,13 +24,13 @@ export default function Feedback() {
 
   if (!token) {
     return (
-      <a
-        href="/login"
+      <Link
+        to="/login"
         className="bg-[#7E60BF] text-[#FEF9F2] px-4 py-2 rounded hover:bg-[#6A4FA0] transition duration-300"
         style={{ fontSize: "18px" }}
       >
         Login
-      </a>
+      </Link>
     );
   }
 
