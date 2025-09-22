@@ -38,19 +38,19 @@ export default function BookNow({ isOpen, onClose, onSubmit, categories: propCat
   }, [isOpen, propCategories]);
 
   useEffect(() => {
-    if (roomType && startDate && endDate) {
-      axios.get(`${import.meta.env.VITE_BACKEND_URL}api/rooms/available?categoryName=${roomType}&checkInDate=${startDate}&checkOutDate=${endDate}`)
+    if (roomType) {
+      axios.get(`${import.meta.env.VITE_BACKEND_URL}api/room/by-category/${roomType}`)
         .then(res => {
-          setAvailableRooms(res.data.availableRooms);
+          setAvailableRooms(res.data.list);
         })
         .catch(err => {
-          toast.error("Could not fetch available rooms.");
+          toast.error("Could not fetch rooms for this category.");
           setAvailableRooms([]);
         });
     } else {
       setAvailableRooms([]);
     }
-  }, [roomType, startDate, endDate]);
+  }, [roomType]);
 
 
   const handleSubmit = (e) => {
@@ -157,11 +157,11 @@ export default function BookNow({ isOpen, onClose, onSubmit, categories: propCat
                 value={roomId}
                 onChange={e => setRoomId(e.target.value)}
                 required
-                disabled={!roomType || !startDate || !endDate}
+                disabled={!roomType}
               >
-                <option value="">{roomType ? "Select a room" : "Select room type and dates first"}</option>
+                <option value="">{roomType ? "Select a room" : "Select a room type first"}</option>
                 {availableRooms.map(room => (
-                  <option key={room.roomId} value={room.roomId}>{room.roomNumber}</option>
+                  <option key={room.roomId} value={room.roomId}>{room.RoomId}</option>
                 ))}
               </select>
             </div>
