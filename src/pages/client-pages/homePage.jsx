@@ -3,6 +3,7 @@ import NavBar from "./navBar";
 import LoginPage from "../../components/auth/login";
 import SignupPage from "../../components/auth/signup";
 import BookNow from "../../components/bookNow/bookNow";
+import FeedbackModal from "../../components/feedback/FeedbackModal";
 import toast from "react-hot-toast";
 import axios from "axios";
 import Marquee from "react-fast-marquee";
@@ -11,6 +12,7 @@ export default function HomePage() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
   const [isBookNowOpen, setIsBookNowOpen] = useState(false);
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState(2);
@@ -56,6 +58,44 @@ export default function HomePage() {
 
   const handleBookNowClose = () => {
     setIsBookNowOpen(false);
+  };
+
+  const handleFeedbackModalOpen = () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("You must be logged in to give feedback.");
+      handleLoginClick();
+      return;
+    }
+    setIsFeedbackModalOpen(true);
+  };
+
+  const handleFeedbackModalClose = () => {
+    setIsFeedbackModalOpen(false);
+  };
+
+  const handleFeedbackSubmit = (feedbackData) => {
+    const token = localStorage.getItem("token");
+    axios
+      .post(import.meta.env.VITE_BACKEND_URL + "api/feedback", feedbackData, {
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => {
+        toast.success("Thank you for your feedback!");
+        handleFeedbackModalClose();
+        axios
+          .get(import.meta.env.VITE_BACKEND_URL + "api/feedback/public-visible-feedbacks")
+          .then((res) => {
+            const visibleFeedbacks = res.data.feedbacks.filter(f => f.visibility);
+            setFeedbacks(visibleFeedbacks);
+          });
+      })
+      .catch((err) => {
+        toast.error(err.response?.data?.message || "Failed to submit feedback.");
+      });
   };
 
   const handleBookNowSubmit = (bookingData) => {
@@ -147,6 +187,13 @@ export default function HomePage() {
         onClose={handleBookNowClose}
         onSubmit={handleBookNowSubmit}
         initialData={{ checkIn, checkOut, guests, roomType }}
+      />
+
+      {/* Feedback Modal */}
+      <FeedbackModal
+        isOpen={isFeedbackModalOpen}
+        onClose={handleFeedbackModalClose}
+        onSubmit={handleFeedbackSubmit}
       />
 
       {/* Navbar */}
@@ -408,6 +455,20 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
+
+      {/* Floating Feedback Button */}
+      <button
+        onClick={handleFeedbackModalOpen}
+        className="fixed z-40 flex items-center p-3 text-white transition-all duration-300 bg-blue-600 rounded-full shadow-lg group bottom-8 right-8 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        aria-label="Give Feedback"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.745A9.003 9.003 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
+        <span className="ml-0 overflow-hidden font-semibold transition-all duration-300 max-w-0 whitespace-nowrap group-hover:ml-2 group-hover:max-w-xs">
+          Give Feedback
+        </span>
+      </button>
     </div>
   );
 }
