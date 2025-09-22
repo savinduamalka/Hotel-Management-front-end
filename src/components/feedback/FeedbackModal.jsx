@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
+import { SeaAnimations } from "../animation/seaAnimations";
 
 export default function FeedbackModal({ isOpen, onClose, onSubmit }) {
   const [rating, setRating] = useState(0);
@@ -25,14 +26,34 @@ export default function FeedbackModal({ isOpen, onClose, onSubmit }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
-      <div className="relative w-full max-w-md p-8 m-4 bg-white rounded-lg shadow-xl animate-fade-in-down">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div className="absolute inset-0 -z-10">
+        <SeaAnimations.Waves />
+      </div>
+      <div
+        className="relative w-full max-w-md p-8 bg-white rounded-lg shadow-xl animate-fade-in-down"
+        onClick={(e) => e.stopPropagation()}
+      >
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-800"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-6 h-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         </button>
 
@@ -62,7 +83,10 @@ export default function FeedbackModal({ isOpen, onClose, onSubmit }) {
           </div>
 
           <div>
-            <label htmlFor="feedback" className="block mb-2 text-sm font-medium text-gray-700">
+            <label
+              htmlFor="feedback"
+              className="block mb-2 text-sm font-medium text-gray-700"
+            >
               Your Feedback
             </label>
             <textarea
