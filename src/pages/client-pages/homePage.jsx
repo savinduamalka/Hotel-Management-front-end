@@ -7,6 +7,7 @@ import FeedbackModal from "../../components/feedback/FeedbackModal";
 import toast from "react-hot-toast";
 import axios from "axios";
 import Marquee from "react-fast-marquee";
+import { Skeleton } from "../../components/ui/skeleton";
 
 export default function HomePage() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -375,8 +376,21 @@ export default function HomePage() {
           </h2>
 
           {isLoadingFeedbacks ? (
-            <div className="text-center">
-              <p className="text-gray-600">Loading testimonials...</p>
+            <div className="flex justify-center space-x-6">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="p-6 rounded-lg shadow bg-blue-50 w-80">
+                  <div className="flex items-center mb-4">
+                    <Skeleton className="w-10 h-10 rounded-full" />
+                    <div className="ml-4 space-y-2">
+                      <Skeleton className="h-4 w-36" />
+                      <Skeleton className="w-24 h-4" />
+                    </div>
+                  </div>
+                  <Skeleton className="w-full h-4 mt-2" />
+                  <Skeleton className="w-full h-4 mt-2" />
+                  <Skeleton className="w-2/3 h-4 mt-2" />
+                </div>
+              ))}
             </div>
           ) : (
             <Marquee pauseOnHover={true} speed={50}>
