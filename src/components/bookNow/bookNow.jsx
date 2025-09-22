@@ -1,22 +1,57 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { SeaAnimations } from "../animation/seaAnimations";
+import axios from "axios";
+import toast from "react-hot-toast";
 
-export default function BookNow({ isOpen, onClose, onSubmit }) {
+export default function BookNow({ isOpen, onClose, onSubmit, categories: propCategories = [], initialData }) {
   const [email, setEmail] = useState("");
-  const [roomType, setRoomType] = useState("");
+  const [roomType, setRoomType] = useState(initialData?.roomType || "");
   const [roomId, setRoomId] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [startDate, setStartDate] = useState(initialData?.checkIn || "");
+  const [endDate, setEndDate] = useState(initialData?.checkOut || "");
   const [notes, setNotes] = useState("");
   const [error, setError] = useState("");
+  const [availableRooms, setAvailableRooms] = useState([]);
+  const [categories, setCategories] = useState(propCategories);
   const modalRef = useRef(null);
 
-  // Mock room data by type (replace with API call in production)
-  const roomOptions = {
-    Luxury: [101, 102, 103],
-    Normal: [201, 202, 203, 204],
-    Budget: [301, 302]
-  };
+  useEffect(() => {
+    setRoomType(initialData?.roomType || "");
+    setStartDate(initialData?.checkIn || "");
+    setEndDate(initialData?.checkOut || "");
+  }, [initialData]);
+
+  useEffect(() => {
+    if (isOpen) {
+      if (!propCategories || propCategories.length === 0) {
+        axios.get(`${import.meta.env.VITE_BACKEND_URL}api/categories`)
+          .then(res => {
+            setCategories(res.data.categories);
+          })
+          .catch(err => {
+            toast.error("Could not load room categories.");
+          });
+      } else {
+        setCategories(propCategories);
+      }
+    }
+  }, [isOpen, propCategories]);
+
+  useEffect(() => {
+    if (roomType && startDate && endDate) {
+      axios.get(`${import.meta.env.VITE_BACKEND_URL}api/rooms/available?categoryName=${roomType}&checkInDate=${startDate}&checkOutDate=${endDate}`)
+        .then(res => {
+          setAvailableRooms(res.data.availableRooms);
+        })
+        .catch(err => {
+          toast.error("Could not fetch available rooms.");
+          setAvailableRooms([]);
+        });
+    } else {
+      setAvailableRooms([]);
+    }
+  }, [roomType, startDate, endDate]);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -110,9 +145,9 @@ export default function BookNow({ isOpen, onClose, onSubmit }) {
                 required
               >
                 <option value="">Select a type</option>
-                <option value="Luxury">Luxury</option>
-                <option value="Normal">Normal</option>
-                <option value="Budget">Budget</option>
+                {categories.map(cat => (
+                  <option key={cat.categoryId} value={cat.name}>{cat.name}</option>
+                ))}
               </select>
             </div>
             <div>
@@ -122,11 +157,11 @@ export default function BookNow({ isOpen, onClose, onSubmit }) {
                 value={roomId}
                 onChange={e => setRoomId(e.target.value)}
                 required
-                disabled={!roomType}
+                disabled={!roomType || !startDate || !endDate}
               >
-                <option value="">{roomType ? "Select a room" : "Select room type first"}</option>
-                {roomType && roomOptions[roomType]?.map(id => (
-                  <option key={id} value={id}>{id}</option>
+                <option value="">{roomType ? "Select a room" : "Select room type and dates first"}</option>
+                {availableRooms.map(room => (
+                  <option key={room.roomId} value={room.roomId}>{room.roomNumber}</option>
                 ))}
               </select>
             </div>

@@ -17,11 +17,12 @@ export default function HomePage() {
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState(2);
-  const [roomType, setRoomType] = useState("Luxury");
+  const [roomType, setRoomType] = useState("");
   const [calculatedPrice, setCalculatedPrice] = useState(null);
   const [nights, setNights] = useState(0);
   const [feedbacks, setFeedbacks] = useState([]);
   const [isLoadingFeedbacks, setIsLoadingFeedbacks] = useState(true);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     axios
@@ -34,6 +35,18 @@ export default function HomePage() {
       .catch((err) => {
         toast.error("Could not load testimonials.");
         setIsLoadingFeedbacks(false);
+      });
+
+    axios
+      .get(import.meta.env.VITE_BACKEND_URL + "api/categories")
+      .then((res) => {
+        setCategories(res.data.categories);
+        if (res.data.categories && res.data.categories.length > 0) {
+          setRoomType(res.data.categories[0].name);
+        }
+      })
+      .catch((err) => {
+        toast.error("Could not load room categories.");
       });
   }, []);
 
@@ -143,20 +156,8 @@ export default function HomePage() {
 
     setNights(dayDiff);
 
-    let baseRate = 0;
-    switch (roomType) {
-      case "Luxury":
-        baseRate = 8000;
-        break;
-      case "Normal":
-        baseRate = 5000;
-        break;
-      case "Budget":
-        baseRate = 2000;
-        break;
-      default:
-        baseRate = 2000;
-    }
+    const selectedCategory = categories.find(cat => cat.name === roomType);
+    const baseRate = selectedCategory ? selectedCategory.price : 0;
 
     const guestCharge = guests * 2000;
     const total = (baseRate + guestCharge) * dayDiff;
@@ -188,6 +189,7 @@ export default function HomePage() {
         onClose={handleBookNowClose}
         onSubmit={handleBookNowSubmit}
         initialData={{ checkIn, checkOut, guests, roomType }}
+        categories={categories}
       />
 
       {/* Feedback Modal */}
@@ -264,9 +266,9 @@ export default function HomePage() {
                     value={roomType}
                     onChange={(e) => setRoomType(e.target.value)}
                     className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option>Luxury</option>
-                    <option>Normal</option>
-                    <option>Budget</option>
+                    {categories.map((cat, index) => (
+                      <option key={cat.categoryId || index} value={cat.name}>{cat.name}</option>
+                    ))}
                   </select>
                 </div>
 
