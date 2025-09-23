@@ -217,95 +217,163 @@ export default function HomePage() {
           </div>
 
           {/* Search Card */}
-          <div className="w-full max-w-4xl mx-auto overflow-hidden transition-all duration-300 shadow-lg bg-white/95 backdrop-blur-sm rounded-xl hover:shadow-xl">
-            <div className="p-4 sm:p-6 md:p-8">
-              <h2 className="mb-4 text-xl font-semibold text-center text-blue-600 sm:text-2xl">Find Your Perfect Stay</h2>
-
-              <form onSubmit={handleViewRates} className="space-y-4 md:space-y-0 md:grid md:grid-cols-8 md:gap-4 lg:gap-6">
-                <div className="md:col-span-2">
-                  <label className="block mb-1 text-sm font-medium text-gray-700">Check In</label>
-                  <input
-                    type="date"
-                    value={checkIn}
-                    onChange={(e) => setCheckIn(e.target.value)}
-                    required
-                    className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
+          <div className="w-full max-w-5xl mx-auto">
+            <div className="relative overflow-hidden shadow-2xl bg-white/10 backdrop-blur-md rounded-3xl border border-white/20">
+              {/* Decorative background elements */}
+              <div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-white/20 to-transparent rounded-full -translate-x-16 -translate-y-16"></div>
+              <div className="absolute bottom-0 right-0 w-24 h-24 bg-gradient-to-tl from-blue-300/30 to-transparent rounded-full translate-x-12 translate-y-12"></div>
+              
+              <div className="relative z-10 p-8 md:p-10 lg:p-12">
+                <div className="text-center mb-8">
+                  <h2 className="text-3xl md:text-4xl font-light text-white mb-3">
+                    Discover Your
+                    <span className="block font-bold bg-gradient-to-r from-blue-200 to-white bg-clip-text text-transparent">
+                      Perfect Escape
+                    </span>
+                  </h2>
+                  <div className="w-24 h-1 bg-gradient-to-r from-blue-300 to-white mx-auto rounded-full opacity-80"></div>
                 </div>
 
-                <div className="md:col-span-2">
-                  <label className="block mb-1 text-sm font-medium text-gray-700">Check Out</label>
-                  <input
-                    type="date"
-                    value={checkOut}
-                    onChange={(e) => setCheckOut(e.target.value)}
-                    required
-                    className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                <div className="md:col-span-1">
-                  <label className="block mb-1 text-sm font-medium text-gray-700">Guests</label>
-                  <input
-                    type="number"
-                    min="1"
-                    placeholder="2"
-                    value={guests}
-                    onChange={(e) => setGuests(e.target.value)}
-                    required
-                    className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                <div className="md:col-span-1">
-                  <label className="block mb-1 text-sm font-medium text-gray-700">Type</label>
-                  <select 
-                    value={roomType}
-                    onChange={(e) => setRoomType(e.target.value)}
-                    required
-                    className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="" disabled>Select a type</option>
-                    {categories.map((cat, index) => (
-                      <option key={cat.categoryId || index} value={cat.name}>{cat.name}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="md:col-span-2">
-                  <label className="block mb-1 text-sm font-medium text-transparent">Search</label>
-                  <button
-                    type="submit"
-                    className="w-full px-4 py-2 font-medium text-white transition duration-150 bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  >
-                    View Rates
-                  </button>
-                </div>
-              </form>
-              {calculatedPrice !== null && (
-                <div className="mt-6 animate-fade-in-up">
-                  <div className="p-6 overflow-hidden text-white bg-gradient-to-r from-blue-600 to-indigo-700 rounded-xl sm:p-8">
-                    <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
-                      <div className="text-center sm:text-left">
-                        <p className="text-sm font-medium tracking-wider uppercase text-blue-200">Estimated Price</p>
-                        <p className="mt-1 text-4xl font-bold sm:text-5xl">
-                          LKR {calculatedPrice.toLocaleString()}
-                        </p>
-                        <p className="mt-2 text-xs text-blue-200">
-                          For {nights} night(s), {guests} guest(s) in a {roomType} room.
-                        </p>
+                <form onSubmit={handleViewRates} className="space-y-6">
+                  {/* Input Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+                    {/* Check In */}
+                    <div className="group">
+                      <label className="block text-sm font-medium text-white/90 mb-3 tracking-wide">
+                        CHECK IN
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="date"
+                          value={checkIn}
+                          onChange={(e) => setCheckIn(e.target.value)}
+                          required
+                          className="w-full px-4 py-4 bg-white/90 backdrop-blur-sm border-0 rounded-2xl text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 focus:bg-white transition-all duration-300 text-center font-medium shadow-lg"
+                        />
+                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                       </div>
-                      <div className="flex-shrink-0">
-                        <button 
-                          onClick={handleBookNowClick}
-                          className="w-full px-8 py-4 text-lg font-bold text-blue-600 transition-transform duration-150 bg-white rounded-lg shadow-lg sm:w-auto hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white/50 active:scale-95"
-                        >
-                          Book Now
-                        </button>
+                    </div>
+
+                    {/* Check Out */}
+                    <div className="group">
+                      <label className="block text-sm font-medium text-white/90 mb-3 tracking-wide">
+                        CHECK OUT
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="date"
+                          value={checkOut}
+                          onChange={(e) => setCheckOut(e.target.value)}
+                          required
+                          className="w-full px-4 py-4 bg-white/90 backdrop-blur-sm border-0 rounded-2xl text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 focus:bg-white transition-all duration-300 text-center font-medium shadow-lg"
+                        />
+                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                      </div>
+                    </div>
+
+                    {/* Guests */}
+                    <div className="group">
+                      <label className="block text-sm font-medium text-white/90 mb-3 tracking-wide">
+                        GUESTS
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="number"
+                          min="1"
+                          placeholder="2"
+                          value={guests}
+                          onChange={(e) => setGuests(e.target.value)}
+                          required
+                          className="w-full px-4 py-4 bg-white/90 backdrop-blur-sm border-0 rounded-2xl text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 focus:bg-white transition-all duration-300 text-center font-medium shadow-lg"
+                        />
+                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                      </div>
+                    </div>
+
+                    {/* Room Type */}
+                    <div className="group">
+                      <label className="block text-sm font-medium text-white/90 mb-3 tracking-wide">
+                        ROOM TYPE
+                      </label>
+                      <div className="relative">
+                        <select 
+                          value={roomType}
+                          onChange={(e) => setRoomType(e.target.value)}
+                          required
+                          className="w-full px-4 py-4 bg-white/90 backdrop-blur-sm border-0 rounded-2xl text-gray-800 focus:outline-none focus:ring-2 focus:ring-white/50 focus:bg-white transition-all duration-300 text-center font-medium shadow-lg appearance-none cursor-pointer">
+                          <option value="" disabled>Choose Type</option>
+                          {categories.map((cat, index) => (
+                            <option key={cat.categoryId || index} value={cat.name}>{cat.name}</option>
+                          ))}
+                        </select>
+                        <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                          <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                       </div>
                     </div>
                   </div>
-                </div>
-              )}
+
+                  {/* Search Button */}
+                  <div className="flex justify-center pt-4">
+                    <button
+                      type="submit"
+                      className="group relative px-12 py-4 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700 text-white font-semibold rounded-2xl shadow-2xl hover:shadow-blue-500/25 focus:outline-none focus:ring-4 focus:ring-white/30 transform hover:scale-105 transition-all duration-300 overflow-hidden"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                      <span className="relative flex items-center space-x-3">
+                        <span className="text-lg tracking-wide">VIEW RATES</span>
+                        <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5-5 5M6 12h12" />
+                        </svg>
+                      </span>
+                    </button>
+                  </div>
+                </form>
+                
+                {calculatedPrice !== null && (
+                  <div className="mt-8 animate-fade-in-up">
+                    <div className="relative p-8 overflow-hidden bg-gradient-to-br from-white/95 to-blue-50/95 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/30">
+                      {/* Decorative elements */}
+                      <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-blue-400/30 to-transparent rounded-full translate-x-10 -translate-y-10"></div>
+                      <div className="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-purple-400/30 to-transparent rounded-full -translate-x-8 translate-y-8"></div>
+                      
+                      <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8">
+                        <div className="text-center lg:text-left">
+                          <p className="text-sm font-semibold tracking-wider uppercase text-blue-600/80 mb-2">
+                            Your Estimated Rate
+                          </p>
+                          <p className="text-5xl lg:text-6xl font-light text-gray-800 mb-2">
+                            <span className="text-2xl font-normal">LKR</span>
+                            <span className="font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent ml-2">
+                              {calculatedPrice.toLocaleString()}
+                            </span>
+                          </p>
+                          <p className="text-gray-600 font-medium">
+                            {nights} night{nights !== 1 ? 's' : ''} • {guests} guest{guests !== 1 ? 's' : ''} • {roomType}
+                          </p>
+                        </div>
+                        <div className="flex-shrink-0">
+                          <button 
+                            onClick={handleBookNowClick}
+                            className="group relative px-10 py-5 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-2xl shadow-2xl hover:shadow-blue-500/30 focus:outline-none focus:ring-4 focus:ring-blue-300/50 transform hover:scale-105 transition-all duration-300 overflow-hidden"
+                          >
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+                            <span className="relative flex items-center space-x-3 text-lg">
+                              <span>BOOK NOW</span>
+                              <svg className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                              </svg>
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
