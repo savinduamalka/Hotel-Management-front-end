@@ -41,9 +41,6 @@ export default function HomePage() {
       .get(import.meta.env.VITE_BACKEND_URL + "api/categories")
       .then((res) => {
         setCategories(res.data.categories);
-        if (res.data.categories && res.data.categories.length > 0) {
-          setRoomType(res.data.categories[0].name);
-        }
       })
       .catch((err) => {
         toast.error("Could not load room categories.");
@@ -265,7 +262,9 @@ export default function HomePage() {
                   <select 
                     value={roomType}
                     onChange={(e) => setRoomType(e.target.value)}
+                    required
                     className="w-full px-3 py-2 text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="" disabled>Select a type</option>
                     {categories.map((cat, index) => (
                       <option key={cat.categoryId || index} value={cat.name}>{cat.name}</option>
                     ))}
@@ -283,23 +282,27 @@ export default function HomePage() {
                 </div>
               </form>
               {calculatedPrice !== null && (
-                <div className="p-5 mt-6 transition-all duration-300 ease-in-out transform bg-blue-50 rounded-lg shadow-lg hover:scale-[1.02]">
-                  <div className="flex flex-col items-center justify-between sm:flex-row">
-                    <div className="mb-4 text-center sm:text-left sm:mb-0">
-                      <p className="text-sm font-medium text-gray-500">Estimated Price</p>
-                      <p className="text-4xl font-bold text-blue-700">
-                        LKR {calculatedPrice.toLocaleString()}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        For {nights} night(s) and {guests} guest(s) in a {roomType} room.
-                      </p>
+                <div className="mt-6 animate-fade-in-up">
+                  <div className="p-6 overflow-hidden text-white bg-gradient-to-r from-blue-600 to-indigo-700 rounded-xl sm:p-8">
+                    <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
+                      <div className="text-center sm:text-left">
+                        <p className="text-sm font-medium tracking-wider uppercase text-blue-200">Estimated Price</p>
+                        <p className="mt-1 text-4xl font-bold sm:text-5xl">
+                          LKR {calculatedPrice.toLocaleString()}
+                        </p>
+                        <p className="mt-2 text-xs text-blue-200">
+                          For {nights} night(s), {guests} guest(s) in a {roomType} room.
+                        </p>
+                      </div>
+                      <div className="flex-shrink-0">
+                        <button 
+                          onClick={handleBookNowClick}
+                          className="w-full px-8 py-4 text-lg font-bold text-blue-600 transition-transform duration-150 bg-white rounded-lg shadow-lg sm:w-auto hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white/50 active:scale-95"
+                        >
+                          Book Now
+                        </button>
+                      </div>
                     </div>
-                    <button 
-                      onClick={handleBookNowClick}
-                      className="px-8 py-3 text-lg font-semibold text-white transition-transform duration-150 bg-green-500 rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 active:scale-95"
-                    >
-                      Book Now
-                    </button>
                   </div>
                 </div>
               )}
@@ -485,6 +488,21 @@ export default function HomePage() {
           Give Feedback
         </span>
       </button>
+      <style>{`
+        @keyframes fade-in-up {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-in-up {
+          animation: fade-in-up 0.5s ease-out forwards;
+        }
+      `}</style>
     </div>
   );
 }
