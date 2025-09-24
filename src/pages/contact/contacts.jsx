@@ -3,10 +3,14 @@ import NavbarDefault from "../client-pages/navBar";
 import SeaAnimations from "../../components/animation/seaAnimations";
 import LoginPage from "../../components/auth/login";
 import SignupPage from "../../components/auth/signup";
+import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
 
 const ContactPage = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
+  const [inquiryDescription, setInquiryDescription] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleLoginClick = () => {
     setIsLoginModalOpen(true);
@@ -24,8 +28,51 @@ const ContactPage = () => {
     setIsSignupModalOpen(false);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      toast.error("Please login to send an inquiry.");
+      handleLoginClick();
+      return;
+    }
+
+    if (!inquiryDescription.trim()) {
+      toast.error("Please enter your message.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    axios
+      .post(
+        `${import.meta.env.VITE_BACKEND_URL}api/inquiry`,
+        { inquiryDescription },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast.success("Your inquiry has been sent successfully!");
+        setInquiryDescription("");
+      })
+      .catch((error) => {
+        toast.error(
+          error.response?.data?.message ||
+            "There was an error sending your inquiry."
+        );
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
+      <Toaster position="top-center" reverseOrder={false} />
       <LoginPage
         isOpen={isLoginModalOpen}
         onClose={handleLoginClose}
@@ -41,21 +88,21 @@ const ContactPage = () => {
       />
       <NavbarDefault onLoginClick={handleLoginClick} />
       {/* Add top padding to avoid overlap with fixed navbar */}
-      <div className="flex-1 pt-24 flex flex-col">
+      <div className="flex flex-col flex-1 pt-24">
         {/* Header */}
         <header className="mb-10 text-center">
-          <h1 className="text-4xl font-bold text-blue-700 drop-shadow mb-2 tracking-wide sm:text-5xl md:text-6xl">
+          <h1 className="mb-2 text-4xl font-bold tracking-wide text-blue-700 drop-shadow sm:text-5xl md:text-6xl">
             Contact Us
           </h1>
-          <p className="text-lg text-blue-600 italic">
+          <p className="text-lg italic text-blue-600">
             We’d love to hear from you! Get in touch with us.
           </p>
         </header>
 
         {/* Contact Info */}
-        <section className="container mx-auto mb-10 px-4">
+        <section className="container px-4 mx-auto mb-10">
           <div className="flex flex-col items-center justify-center gap-6 md:flex-row md:gap-16">
-            <div className="flex items-center gap-3 bg-white/95 rounded-xl shadow px-6 py-4">
+            <div className="flex items-center gap-3 px-6 py-4 shadow bg-white/95 rounded-xl">
               <svg
                 className="w-6 h-6 text-blue-700"
                 fill="none"
@@ -76,7 +123,7 @@ const ContactPage = () => {
                 info@bluehorizon.com
               </a>
             </div>
-            <div className="flex items-center gap-3 bg-white/95 rounded-xl shadow px-6 py-4">
+            <div className="flex items-center gap-3 px-6 py-4 shadow bg-white/95 rounded-xl">
               <svg
                 className="w-6 h-6 text-blue-700"
                 fill="none"
@@ -101,11 +148,11 @@ const ContactPage = () => {
         </section>
 
         {/* Location */}
-        <section className="container mx-auto mb-10 px-4">
+        <section className="container px-4 mx-auto mb-10">
           <h2 className="mb-4 text-2xl font-semibold text-center text-blue-700">
             Our Location
           </h2>
-          <div className="w-full h-64 md:h-96 rounded-xl overflow-hidden shadow-lg bg-gray-200">
+          <div className="w-full h-64 overflow-hidden bg-gray-200 shadow-lg md:h-96 rounded-xl">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3967.590038371026!2d80.2830967745691!3d6.050842593934938!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae16d6ef589344d%3A0x26fb49a562532b14!2sAgni%20BookShop%20%26%20Communication!5e0!3m2!1sen!2slk!4v1732466590549!5m2!1sen!2slk"
               width="100%"
@@ -120,68 +167,53 @@ const ContactPage = () => {
         </section>
 
         {/* Contact Form with Sea Animation */}
-        <section className="container mx-auto px-4 relative">
+        <section className="container relative px-4 mx-auto mb-12">
           {/* Sea animation background */}
           <div className="absolute inset-0 z-0 pointer-events-none opacity-70">
             <SeaAnimations.Waves />
           </div>
-          <h2 className="mb-6 text-2xl font-semibold text-center text-blue-700 relative z-10">
-            Send Us a Message
-          </h2>
-          <form className="max-w-2xl mx-auto bg-white/95 rounded-xl shadow-lg p-8 space-y-6 backdrop-blur-sm relative z-10">
-            <div>
-              <label
-                className="block mb-2 font-medium text-blue-700"
-                htmlFor="name"
-              >
-                Full Name
-              </label>
-              <input
-                id="name"
-                type="text"
-                placeholder="Enter your name"
-                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+          <div className="relative z-10 max-w-3xl mx-auto">
+            <div className="overflow-hidden border shadow-2xl bg-white/80 backdrop-blur-md rounded-2xl border-white/30">
+              <div className="p-8 md:p-12">
+                <h2 className="mb-2 text-3xl font-bold text-center text-blue-800">
+                  Send Us a Message
+                </h2>
+                <p className="mb-8 text-center text-gray-600">
+                  Have a question or a special request? Drop us a line.
+                </p>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div>
+                    <label
+                      className="block mb-2 font-semibold text-blue-800"
+                      htmlFor="message"
+                    >
+                      Your Message
+                    </label>
+                    <textarea
+                      id="message"
+                      rows="5"
+                      placeholder="Tell us how we can help you..."
+                      value={inquiryDescription}
+                      onChange={(e) => setInquiryDescription(e.target.value)}
+                      className="w-full px-5 py-4 transition-all duration-300 border-2 border-blue-100 shadow-inner bg-white/90 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-300/50 focus:border-blue-500"
+                      disabled={isSubmitting}
+                    ></textarea>
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full py-4 text-lg font-semibold text-white transition-all duration-300 transform shadow-lg bg-gradient-to-r from-blue-600 to-indigo-700 rounded-xl hover:from-blue-700 hover:to-indigo-800 hover:shadow-blue-500/30 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-blue-500/70 disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100"
+                  >
+                    {isSubmitting ? "Sending..." : "Send Inquiry"}
+                  </button>
+                </form>
+              </div>
             </div>
-            <div>
-              <label
-                className="block mb-2 font-medium text-blue-700"
-                htmlFor="email"
-              >
-                Email Address
-              </label>
-              <input
-                id="email"
-                type="email"
-                placeholder="Enter your email"
-                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label
-                className="block mb-2 font-medium text-blue-700"
-                htmlFor="message"
-              >
-                Message
-              </label>
-              <textarea
-                id="message"
-                rows="4"
-                placeholder="Write your message here"
-                className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              ></textarea>
-            </div>
-            <button
-              type="submit"
-              className="w-full py-3 text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-md hover:from-blue-700 hover:to-indigo-700 font-semibold shadow transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
-              Send Message
-            </button>
-          </form>
+          </div>
         </section>
 
         {/* Footer */}
-        <footer className="px-4 py-8 mt-0 text-white bg-gradient-to-r from-blue-600 to-indigo-700 sm:px-6 lg:px-8 w-full shadow-inner flex-shrink-0">
+        <footer className="w-full px-4 py-8 mt-auto text-white shadow-inner bg-gradient-to-r from-blue-600 to-indigo-700 sm:px-6 lg:px-8">
           <div className="container mx-auto">
             <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
               <div>
