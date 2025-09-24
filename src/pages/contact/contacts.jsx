@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NavbarDefault from "../client-pages/navBar";
 import SeaAnimations from "../../components/animation/seaAnimations";
 import LoginPage from "../../components/auth/login";
@@ -10,7 +10,17 @@ const ContactPage = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
   const [inquiryDescription, setInquiryDescription] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   const handleLoginClick = () => {
     setIsLoginModalOpen(true);
@@ -32,10 +42,14 @@ const ContactPage = () => {
     e.preventDefault();
     const token = localStorage.getItem("token");
 
+    let inquiryData = { inquiryDescription };
+
     if (!token) {
-      toast.error("Please login to send an inquiry.");
-      handleLoginClick();
-      return;
+      if (!email.trim() || !phone.trim()) {
+        toast.error("Please enter your email and phone number.");
+        return;
+      }
+      inquiryData = { ...inquiryData, email, phone };
     }
 
     if (!inquiryDescription.trim()) {
@@ -45,19 +59,21 @@ const ContactPage = () => {
 
     setIsSubmitting(true);
 
+    const url = token
+      ? `${import.meta.env.VITE_BACKEND_URL}api/inquiry`
+      : `${import.meta.env.VITE_BACKEND_URL}api/inquiry/public-inquiry"`;
+
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
     axios
-      .post(
-        `${import.meta.env.VITE_BACKEND_URL}api/inquiry`,
-        { inquiryDescription },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      .post(url, inquiryData, { headers })
       .then((response) => {
         toast.success("Your inquiry has been sent successfully!");
         setInquiryDescription("");
+        if (!token) {
+          setEmail("");
+          setPhone("");
+        }
       })
       .catch((error) => {
         toast.error(
@@ -182,6 +198,46 @@ const ContactPage = () => {
                   Have a question or a special request? Drop us a line.
                 </p>
                 <form onSubmit={handleSubmit} className="space-y-6">
+                  {!isLoggedIn && (
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                      <div>
+                        <label
+                          className="block mb-2 font-semibold text-blue-800"
+                          htmlFor="email"
+                        >
+                          Email Address
+                        </label>
+                        <input
+                          id="email"
+                          type="email"
+                          placeholder="you@example.com"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="w-full px-5 py-4 transition-all duration-300 border-2 border-blue-100 shadow-inner bg-white/90 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-300/50 focus:border-blue-500"
+                          disabled={isSubmitting}
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label
+                          className="block mb-2 font-semibold text-blue-800"
+                          htmlFor="phone"
+                        >
+                          Phone Number
+                        </label>
+                        <input
+                          id="phone"
+                          type="tel"
+                          placeholder="+94 12 345 6789"
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                          className="w-full px-5 py-4 transition-all duration-300 border-2 border-blue-100 shadow-inner bg-white/90 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-300/50 focus:border-blue-500"
+                          disabled={isSubmitting}
+                          required
+                        />
+                      </div>
+                    </div>
+                  )}
                   <div>
                     <label
                       className="block mb-2 font-semibold text-blue-800"
