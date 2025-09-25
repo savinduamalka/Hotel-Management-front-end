@@ -60,8 +60,8 @@ const ContactPage = () => {
     setIsSubmitting(true);
 
     const url = token
-      ? `${import.meta.env.VITE_BACKEND_URL}api/inquiry`
-      : `${import.meta.env.VITE_BACKEND_URL}api/inquiry/public-inquiry"`;
+      ? `${import.meta.env.VITE_BACKEND_URL}api/inquiry/create`
+      : `${import.meta.env.VITE_BACKEND_URL}api/inquiry/public-inquiry`;
 
     const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
