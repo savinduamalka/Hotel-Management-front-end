@@ -8,6 +8,7 @@ export default function LoginPage({
   onClose,
   onSignupClick,
   onVerifyEmail,
+  onForgotPasswordClick,
 }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,7 +29,9 @@ export default function LoginPage({
 
       // Focus trap and escape key handler
       const handleEscape = (e) => {
-        if (e.key === 'Escape') onClose();
+        if (e.key === 'Escape') {
+          onClose();
+        }
       };
 
       document.addEventListener('keydown', handleEscape);
@@ -187,9 +190,9 @@ export default function LoginPage({
                 <label htmlFor="password" className="block text-xs font-medium text-gray-700">
                   Password
                 </label>
-                <a href="#" className="text-xs font-medium text-blue-600 transition-colors hover:text-blue-500">
+                <button type="button" onClick={onForgotPasswordClick} className="text-xs font-medium text-blue-600 transition-colors hover:text-blue-500">
                   Forgot password?
-                </a>
+                </button>
               </div>
               <div className="relative">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
