@@ -184,7 +184,7 @@ const ContactPage = () => {
                     href="tel:+94725451111"
                     className="text-xl font-bold text-gray-800 transition-colors duration-200 hover:text-indigo-600"
                   >
-                    +94 72 545 1111
+                    +94 78 944 8508
                   </a>
                 </div>
               </div>
@@ -205,10 +205,27 @@ const ContactPage = () => {
           
           <div className="relative group">
             <div className="absolute transition-opacity duration-500 -inset-4 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 rounded-3xl blur-xl opacity-30 group-hover:opacity-50"></div>
-            <div className="relative w-full h-80 overflow-hidden bg-white shadow-2xl md:h-[500px] rounded-3xl border-4 border-white/50">
-              <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/20 to-transparent"></div>
+            <div
+              className="relative w-full h-80 overflow-hidden bg-white shadow-2xl md:h-[500px] rounded-3xl border-4 border-white/50 cursor-pointer"
+              onClick={() => {
+                const lat = 6.0524288501652945;
+                const lng = 80.2842032529791;
+                const isMobile = /iPhone|iPad|iPod|Android/i.test(
+                  navigator.userAgent
+                );
+                if (isMobile) {
+                  window.open(`https://maps.google.com/maps?q=${lat},${lng}`);
+                } else {
+                  window.open(
+                    `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`,
+                    "_blank"
+                  );
+                }
+              }}
+            >
+              <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-t from-black/20 to-transparent"></div>
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3967.590038371026!2d80.2830967745691!3d6.050842593934938!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae16d6ef589344d%3A0x26fb49a562532b14!2sAgni%20BookShop%20%26%20Communication!5e0!3m2!1sen!2slk!4v1732466590549!5m2!1sen!2slk"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2786.122590120544!2d80.2842032529791!3d6.0524288501652945!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae16d0632996fc7%3A0xcdd1a609ee0594ce!2sOrenda%20Eco%20Lodge%20%26%20Spa!5e0!3m2!1sen!2slk!4v1758810760958!5m2!1sen!2slk"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
@@ -216,21 +233,38 @@ const ContactPage = () => {
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 title="Google Map"
-                className="transition-all duration-500 hover:grayscale-0 grayscale"
+                className="transition-all duration-500 pointer-events-none hover:grayscale-0 grayscale"
               />
               
               {/* Location overlay card */}
-              <div className="absolute z-20 p-6 border shadow-2xl bottom-6 left-6 right-6 bg-white/95 backdrop-blur-md rounded-2xl border-white/50">
+              <div className="absolute z-20 p-6 border shadow-2xl pointer-events-none bottom-6 left-6 right-6 bg-white/95 backdrop-blur-md rounded-2xl border-white/50">
                 <div className="flex items-center gap-4">
                   <div className="p-3 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600">
-                    <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <svg
+                      className="w-6 h-6 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-gray-800">Blue Horizon Resort</h3>
-                    <p className="text-gray-600">Pilana Road, Galle, Sri Lanka</p>
+                    <h3 className="text-lg font-bold text-gray-800">
+                      Orenda Eco Lodge & Spa
+                    </h3>
+                    <p className="text-gray-600">Pilana, Galle, Sri Lanka</p>
                   </div>
                 </div>
               </div>
@@ -308,7 +342,7 @@ const ContactPage = () => {
                             <input
                               id="phone"
                               type="tel"
-                              placeholder="+94 12 345 6789"
+                              placeholder="+94 71 345 6789"
                               value={phone}
                               onChange={(e) => setPhone(e.target.value)}
                               className="w-full px-6 py-4 text-gray-800 transition-all duration-300 border-2 border-gray-200 shadow-lg bg-white/95 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-300/40 focus:border-blue-500 hover:shadow-xl hover:border-blue-300 disabled:opacity-50"
