@@ -11,7 +11,7 @@ export default function Feedback() {
   useEffect(() => {
     if (token && !isLoaded) {
       axios
-        .get(import.meta.env.VITE_BACKEND_URL + "api/feedback")
+        .get(import.meta.env.VITE_BACKEND_URL + "api/feedback/all")
         .then((res) => {
           setFeedback(res.data.feedbacks);
           setIsLoaded(true);
@@ -21,6 +21,33 @@ export default function Feedback() {
         });
     }
   }, [isLoaded]);
+
+  const handleVisibilityToggle = (feedbackId, currentVisibility) => {
+    const newVisibility = !currentVisibility;
+    axios
+      .put(
+        `${import.meta.env.VITE_BACKEND_URL}api/feedback/${feedbackId}`,
+        { visibility: newVisibility },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
+      .then((res) => {
+        toast.success("Feedback visibility updated successfully.");
+        setFeedback((prevFeedback) =>
+          prevFeedback.map((item) =>
+            item.feedbackId === feedbackId
+              ? { ...item, visibility: newVisibility }
+              : item
+          )
+        );
+      })
+      .catch((err) => {
+        toast.error("Failed to update feedback visibility.");
+      });
+  };
 
   if (!token) {
     return (
@@ -47,6 +74,7 @@ export default function Feedback() {
             <th className="py-4 px-6 border-b border-[#E4B1F0]">Date</th>
             <th className="py-4 px-6 border-b border-[#E4B1F0]">Response</th>
             <th className="py-4 px-6 border-b border-[#E4B1F0]">Visibility</th>
+            <th className="py-4 px-6 border-b border-[#E4B1F0]">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -78,6 +106,16 @@ export default function Feedback() {
                 </td>
                 <td className="py-3 px-5 border-b border-[#E4B1F0]">
                   {entry.visibility ? "Visible" : "Hidden"}
+                </td>
+                <td className="py-3 px-5 border-b border-[#E4B1F0]">
+                  <button
+                    onClick={() =>
+                      handleVisibilityToggle(entry.feedbackId, entry.visibility)
+                    }
+                    className="bg-[#7E60BF] text-white px-3 py-1 rounded hover:bg-[#6A4FA0] transition duration-300"
+                  >
+                    Toggle
+                  </button>
                 </td>
               </tr>
             ))}
