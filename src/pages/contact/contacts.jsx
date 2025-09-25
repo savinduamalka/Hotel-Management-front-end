@@ -206,26 +206,10 @@ const ContactPage = () => {
           <div className="relative group">
             <div className="absolute transition-opacity duration-500 -inset-4 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 rounded-3xl blur-xl opacity-30 group-hover:opacity-50"></div>
             <div
-              className="relative w-full h-80 overflow-hidden bg-white shadow-2xl md:h-[500px] rounded-3xl border-4 border-white/50 cursor-pointer"
-              onClick={() => {
-                const lat = 6.0524288501652945;
-                const lng = 80.2842032529791;
-                const isMobile = /iPhone|iPad|iPod|Android/i.test(
-                  navigator.userAgent
-                );
-                if (isMobile) {
-                  window.open(`https://maps.google.com/maps?q=${lat},${lng}`);
-                } else {
-                  window.open(
-                    `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`,
-                    "_blank"
-                  );
-                }
-              }}
+              className="relative w-full h-80 overflow-hidden bg-white shadow-2xl md:h-[500px] rounded-3xl border-4 border-white/50"
             >
-              <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-t from-black/20 to-transparent"></div>
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2786.122590120544!2d80.2842032529791!3d6.0524288501652945!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae16d0632996fc7%3A0xcdd1a609ee0594ce!2sOrenda%20Eco%20Lodge%20%26%20Spa!5e0!3m2!1sen!2slk!4v1758810760958!5m2!1sen!2slk"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2786.122590120544!2d80.2842032529791!3d6.0524288501652945!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae16d0632996fc7%3A0xcdd1a609ee0594ce!2sOrenda%20Eco%20Lodge%20%26%20Spa!5e1!3m2!1sen!2slk!4v1758810760958!5m2!1sen!2slk"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
@@ -233,7 +217,7 @@ const ContactPage = () => {
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 title="Google Map"
-                className="transition-all duration-500 pointer-events-none hover:grayscale-0 grayscale"
+                className="transition-all duration-500"
               />
               
               {/* Location overlay card */}
