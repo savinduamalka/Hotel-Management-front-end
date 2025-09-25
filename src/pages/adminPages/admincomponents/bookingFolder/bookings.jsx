@@ -18,7 +18,7 @@ export default function Bookings() {
           },
         })
         .then((res) => {
-          setBookings(res.data.bookings);
+          setBookings(res.data.list);
           setIsLoaded(true);
         })
         .catch((err) => {
