@@ -6,8 +6,9 @@ import Rooms from "../roomsFolder/rooms";
 import Users from "../usersFolder/users";
 import Feedback from "../feedbackFolder/feedback";
 import Gallery from "../galleryFolder/gallery";
-import { FaBookmark, FaClipboardList, FaBed, FaUsers, FaComments, FaImage } from "react-icons/fa";
+import { FaBookmark, FaClipboardList, FaBed, FaUsers, FaComments, FaImage, FaEnvelopeOpenText } from "react-icons/fa";
 import AddCategory from "../categoryFolder/addCategory";
+import Subscriptions from "../subscriptionFolder/subscriptions";
 
 export default function AdminPage() {
   return (
@@ -58,6 +59,13 @@ export default function AdminPage() {
             <FaImage className="mr-2" />
             Gallery Items
           </Link>
+          <Link
+            to="subscriptions"
+            className="flex items-center text-2xl hover:text-[#E4B1F0] transition-colors duration-300"
+          >
+            <FaEnvelopeOpenText className="mr-2" />
+            Subscriptions
+          </Link>
         </div>
       </div>
 
@@ -75,6 +83,7 @@ export default function AdminPage() {
           <Route path="users" element={<Users />} />
           <Route path="feedback" element={<Feedback />} />
           <Route path="gallery" element={<Gallery />} />
+          <Route path="subscriptions" element={<Subscriptions />} />
         </Routes>
       </div>
     </div>
