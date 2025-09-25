@@ -3,6 +3,7 @@ import NavbarDefault from "../client-pages/navBar";
 import SeaAnimations from "../../components/animation/seaAnimations";
 import LoginPage from "../../components/auth/login";
 import SignupPage from "../../components/auth/signup";
+import Footer from "../../components/footer/Footer";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -374,135 +375,7 @@ const ContactPage = () => {
           </div>
         </section>
 
-        {/* Enhanced Footer */}
-        <footer className="relative w-full mt-auto overflow-hidden text-white">
-          {/* Background gradients and effects */}
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-          <div className="absolute top-0 left-0 -translate-x-48 -translate-y-48 bg-blue-500 rounded-full w-96 h-96 opacity-10 blur-3xl"></div>
-          <div className="absolute bottom-0 right-0 translate-x-40 translate-y-40 bg-indigo-500 rounded-full w-80 h-80 opacity-10 blur-3xl"></div>
-          
-          <div className="relative px-4 py-12 sm:px-6 lg:px-8">
-            <div className="container mx-auto">
-              <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl">
-                      <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.78 0-2.674-2.154-1.414-3.414l5-5A2 2 0 008 9.586V5L8 4z" />
-                      </svg>
-                    </div>
-                    <h3 className="text-2xl font-bold tracking-wide">BLUE HORIZON</h3>
-                  </div>
-                  <p className="text-lg leading-relaxed text-blue-100">
-                    Experience luxury and comfort on the beautiful shores of Galle, Sri Lanka. Where memories are made and dreams come true.
-                  </p>
-                  <div className="flex gap-4 pt-4">
-                    <div className="p-3 transition-colors duration-300 rounded-full cursor-pointer bg-white/10 backdrop-blur-sm hover:bg-white/20">
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
-                      </svg>
-                    </div>
-                    <div className="p-3 transition-colors duration-300 rounded-full cursor-pointer bg-white/10 backdrop-blur-sm hover:bg-white/20">
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/>
-                      </svg>
-                    </div>
-                    <div className="p-3 transition-colors duration-300 rounded-full cursor-pointer bg-white/10 backdrop-blur-sm hover:bg-white/20">
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.404-5.219 1.404-5.219s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.551.097.118.112.221.083.402-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.357-.629-2.םדר-.82l-.637 2.43c-.230.889-.85 2.002-1.269 2.681.957.291 1.969.448 3.017.448C18.624 23.973 23.991 18.592 23.991 11.987 24.001 5.367 18.634.001 12.017.001z"/>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-                
-                <div>
-                  <h3 className="mb-6 text-xl font-bold">Quick Links</h3>
-                  <ul className="space-y-3">
-                    <li>
-                      <a
-                        href="/"
-                        className="flex items-center gap-2 text-blue-100 transition-all duration-300 hover:text-white hover:translate-x-2"
-                      >
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                        Home
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="/gallery"
-                        className="flex items-center gap-2 text-blue-100 transition-all duration-300 hover:text-white hover:translate-x-2"
-                      >
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                        Gallery
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="/contacts"
-                        className="flex items-center gap-2 text-blue-100 transition-all duration-300 hover:text-white hover:translate-x-2"
-                      >
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                        Contact Us
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-                
-                <div>
-                  <h3 className="mb-6 text-xl font-bold">Get In Touch</h3>
-                  <div className="space-y-4">
-                    <div className="flex items-start gap-3">
-                      <div className="p-2 mt-1 rounded-lg bg-blue-500/20">
-                        <svg className="w-4 h-4 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                      </div>
-                      <div>
-                        <p className="leading-relaxed text-blue-100">Pilana Road, Galle<br/>Sri Lanka</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-lg bg-blue-500/20">
-                        <svg className="w-4 h-4 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
-                        </svg>
-                      </div>
-                      <p className="text-blue-100">info@bluehorizon.com</p>
-                    </div>
-                    
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-lg bg-blue-500/20">
-                        <svg className="w-4 h-4 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                        </svg>
-                      </div>
-                      <p className="text-blue-100">+94 725451111</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex flex-col items-center justify-between pt-8 mt-12 border-t border-white/20 md:flex-row">
-                <p className="text-center text-blue-100 md:text-left">
-                  © {new Date().getFullYear()} Blue Horizon. All rights reserved. Crafted with ❤️ in Sri Lanka.
-                </p>
-                <div className="flex gap-6 mt-4 md:mt-0">
-                  <a href="#" className="text-blue-200 transition-colors hover:text-white">Privacy Policy</a>
-                  <a href="#" className="text-blue-200 transition-colors hover:text-white">Terms of Service</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </footer>
+        <Footer />
       </div>
     </div>
   );

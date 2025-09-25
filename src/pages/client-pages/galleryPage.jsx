@@ -3,6 +3,7 @@ import NavbarDefault from "./navBar";
 import LoginPage from "../../components/auth/login";
 import SignupPage from "../../components/auth/signup";
 import SeaAnimations from "../../components/animation/seaAnimations";
+import Footer from "../../components/footer/Footer";
 import { 
   Search, 
   Filter, 
@@ -751,51 +752,7 @@ const GalleryPage = () => {
         </div>
       )}
 
-      <footer className="px-4 py-8 text-white bg-gradient-to-r from-blue-600 to-indigo-700 sm:px-6 lg:px-8">
-        <div className="container mx-auto">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            <div>
-              <h3 className="mb-4 text-xl font-bold">BLUE HORIZON</h3>
-              <p className="text-blue-100">
-                Experience luxury and comfort on the beautiful shores of Galle,
-                Sri Lanka.
-              </p>
-            </div>
-            <div>
-              <h3 className="mb-4 text-lg font-bold">Quick Links</h3>
-              <ul className="space-y-2">
-                <li>
-                  <a href="/" className="text-blue-100 transition-colors hover:text-white">
-                    Home
-                  </a>
-                </li>
-                <li>
-                  <a href="/gallery" className="text-blue-100 transition-colors hover:text-white">
-                    Gallery
-                  </a>
-                </li>
-                <li>
-                  <a href="/contacts" className="text-blue-100 transition-colors hover:text-white">
-                    Contact Us
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="mb-4 text-lg font-bold">Contact Us</h3>
-              <address className="not-italic text-blue-100">
-                <p>Koggala Beach, Galle</p>
-                <p>Sri Lanka</p>
-                <p className="mt-2">Email: info@bluehorizon.com</p>
-                <p>Phone: +94 725451111</p>
-              </address>
-            </div>
-          </div>
-          <div className="pt-6 mt-8 text-center text-blue-100 border-t border-blue-400">
-            <p>© {new Date().getFullYear()} Blue Horizon Resort. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
 
       {/* Magical CSS Styles */}
       <style>{`

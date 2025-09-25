@@ -81,10 +81,10 @@ export default function NavbarDefault({ onLoginClick }) {
         onSubmit={handleBookNowSubmit}
       />
       <nav
-        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
           scrolled
-            ? "bg-gradient-to-r from-blue-500/90 to-indigo-600/90 backdrop-blur-md shadow-md"
-            : "bg-gradient-to-r from-blue-500/40 to-indigo-600/40 backdrop-blur-sm"
+            ? "bg-gradient-to-r from-slate-900/95 via-slate-800/95 to-slate-900/95 backdrop-blur-lg shadow-2xl border-b border-cyan-500/20"
+            : "bg-gradient-to-r from-slate-900/60 via-slate-800/60 to-slate-900/60 backdrop-blur-md"
         }`}
       >
         <div className="container px-4 mx-auto sm:px-6 lg:px-8">
@@ -93,7 +93,7 @@ export default function NavbarDefault({ onLoginClick }) {
             <div className="flex-shrink-0">
               <a
                 href="/"
-                className="text-xl font-bold tracking-wide text-white md:text-2xl"
+                className="text-xl font-bold tracking-wide md:text-2xl bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent hover:from-cyan-300 hover:via-blue-300 hover:to-purple-300 transition-all duration-300"
               >
                 BLUE HORIZON
               </a>
@@ -106,21 +106,24 @@ export default function NavbarDefault({ onLoginClick }) {
                   <a
                     key={link.name}
                     href={link.path}
-                    className="px-3 py-2 text-sm font-medium text-white transition-colors duration-150 rounded-md hover:bg-white/20"
+                    className="group relative px-4 py-2 text-sm font-medium text-slate-200 transition-all duration-300 rounded-lg hover:text-cyan-300"
                   >
-                    {link.name}
+                    <span className="relative z-10">{link.name}</span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 to-blue-500/0 group-hover:from-cyan-500/10 group-hover:to-blue-500/10 rounded-lg transition-all duration-300"></div>
+                    <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-cyan-400 to-blue-400 group-hover:w-full transition-all duration-300"></div>
                   </a>
                 ))}
                 <button
-                  className="px-4 py-2 ml-4 text-sm font-medium text-blue-600 transition-colors duration-150 bg-white rounded-md hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-500"
+                  className="relative px-6 py-2.5 ml-6 text-sm font-medium text-white bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg overflow-hidden group hover:from-cyan-600 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-slate-900 transition-all duration-300 transform hover:scale-105"
                   onClick={handleBookNowClick}
                 >
-                  Book Now
+                  <span className="relative z-10">Book Now</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 to-white/20 transform translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500"></div>
                 </button>
               </div>
 
               {/* UserProfile in desktop nav */}
-              <div className="pl-6 ml-6 border-l border-white/30">
+              <div className="pl-6 ml-6 border-l border-cyan-500/30">
                 <UserProfile onLoginClick={onLoginClick} />
               </div>
             </div>
@@ -134,7 +137,7 @@ export default function NavbarDefault({ onLoginClick }) {
 
               <button
                 onClick={() => setOpenNav(!openNav)}
-                className="inline-flex items-center justify-center p-2 text-white rounded-md hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                className="inline-flex items-center justify-center p-2 text-slate-200 rounded-lg hover:bg-cyan-500/20 hover:text-cyan-300 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cyan-400 transition-all duration-300"
                 aria-expanded={openNav}
               >
                 <span className="sr-only">Open main menu</span>
@@ -178,19 +181,20 @@ export default function NavbarDefault({ onLoginClick }) {
 
         {/* Mobile menu, show/hide based on menu state */}
         {openNav && (
-          <div className="md:hidden bg-gradient-to-r from-blue-500/90 to-indigo-600/90 backdrop-blur-md">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+          <div className="md:hidden bg-gradient-to-r from-slate-900/95 via-slate-800/95 to-slate-900/95 backdrop-blur-lg border-t border-cyan-500/20">
+            <div className="px-4 pt-4 pb-6 space-y-3 sm:px-6">
               {navLinks.map((link) => (
                 <a
                   key={link.name}
                   href={link.path}
-                  className="block px-3 py-2 text-base font-medium text-white rounded-md hover:bg-white/20"
+                  className="group flex items-center px-4 py-3 text-base font-medium text-slate-200 rounded-lg hover:text-cyan-300 hover:bg-cyan-500/10 transition-all duration-300"
                 >
+                  <span className="w-2 h-2 bg-cyan-400 rounded-full mr-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                   {link.name}
                 </a>
               ))}
               <button
-                className="w-full px-4 py-2 mt-2 text-sm font-medium text-blue-600 transition-colors duration-150 bg-white rounded-md hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-blue-500"
+                className="w-full px-6 py-3 mt-4 text-sm font-medium text-white bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg hover:from-cyan-600 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-slate-900 transition-all duration-300 transform hover:scale-105"
                 onClick={handleBookNowClick}
               >
                 Book Now
