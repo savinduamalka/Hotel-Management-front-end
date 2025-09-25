@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { X, ChevronLeft, ChevronRight, MapPin, Star, Eye } from "lucide-react";
 
 const RoomCarousel = ({ galleryItems }) => {
@@ -7,10 +7,17 @@ const RoomCarousel = ({ galleryItems }) => {
   const [visibleItems, setVisibleItems] = useState([]);
   const [showMore, setShowMore] = useState(false);
 
+  const closeModal = useCallback(() => {
+    setSelectedImage(null);
+    document.body.style.overflow = 'auto';
+  }, []);
+
   // Group items by type for better organization
   const groupedItems = galleryItems?.reduce((acc, item) => {
     const type = item.description || 'Other';
-    if (!acc[type]) acc[type] = [];
+    if (!acc[type]) {
+      acc[type] = [];
+    }
     acc[type].push(item);
     return acc;
   }, {}) || {};
@@ -22,6 +29,22 @@ const RoomCarousel = ({ galleryItems }) => {
       setVisibleItems(showMore ? galleryItems : galleryItems.slice(0, initialItemsToShow));
     }
   }, [galleryItems, showMore]);
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        closeModal();
+      }
+    };
+
+    if (selectedImage) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [selectedImage, closeModal]);
 
   if (!galleryItems || galleryItems.length === 0) {
     return (
@@ -38,11 +61,6 @@ const RoomCarousel = ({ galleryItems }) => {
     setSelectedImage(item);
     setCurrentIndex(index);
     document.body.style.overflow = 'hidden';
-  };
-
-  const closeModal = () => {
-    setSelectedImage(null);
-    document.body.style.overflow = 'auto';
   };
 
   const navigateImage = (direction) => {

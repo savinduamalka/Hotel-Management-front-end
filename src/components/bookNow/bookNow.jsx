@@ -59,6 +59,21 @@ export default function BookNow({ isOpen, onClose, onSubmit, categories: propCat
       setError("Please fill in all required fields.");
       return;
     }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const checkInDate = new Date(startDate);
+
+    if (checkInDate < today) {
+      toast.error("Check-in date cannot be in the past.");
+      return;
+    }
+
+    if (new Date(endDate) <= checkInDate) {
+      toast.error("Check-out date must be after check-in date.");
+      return;
+    }
+
     setError("");
     onSubmit && onSubmit({ email, roomType, roomId, startDate, endDate, notes });
     onClose();

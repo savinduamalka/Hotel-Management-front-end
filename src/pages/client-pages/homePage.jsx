@@ -156,7 +156,16 @@ export default function HomePage() {
     e.preventDefault();
 
     if (!checkIn || !checkOut) {
-      alert("Please select check-in and check-out dates.");
+      toast.error("Please select check-in and check-out dates.");
+      return;
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const checkInDate = new Date(checkIn);
+
+    if (checkInDate < today) {
+      toast.error("Check-in date cannot be in the past.");
       return;
     }
 
@@ -166,7 +175,7 @@ export default function HomePage() {
     const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
     if (dayDiff <= 0) {
-      alert("Check-out date must be after check-in date.");
+      toast.error("Check-out date must be after check-in date.");
       return;
     }
 
