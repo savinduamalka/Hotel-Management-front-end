@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Skeleton } from "../ui/skeleton";
 import toast from "react-hot-toast";
 
@@ -7,112 +7,163 @@ import toast from "react-hot-toast";
 function decodeJWT(token) {
   try {
     const payload = token.split(".")[1];
-    const decoded = JSON.parse(atob(payload));
-    return decoded;
+    return JSON.parse(atob(payload));
   } catch {
     return {};
   }
 }
 
-function UserProfile({ onLoginClick }) {
-  const [name, setName] = useState('');
-  const [isChanged, setIsChanged] = useState(false);
-  const [image, setImage] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+export default function UserProfile({ onLoginClick, onEditProfileClick, refreshKey }) {
+  const [user, setUser] = useState(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  const fetchUserData = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decoded = decodeJWT(token);
+      setUser(decoded);
+    } else {
+      setUser(null);
+    }
+  };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoading(true);
+    fetchUserData();
+  }, [refreshKey]);
 
-    if (!token) {
-      setName('Guest');
-      setImage('');
-      setIsLoading(false);
-    } else {
-      // decode token for name/email/image
-      const decoded = decodeJWT(token);
-      const fullName = (decoded.firstName || "") + " " + (decoded.lastName || "");
-      setName(fullName.trim() || "User");
-      setImage(decoded.image || ""); 
-
-      // fallback: fetch image from backend only if not present in token
-      if (!decoded.image) {
-        axios.get(import.meta.env.VITE_BACKEND_URL + "api/users", {
-          headers: {
-            Authorization: "Bearer " + token,
-            "Content-Type": "application/json"
-          },
-        })
-        .then((res) => {
-          setImage(res.data.image);
-          setIsLoading(false);
-        })
-        .catch((err) => {
-          localStorage.removeItem("token");
-          setName('Guest');
-          setImage('');
-          setIsLoading(false);
-          toast.error("Session expired. Please log in again.");
-        });
-      } else {
-        setIsLoading(false);
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
       }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
     }
-  }, [isChanged]);
+  }, [isDropdownOpen]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    setIsChanged(!isChanged);
+    setIsDropdownOpen(false);
     window.location.href = "/";
     toast.success("You have been logged out.");
   };
 
+  const handleProfileClick = () => {
+    if (!user) {
+      onLoginClick();
+    } else {
+      setIsDropdownOpen(!isDropdownOpen);
+    }
+  };
+
+  const handleEditProfile = () => {
+    onEditProfileClick();
+    setIsDropdownOpen(false);
+  };
+
   return (
-    <div className="flex items-center gap-2">
-      {isLoading ? (
-        <>
-          <Skeleton className="w-8 h-8 rounded-full" />
-          <Skeleton className="w-20 h-4 rounded" />
-        </>
-      ) : (
-        <>
-          <div className="relative flex-shrink-0">
-            {image ? (
-              <img 
-                className="object-cover w-8 h-8 border-2 rounded-full shadow-sm border-white/70"
-                src={image} 
-                alt={name || "User"}
-              />
-            ) : (
-              <div className="flex items-center justify-center w-8 h-8 border-2 rounded-full shadow-sm bg-white/20 border-white/70 backdrop-blur-sm">
-                <span className="text-sm font-semibold text-white">
-                  {name ? name.charAt(0).toUpperCase() : "G"}
-                </span>
-              </div>
-            )}
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-white">{name || "Guest"}</span>
-            {name === 'Guest' ? (
-              <button 
-                onClick={onLoginClick}
-                className="px-2 py-1 text-xs text-blue-600 transition duration-150 bg-white rounded-md shadow-sm hover:bg-blue-50"
-              >
-                Sign In
-              </button>
-            ) : (
+    <>
+      <div className="flex items-center gap-2">
+        {!user ? (
+          <button
+            onClick={onLoginClick}
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white transition-all duration-200 rounded-lg bg-white/10 hover:bg-white/20"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+            </svg>
+            Sign In
+          </button>
+        ) : (
+          <>
+            <div className="relative flex-shrink-0" ref={dropdownRef}>
               <button
-                onClick={handleLogout}
-                className="px-2 py-1 text-xs text-blue-600 transition duration-150 bg-white rounded-md shadow-sm hover:bg-blue-50"
+                onClick={handleProfileClick}
+                className="flex items-center gap-2 transition-all duration-200 hover:opacity-80"
               >
-                Sign Out
+                {user.image ? (
+                  <img 
+                    className="object-cover w-8 h-8 border-2 rounded-full shadow-sm border-white/70 hover:border-white/90 transition-all duration-200"
+                    src={user.image} 
+                    alt={`${user.firstName} ${user.lastName}` || "User"}
+                  />
+                ) : (
+                  <div className="flex items-center justify-center w-8 h-8 border-2 rounded-full shadow-sm bg-white/20 border-white/70 backdrop-blur-sm hover:border-white/90 transition-all duration-200">
+                    <span className="text-sm font-semibold text-white">
+                      {user.firstName ? user.firstName.charAt(0).toUpperCase() : "G"}
+                    </span>
+                  </div>
+                )}
+                <span className="text-sm font-medium text-white">{`${user.firstName} ${user.lastName}`.trim() || "Guest"}</span>
+                {user && (
+                  <svg 
+                    className={`w-4 h-4 text-white transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                )}
               </button>
-            )}
-          </div>
-        </>
-      )}
-    </div>
+
+              {/* Dropdown Menu */}
+              {isDropdownOpen && user && (
+                <div className="absolute right-0 z-[9998] mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 py-1 animate-fadeIn">
+                  <div className="px-4 py-2 border-b border-gray-100">
+                    <p className="text-sm font-semibold text-gray-800 truncate">{`${user.firstName} ${user.lastName}`}</p>
+                    <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                  </div>
+                  <button
+                    onClick={handleEditProfile}
+                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200"
+                  >
+                    <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                    Edit Profile
+                  </button>
+                  <hr className="my-1 border-gray-100" />
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors duration-200"
+                  >
+                    <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    Sign Out
+                  </button>
+                </div>
+              )}
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Add the animation styles */}
+      <style jsx>{`
+        @keyframes fadeIn {
+          0% { 
+            opacity: 0; 
+            transform: translateY(-10px); 
+          }
+          100% { 
+            opacity: 1; 
+            transform: translateY(0); 
+          }
+        }
+        
+        .animate-fadeIn {
+          animation: fadeIn 0.2s ease-out forwards;
+        }
+      `}</style>
+    </>
   );
 }
-
-export default UserProfile;

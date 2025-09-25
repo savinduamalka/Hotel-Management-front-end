@@ -4,7 +4,7 @@ import BookNow from "../../components/bookNow/bookNow";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-export default function NavbarDefault({ onLoginClick }) {
+export default function NavbarDefault({ onLoginClick, onEditProfileClick, refreshKey }) {
   const [openNav, setOpenNav] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isBookNowOpen, setIsBookNowOpen] = useState(false);
@@ -124,7 +124,7 @@ export default function NavbarDefault({ onLoginClick }) {
 
               {/* UserProfile in desktop nav */}
               <div className="pl-6 ml-6 border-l border-cyan-500/30">
-                <UserProfile onLoginClick={onLoginClick} />
+                <UserProfile onLoginClick={onLoginClick} onEditProfileClick={onEditProfileClick} refreshKey={refreshKey} />
               </div>
             </div>
 
@@ -132,7 +132,7 @@ export default function NavbarDefault({ onLoginClick }) {
             <div className="flex items-center md:hidden">
               {/* Mobile UserProfile */}
               <div className="mr-2">
-                <UserProfile onLoginClick={onLoginClick} />
+                <UserProfile onLoginClick={onLoginClick} onEditProfileClick={onEditProfileClick} refreshKey={refreshKey} />
               </div>
 
               <button
