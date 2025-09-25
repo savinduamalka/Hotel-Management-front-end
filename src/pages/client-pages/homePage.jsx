@@ -12,12 +12,16 @@ import Marquee from "react-fast-marquee";
 import { Skeleton } from "../../components/ui/skeleton";
 import RoomCarousel from "../../components/rooms/roomCarousel";
 import AttractionsSection from "../../components/attractions/attractionsSection";
+import OtpVerification from "../../components/auth/otpVerification";
+import EditProfileModal from "../../components/auth/editProfile";
 
 export default function HomePage() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
   const [isBookNowOpen, setIsBookNowOpen] = useState(false);
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+  const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
+  const [emailForOtp, setEmailForOtp] = useState("");
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState(2);
@@ -80,6 +84,23 @@ export default function HomePage() {
 
   const handleSignupClose = () => {
     setIsSignupModalOpen(false);
+  };
+
+  const handleOtpModalOpen = (email) => {
+    setEmailForOtp(email);
+    setIsOtpModalOpen(true);
+    setIsLoginModalOpen(false);
+    setIsSignupModalOpen(false);
+  };
+
+  const handleOtpModalClose = () => {
+    setIsOtpModalOpen(false);
+    setEmailForOtp("");
+  };
+
+  const handleOtpSuccess = () => {
+    handleOtpModalClose();
+    handleLoginClick();
   };
 
   const handleBookNowClick = () => {
@@ -203,6 +224,7 @@ export default function HomePage() {
     setIsLoginModalOpen(false);
     setIsSignupModalOpen(false);
     setIsEditProfileOpen(false);
+    setIsOtpModalOpen(false);
   };
 
   const switchToSignup = () => {
@@ -213,6 +235,7 @@ export default function HomePage() {
   const switchToLogin = () => {
     setIsSignupModalOpen(false);
     setIsLoginModalOpen(true);
+    setIsOtpModalOpen(false);
   };
 
   return (
@@ -744,6 +767,7 @@ export default function HomePage() {
           isOpen={isLoginModalOpen}
           onClose={handleLoginClose}
           onSignupClick={switchToSignup}
+          onVerifyEmail={handleOtpModalOpen}
         />
       )}
       {isSignupModalOpen && (
@@ -751,6 +775,7 @@ export default function HomePage() {
           isOpen={isSignupModalOpen}
           onClose={handleSignupClose}
           onLoginClick={switchToLogin}
+          onVerifyEmail={handleOtpModalOpen}
         />
       )}
       {isBookNowOpen && (
@@ -774,6 +799,15 @@ export default function HomePage() {
           isOpen={isEditProfileOpen}
           onClose={handleCloseModals}
           onUpdate={handleProfileUpdate}
+        />
+      )}
+      {isOtpModalOpen && (
+        <OtpVerification
+          isOpen={isOtpModalOpen}
+          onClose={handleOtpModalClose}
+          onSuccess={handleOtpSuccess}
+          email={emailForOtp}
+          onLoginClick={switchToLogin}
         />
       )}
     </div>
