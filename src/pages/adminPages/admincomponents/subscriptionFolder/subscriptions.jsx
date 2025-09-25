@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { Trash2 } from "lucide-react";
 
 export default function Subscriptions() {
   const [subscriptions, setSubscriptions] = useState([]);
@@ -29,6 +30,28 @@ export default function Subscriptions() {
     }
   }, [isLoaded, token]);
 
+  const handleDelete = (email) => {
+    if (window.confirm("Are you sure you want to delete this subscription?")) {
+      axios
+        .delete(import.meta.env.VITE_BACKEND_URL + "api/subscription/delete", {
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json",
+          },
+          data: { email },
+        })
+        .then((res) => {
+          toast.success(res.data.message || "Subscription deleted successfully!");
+          setIsLoaded(false); // Refresh the list
+        })
+        .catch((err) => {
+          toast.error(
+            err.response?.data?.message || "Failed to delete subscription."
+          );
+        });
+    }
+  };
+
   if (!token) {
     return (
       <a
@@ -49,6 +72,7 @@ export default function Subscriptions() {
           <tr className="bg-[#7E60BF] text-white text-lg">
             <th className="py-4 px-6 border-b border-[#E4B1F0]">Email</th>
             <th className="py-4 px-6 border-b border-[#E4B1F0]">Subscription Date</th>
+            <th className="py-4 px-6 border-b border-[#E4B1F0]">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -62,6 +86,14 @@ export default function Subscriptions() {
               <td className="py-3 px-5 border-b border-[#E4B1F0]">{sub.email}</td>
               <td className="py-3 px-5 border-b border-[#E4B1F0]">
                 {new Date(sub.subscriptionDate).toLocaleDateString()}
+              </td>
+              <td className="py-3 px-5 border-b border-[#E4B1F0]">
+                <button
+                  onClick={() => handleDelete(sub.email)}
+                  className="text-red-500 transition-colors duration-300 hover:text-red-700"
+                >
+                  <Trash2 size={20} />
+                </button>
               </td>
             </tr>
           ))}
