@@ -14,6 +14,7 @@ import RoomCarousel from "../../components/rooms/roomCarousel";
 import AttractionsSection from "../../components/attractions/attractionsSection";
 import OtpVerification from "../../components/auth/otpVerification";
 import EditProfileModal from "../../components/auth/editProfile";
+import ForgotPasswordModal from "../../components/auth/ForgotPasswordModal";
 
 export default function HomePage() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -21,6 +22,7 @@ export default function HomePage() {
   const [isBookNowOpen, setIsBookNowOpen] = useState(false);
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
   const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
+  const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false);
   const [emailForOtp, setEmailForOtp] = useState("");
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
@@ -84,6 +86,15 @@ export default function HomePage() {
 
   const handleSignupClose = () => {
     setIsSignupModalOpen(false);
+  };
+
+  const handleForgotPasswordClick = () => {
+    setIsLoginModalOpen(false);
+    setIsForgotPasswordModalOpen(true);
+  };
+
+  const handleForgotPasswordClose = () => {
+    setIsForgotPasswordModalOpen(false);
   };
 
   const handleOtpModalOpen = (email) => {
@@ -225,6 +236,7 @@ export default function HomePage() {
     setIsSignupModalOpen(false);
     setIsEditProfileOpen(false);
     setIsOtpModalOpen(false);
+    setIsForgotPasswordModalOpen(false);
   };
 
   const switchToSignup = () => {
@@ -236,6 +248,7 @@ export default function HomePage() {
     setIsSignupModalOpen(false);
     setIsLoginModalOpen(true);
     setIsOtpModalOpen(false);
+    setIsForgotPasswordModalOpen(false);
   };
 
   return (
@@ -768,6 +781,7 @@ export default function HomePage() {
           onClose={handleLoginClose}
           onSignupClick={switchToSignup}
           onVerifyEmail={handleOtpModalOpen}
+          onForgotPasswordClick={handleForgotPasswordClick}
         />
       )}
       {isSignupModalOpen && (
@@ -807,6 +821,13 @@ export default function HomePage() {
           onClose={handleOtpModalClose}
           onSuccess={handleOtpSuccess}
           email={emailForOtp}
+          onLoginClick={switchToLogin}
+        />
+      )}
+      {isForgotPasswordModalOpen && (
+        <ForgotPasswordModal
+          isOpen={isForgotPasswordModalOpen}
+          onClose={handleForgotPasswordClose}
           onLoginClick={switchToLogin}
         />
       )}
