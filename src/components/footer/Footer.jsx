@@ -1,8 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from "react-router-dom";
+import axios from 'axios';
+import toast from 'react-hot-toast';
 import { SeaAnimations } from "../animation/seaAnimations";
 
 export default function Footer() {
+  const [email, setEmail] = useState('');
+
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    if (!email) {
+      toast.error("Please enter your email address.");
+      return;
+    }
+
+    axios.post(import.meta.env.VITE_BACKEND_URL + 'api/subscription/subscribe', { email })
+      .then(response => {
+        toast.success(response.data.message || "Subscription successful!");
+        setEmail('');
+      })
+      .catch(error => {
+        toast.error(error.response?.data?.message || "Subscription failed. Please try again.");
+      });
+  };
+
   return (
     <footer className="relative pt-20 pb-8 overflow-hidden text-white bg-gray-900">
       <div className="absolute inset-0 opacity-10">
@@ -133,11 +154,13 @@ export default function Footer() {
                 Stay Updated
               </h3>
               <p className="mb-4 text-slate-300">Subscribe to our newsletter for exclusive offers and updates.</p>
-              <form className="space-y-3">
+              <form className="space-y-3" onSubmit={handleSubscribe}>
                 <div className="relative">
                   <input
                     type="email"
                     placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="w-full px-4 py-3 text-white transition-colors duration-300 border rounded-lg bg-slate-800/50 border-slate-600 placeholder-slate-400 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400"
                   />
                 </div>
