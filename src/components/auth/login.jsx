@@ -3,7 +3,12 @@ import axios from "axios";
 import { SeaAnimations } from "../animation/seaAnimations"; 
 import toast from "react-hot-toast";
 
-export default function LoginPage({ isOpen, onClose, onSignupClick }) {
+export default function LoginPage({
+  isOpen,
+  onClose,
+  onSignupClick,
+  onVerifyEmail,
+}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -41,29 +46,31 @@ export default function LoginPage({ isOpen, onClose, onSignupClick }) {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    axios
-      .post(import.meta.env.VITE_BACKEND_URL + "api/users/login", {
-        email,
-        password,
-      })
-      .then((res) => {
-        
-        localStorage.setItem("token", res.data.token);
-        if (res.data.detailsofuser.type === "admin") {
-          window.location.href = "/admin";
-        } else {
-          window.location.href = "/";
-        }
-        toast.success("Login successful!");
-      })
-      .catch((err) => {
-        
-        setError("Invalid email or password. Please try again.");
-        toast.error("Invalid email or password. Please try again.");
-      });
+    setIsLoading(true);
+    try {
+      const response = await axios.post(
+        import.meta.env.VITE_BACKEND_URL + "api/users/login",
+        { email, password }
+      );
+      toast.success(response.data.message || "Login successful!");
+      localStorage.setItem("token", response.data.token);
+      onClose();
+      window.location.reload();
+    } catch (err) {
+      if (err.response?.data?.requiresVerification) {
+        toast.error(err.response.data.message);
+        onVerifyEmail(email);
+      } else {
+        toast.error(
+          err.response?.data?.message || "Login failed. Please try again."
+        );
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (!isOpen) {
@@ -185,20 +192,20 @@ export default function LoginPage({ isOpen, onClose, onSignupClick }) {
                 </a>
               </div>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <svg className="w-5 h-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  className="block w-full py-2 pl-10 pr-3 text-xs text-gray-900 transition-all duration-200 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <svg className="w-5 h-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <input
+                    id="password"
+                    type="password"
+                    placeholder="••••••••"
+                    className="block w-full py-2 pl-10 pr-3 text-xs text-gray-900 transition-all duration-200 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
               </div>
             </div>
 

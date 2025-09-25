@@ -4,14 +4,18 @@ import { SeaAnimations } from "../animation/seaAnimations";
 import uploadMedia from "../../utils/mediaUpload"; 
 import toast from "react-hot-toast";
 
-export default function SignupPage({ isOpen, onClose, onLoginClick = () => {} }) {
-  const [form, setForm] = useState({
-    firstname: "",
-    lastname: "",
-    email: "",
-    password: "",
-    whatsapp: "",
-  });
+export default function SignupPage({
+  isOpen,
+  onClose,
+  onLoginClick,
+  onVerifyEmail,
+}) {
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [email, setEmail] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [profileImage, setProfileImage] = useState(null);
   const [profilePreview, setProfilePreview] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,13 +25,12 @@ export default function SignupPage({ isOpen, onClose, onLoginClick = () => {} })
 
   useEffect(() => {
     if (isOpen) {
-      setForm({
-        firstname: "",
-        lastname: "",
-        email: "",
-        password: "",
-        whatsapp: "",
-      });
+      setFirstname("");
+      setLastname("");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+      setWhatsapp("");
       setProfileImage(null);
       setProfilePreview(null);
       setError("");
@@ -51,11 +54,33 @@ export default function SignupPage({ isOpen, onClose, onLoginClick = () => {} })
     }
   };
 
-  function handleChange(e) {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    switch (name) {
+      case "firstname":
+        setFirstname(value);
+        break;
+      case "lastname":
+        setLastname(value);
+        break;
+      case "email":
+        setEmail(value);
+        break;
+      case "password":
+        setPassword(value);
+        break;
+      case "confirmPassword":
+        setConfirmPassword(value);
+        break;
+      case "whatsapp":
+        setWhatsapp(value);
+        break;
+      default:
+        break;
+    }
+  };
 
-  function handleImageChange(e) {
+  const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setProfileImage(file);
@@ -64,9 +89,9 @@ export default function SignupPage({ isOpen, onClose, onLoginClick = () => {} })
       reader.onload = (ev) => setProfilePreview(ev.target.result);
       reader.readAsDataURL(file);
     }
-  }
+  };
 
-  async function handleSignup(e) {
+  const handleSignup = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
@@ -76,27 +101,37 @@ export default function SignupPage({ isOpen, onClose, onLoginClick = () => {} })
       if (profileImage) {
         imageUrl = await uploadMedia(profileImage);
       }
-      const data = {
-        ...form,
-        image: imageUrl,
-      };
-      await axios.post(
+      const response = await axios.post(
         import.meta.env.VITE_BACKEND_URL + "api/users",
-        data
+        { firstname, lastname, email, whatsapp, password, confirmPassword }
       );
-      setSuccess("Account created! Please login.");
-      toast.success("Account created successfully! Please log in.");
-      setIsLoading(false);
-      // Immediately close signup and open login modal
-      if (onClose) onClose();
-      if (onLoginClick) onLoginClick();
+      toast.success(response.data.message || "Signup successful!");
+      if (response.data.requiresVerification) {
+        onVerifyEmail(email);
+      } else {
+        onLoginClick();
+      }
     } catch (err) {
-      const errorMessage = err?.response?.data?.message || "Signup failed. Please check your details and try again.";
-      setError(errorMessage);
-      toast.error(errorMessage);
+      toast.error(
+        err.response?.data?.message || "Signup failed. Please try again."
+      );
+    } finally {
       setIsLoading(false);
     }
-  }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Enter" && isOpen) {
+        handleSignup(e);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleSignup, isOpen]);
 
   const passwordRequirements = (
     <ul className="mt-1 text-xs text-gray-500 list-disc list-inside">
@@ -106,6 +141,16 @@ export default function SignupPage({ isOpen, onClose, onLoginClick = () => {} })
       <li>Has at least one special character (e.g., @, #, $, %)</li>
     </ul>
   );
+
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, [onClose]);
 
   if (!isOpen) {
     return null;
@@ -259,7 +304,7 @@ export default function SignupPage({ isOpen, onClose, onLoginClick = () => {} })
                   type="text"
                   placeholder="First Name"
                   className="block w-full px-3 py-2 text-xs text-gray-900 transition-all duration-200 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300"
-                  value={form.firstname}
+                  value={firstname}
                   onChange={handleChange}
                   required
                 />
@@ -277,7 +322,7 @@ export default function SignupPage({ isOpen, onClose, onLoginClick = () => {} })
                   type="text"
                   placeholder="Last Name"
                   className="block w-full px-3 py-2 text-xs text-gray-900 transition-all duration-200 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300"
-                  value={form.lastname}
+                  value={lastname}
                   onChange={handleChange}
                   required
                 />
@@ -296,10 +341,34 @@ export default function SignupPage({ isOpen, onClose, onLoginClick = () => {} })
                 type="email"
                 placeholder="your@email.com"
                 className="block w-full px-3 py-2 text-xs text-gray-900 transition-all duration-200 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300"
-                value={form.email}
+                value={email}
                 onChange={handleChange}
                 required
               />
+            </div>
+            <div>
+              <label
+                htmlFor="whatsapp"
+                className="block mb-2 text-sm font-medium text-gray-700"
+              >
+                WhatsApp Number
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <svg className="w-5 h-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M17.965 2.035a.75.75 0 00-1.06 0L1.252 17.688a.75.75 0 00.688 1.212l4.33-.962a13.25 13.25 0 006.226 0l4.33.962a.75.75 0 00.688-1.212L17.965 2.035zM5.463 15.82l-2.66.591L5.05 13.8l2.66-.592-2.247 2.612zM10 14.25a11.75 11.75 0 01-4.33-.962L10 8.676l4.33 4.612A11.75 11.75 0 0110 14.25zM14.95 13.8l2.247 2.612-2.66-.591L12.29 13.2l2.66.6z" />
+                  </svg>
+                </div>
+                <input
+                  id="whatsapp"
+                  type="text"
+                  value={whatsapp}
+                  onChange={(e) => setWhatsapp(e.target.value)}
+                  required
+                  className="w-full py-3 pl-10 pr-4 text-gray-800 placeholder-gray-400 border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Your WhatsApp number"
+                />
+              </div>
             </div>
             <div>
               <label
@@ -314,25 +383,25 @@ export default function SignupPage({ isOpen, onClose, onLoginClick = () => {} })
                 type="password"
                 placeholder="••••••••"
                 className="block w-full px-3 py-2 text-xs text-gray-900 transition-all duration-200 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300"
-                value={form.password}
+                value={password}
                 onChange={handleChange}
                 required
               />
             </div>
             <div>
               <label
-                htmlFor="whatsapp"
+                htmlFor="confirmPassword"
                 className="block text-xs font-medium text-gray-700"
               >
-                WhatsApp Number
+                Confirm Password
               </label>
               <input
-                id="whatsapp"
-                name="whatsapp"
-                type="text"
-                placeholder="WhatsApp Number"
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                placeholder="••••••••"
                 className="block w-full px-3 py-2 text-xs text-gray-900 transition-all duration-200 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300"
-                value={form.whatsapp}
+                value={confirmPassword}
                 onChange={handleChange}
                 required
               />
