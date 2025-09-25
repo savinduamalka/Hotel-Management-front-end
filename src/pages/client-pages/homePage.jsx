@@ -8,6 +8,8 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import Marquee from "react-fast-marquee";
 import { Skeleton } from "../../components/ui/skeleton";
+import RoomCarousel from "../../components/rooms/roomCarousel";
+import AttractionsSection from "../../components/attractions/attractionsSection";
 
 export default function HomePage() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -23,6 +25,8 @@ export default function HomePage() {
   const [feedbacks, setFeedbacks] = useState([]);
   const [isLoadingFeedbacks, setIsLoadingFeedbacks] = useState(true);
   const [categories, setCategories] = useState([]);
+  const [galleryItems, setGalleryItems] = useState([]);
+  const [isLoadingGallery, setIsLoadingGallery] = useState(true);
 
   useEffect(() => {
     axios
@@ -44,6 +48,18 @@ export default function HomePage() {
       })
       .catch((err) => {
         toast.error("Could not load room categories.");
+      });
+
+    axios
+      .get(import.meta.env.VITE_BACKEND_URL + "api/gallery")
+      .then((res) => {
+        console.log(res.data.galleryItems);
+        setGalleryItems(res.data.galleryItems);
+        setIsLoadingGallery(false);
+      })
+      .catch((err) => {
+        toast.error("Could not load gallery items.");
+        setIsLoadingGallery(false);
       });
   }, []);
 
@@ -200,246 +216,302 @@ export default function HomePage() {
       <NavBar onLoginClick={handleLoginClick} />
 
       {/* Hero Section */}
-      <div
-        className="relative min-h-screen pt-16 bg-center bg-cover md:pt-20"
+            {/* Hero Section with Search - Magically Redesigned */}
+      <div 
+        className="relative min-h-screen pt-16 bg-center bg-cover md:pt-20 overflow-hidden"
         style={{ backgroundImage: `url('/bag-home.jpg')` }}
       >
-        <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+        {/* Dynamic Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-blue-900/40 to-purple-900/30"></div>
+        
+        {/* Floating Animation Elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/4 left-10 w-2 h-2 bg-white/40 rounded-full animate-pulse"></div>
+          <div className="absolute top-1/3 right-20 w-1 h-1 bg-blue-300/60 rounded-full animate-ping delay-1000"></div>
+          <div className="absolute bottom-1/4 left-1/4 w-3 h-3 bg-purple-300/30 rounded-full animate-bounce delay-2000"></div>
+          <div className="absolute top-1/2 right-1/3 w-1.5 h-1.5 bg-white/50 rounded-full animate-pulse delay-3000"></div>
+        </div>
 
         <div className="container relative z-10 flex flex-col items-center justify-center h-full px-4 py-20 mx-auto sm:px-6">
-          <div className="mb-12 text-center">
-            <h1 className="mb-4 text-4xl font-bold leading-tight tracking-wide text-white sm:text-5xl md:text-6xl drop-shadow-lg">
-              BLUE HORIZON
-            </h1>
-            <p className="text-xl italic text-blue-100 sm:text-2xl drop-shadow">
-              Galle • Sri Lanka
+          {/* Magical Hotel Title */}
+          <div className="mb-16 text-center">
+            <div className="relative mb-6">
+              <h1 className="mb-4 text-5xl font-black leading-tight tracking-wider text-transparent sm:text-6xl md:text-8xl bg-gradient-to-br from-white via-blue-100 to-purple-100 bg-clip-text drop-shadow-2xl animate-fade-in">
+                BLUE HORIZON
+              </h1>
+              {/* Magical Underline */}
+              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-blue-400 to-transparent rounded-full animate-pulse"></div>
+            </div>
+            <p className="text-2xl italic font-light text-blue-100 sm:text-3xl drop-shadow-lg tracking-wide">
+              <span className="inline-block animate-fade-in-up">Galle</span>
+              <span className="mx-3 text-white/60">•</span>
+              <span className="inline-block animate-fade-in-up delay-300">Sri Lanka</span>
             </p>
           </div>
 
-          {/* Search Card */}
-          <div className="w-full max-w-5xl mx-auto">
-            <div className="relative overflow-hidden shadow-2xl bg-white/10 backdrop-blur-md rounded-3xl border border-white/20">
-              {/* Decorative background elements */}
-              <div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-white/20 to-transparent rounded-full -translate-x-16 -translate-y-16"></div>
-              <div className="absolute bottom-0 right-0 w-24 h-24 bg-gradient-to-tl from-blue-300/30 to-transparent rounded-full translate-x-12 translate-y-12"></div>
+          {/* Magical Search Card */}
+          <div className="w-full max-w-6xl mx-auto">
+            <div className="relative group">
+              {/* Magical Glow Effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-blue-600/20 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-700"></div>
               
-              <div className="relative z-10 p-8 md:p-10 lg:p-12">
-                <div className="text-center mb-8">
-                  <h2 className="text-3xl md:text-4xl font-light text-white mb-3">
-                    Discover Your
-                    <span className="block font-bold bg-gradient-to-r from-blue-200 to-white bg-clip-text text-transparent">
-                      Perfect Escape
-                    </span>
-                  </h2>
-                  <div className="w-24 h-1 bg-gradient-to-r from-blue-300 to-white mx-auto rounded-full opacity-80"></div>
+              <div className="relative overflow-hidden border-2 shadow-2xl bg-white/5 backdrop-blur-xl rounded-3xl border-white/10 hover:border-white/20 transition-all duration-500">
+                {/* Magical Background Pattern */}
+                <div className="absolute inset-0 opacity-30">
+                  <div className="absolute top-0 left-0 w-40 h-40 -translate-x-20 -translate-y-20 rounded-full bg-gradient-to-br from-blue-400/30 to-transparent animate-pulse"></div>
+                  <div className="absolute top-1/2 right-0 w-32 h-32 translate-x-16 -translate-y-16 rounded-full bg-gradient-to-bl from-purple-400/30 to-transparent animate-pulse delay-1000"></div>
+                  <div className="absolute bottom-0 left-1/3 w-28 h-28 translate-y-14 rounded-full bg-gradient-to-t from-white/20 to-transparent animate-pulse delay-2000"></div>
                 </div>
-
-                <form onSubmit={handleViewRates} className="space-y-6">
-                  {/* Input Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-                    {/* Check In */}
-                    <div className="group">
-                      <label className="block text-sm font-medium text-white/90 mb-3 tracking-wide">
-                        CHECK IN
-                      </label>
-                      <div className="relative">
-                        <input
-                          type="date"
-                          value={checkIn}
-                          onChange={(e) => setCheckIn(e.target.value)}
-                          required
-                          className="w-full px-4 py-4 bg-white/90 backdrop-blur-sm border-0 rounded-2xl text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 focus:bg-white transition-all duration-300 text-center font-medium shadow-lg"
-                        />
-                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-                      </div>
-                    </div>
-
-                    {/* Check Out */}
-                    <div className="group">
-                      <label className="block text-sm font-medium text-white/90 mb-3 tracking-wide">
-                        CHECK OUT
-                      </label>
-                      <div className="relative">
-                        <input
-                          type="date"
-                          value={checkOut}
-                          onChange={(e) => setCheckOut(e.target.value)}
-                          required
-                          className="w-full px-4 py-4 bg-white/90 backdrop-blur-sm border-0 rounded-2xl text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 focus:bg-white transition-all duration-300 text-center font-medium shadow-lg"
-                        />
-                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-                      </div>
-                    </div>
-
-                    {/* Guests */}
-                    <div className="group">
-                      <label className="block text-sm font-medium text-white/90 mb-3 tracking-wide">
-                        GUESTS
-                      </label>
-                      <div className="relative">
-                        <input
-                          type="number"
-                          min="1"
-                          placeholder="2"
-                          value={guests}
-                          onChange={(e) => setGuests(e.target.value)}
-                          required
-                          className="w-full px-4 py-4 bg-white/90 backdrop-blur-sm border-0 rounded-2xl text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 focus:bg-white transition-all duration-300 text-center font-medium shadow-lg"
-                        />
-                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-                      </div>
-                    </div>
-
-                    {/* Room Type */}
-                    <div className="group">
-                      <label className="block text-sm font-medium text-white/90 mb-3 tracking-wide">
-                        ROOM TYPE
-                      </label>
-                      <div className="relative">
-                        <select 
-                          value={roomType}
-                          onChange={(e) => setRoomType(e.target.value)}
-                          required
-                          className="w-full px-4 py-4 bg-white/90 backdrop-blur-sm border-0 rounded-2xl text-gray-800 focus:outline-none focus:ring-2 focus:ring-white/50 focus:bg-white transition-all duration-300 text-center font-medium shadow-lg appearance-none cursor-pointer">
-                          <option value="" disabled>Choose Type</option>
-                          {categories.map((cat, index) => (
-                            <option key={cat.categoryId || index} value={cat.name}>{cat.name}</option>
-                          ))}
-                        </select>
-                        <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
-                          <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                          </svg>
-                        </div>
-                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Search Button */}
-                  <div className="flex justify-center pt-4">
-                    <button
-                      type="submit"
-                      className="group relative px-12 py-4 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700 text-white font-semibold rounded-2xl shadow-2xl hover:shadow-blue-500/25 focus:outline-none focus:ring-4 focus:ring-white/30 transform hover:scale-105 transition-all duration-300 overflow-hidden"
-                    >
-                      <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
-                      <span className="relative flex items-center space-x-3">
-                        <span className="text-lg tracking-wide">VIEW RATES</span>
-                        <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5-5 5M6 12h12" />
-                        </svg>
-                      </span>
-                    </button>
-                  </div>
-                </form>
                 
-                {calculatedPrice !== null && (
-                  <div className="mt-8 animate-fade-in-up">
-                    <div className="relative p-8 overflow-hidden bg-gradient-to-br from-white/95 to-blue-50/95 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/30">
-                      {/* Decorative elements */}
-                      <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-blue-400/30 to-transparent rounded-full translate-x-10 -translate-y-10"></div>
-                      <div className="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-purple-400/30 to-transparent rounded-full -translate-x-8 translate-y-8"></div>
-                      
-                      <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8">
-                        <div className="text-center lg:text-left">
-                          <p className="text-sm font-semibold tracking-wider uppercase text-blue-600/80 mb-2">
-                            Your Estimated Rate
-                          </p>
-                          <p className="text-5xl lg:text-6xl font-light text-gray-800 mb-2">
-                            <span className="text-2xl font-normal">LKR</span>
-                            <span className="font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent ml-2">
-                              {calculatedPrice.toLocaleString()}
-                            </span>
-                          </p>
-                          <p className="text-gray-600 font-medium">
-                            {nights} night{nights !== 1 ? 's' : ''} • {guests} guest{guests !== 1 ? 's' : ''} • {roomType}
-                          </p>
+                <div className="relative z-10 p-6 md:p-8 lg:p-12">
+                  {/* Enchanted Header */}
+                  <div className="mb-10 text-center">
+                    <div className="inline-flex items-center justify-center w-16 h-16 mb-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full shadow-lg animate-bounce">
+                      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                    </div>
+                    <h2 className="mb-4 text-4xl font-extralight text-white md:text-5xl tracking-wide">
+                      Discover Your
+                    </h2>
+                    <div className="relative">
+                      <span className="text-4xl md:text-6xl font-black text-transparent bg-gradient-to-r from-blue-200 via-white to-purple-200 bg-clip-text animate-pulse">
+                        Perfect Escape
+                      </span>
+                      <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-48 h-1 bg-gradient-to-r from-transparent via-blue-400 to-transparent rounded-full animate-pulse"></div>
+                    </div>
+                    <p className="mt-6 text-lg text-white/80 font-light tracking-wide">
+                      Where luxury meets serenity in paradise
+                    </p>
+                  </div>
+
+                  {/* Magical Form */}
+                  <form onSubmit={handleViewRates} className="space-y-8">
+                    {/* Enchanted Input Grid */}
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+                      {/* Magical Check In */}
+                      <div className="group">
+                        <label className="flex items-center mb-4 text-sm font-bold tracking-widest text-white/90 uppercase">
+                          <svg className="w-4 h-4 mr-2 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                          Check In
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="date"
+                            value={checkIn}
+                            onChange={(e) => setCheckIn(e.target.value)}
+                            required
+                            className="w-full px-6 py-5 font-semibold text-center text-gray-800 transition-all duration-500 border-2 shadow-2xl bg-white/95 backdrop-blur-sm rounded-2xl border-white/30 focus:outline-none focus:ring-4 focus:ring-blue-400/50 focus:border-blue-400 focus:bg-white group-hover:shadow-blue-400/20 group-hover:scale-105"
+                          />
+                          <div className="absolute inset-0 transition-all duration-500 opacity-0 pointer-events-none rounded-2xl bg-gradient-to-r from-blue-400/10 via-purple-400/10 to-blue-400/10 group-hover:opacity-100 group-hover:animate-pulse"></div>
                         </div>
-                        <div className="flex-shrink-0">
-                          <button 
-                            onClick={handleBookNowClick}
-                            className="group relative px-10 py-5 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-2xl shadow-2xl hover:shadow-blue-500/30 focus:outline-none focus:ring-4 focus:ring-blue-300/50 transform hover:scale-105 transition-all duration-300 overflow-hidden"
-                          >
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-                            <span className="relative flex items-center space-x-3 text-lg">
-                              <span>BOOK NOW</span>
-                              <svg className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                              </svg>
-                            </span>
-                          </button>
+                      </div>
+
+                      {/* Magical Check Out */}
+                      <div className="group">
+                        <label className="flex items-center mb-4 text-sm font-bold tracking-widest text-white/90 uppercase">
+                          <svg className="w-4 h-4 mr-2 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                          Check Out
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="date"
+                            value={checkOut}
+                            onChange={(e) => setCheckOut(e.target.value)}
+                            required
+                            className="w-full px-6 py-5 font-semibold text-center text-gray-800 transition-all duration-500 border-2 shadow-2xl bg-white/95 backdrop-blur-sm rounded-2xl border-white/30 focus:outline-none focus:ring-4 focus:ring-purple-400/50 focus:border-purple-400 focus:bg-white group-hover:shadow-purple-400/20 group-hover:scale-105"
+                          />
+                          <div className="absolute inset-0 transition-all duration-500 opacity-0 pointer-events-none rounded-2xl bg-gradient-to-r from-purple-400/10 via-blue-400/10 to-purple-400/10 group-hover:opacity-100 group-hover:animate-pulse"></div>
+                        </div>
+                      </div>
+
+                      {/* Magical Guests */}
+                      <div className="group">
+                        <label className="flex items-center mb-4 text-sm font-bold tracking-widest text-white/90 uppercase">
+                          <svg className="w-4 h-4 mr-2 text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                          </svg>
+                          Guests
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="number"
+                            min="1"
+                            placeholder="2"
+                            value={guests}
+                            onChange={(e) => setGuests(e.target.value)}
+                            required
+                            className="w-full px-6 py-5 font-semibold text-center text-gray-800 transition-all duration-500 border-2 shadow-2xl bg-white/95 backdrop-blur-sm rounded-2xl border-white/30 focus:outline-none focus:ring-4 focus:ring-green-400/50 focus:border-green-400 focus:bg-white group-hover:shadow-green-400/20 group-hover:scale-105"
+                          />
+                          <div className="absolute inset-0 transition-all duration-500 opacity-0 pointer-events-none rounded-2xl bg-gradient-to-r from-green-400/10 via-blue-400/10 to-green-400/10 group-hover:opacity-100 group-hover:animate-pulse"></div>
+                        </div>
+                      </div>
+
+                      {/* Magical Room Type */}
+                      <div className="group">
+                        <label className="flex items-center mb-4 text-sm font-bold tracking-widest text-white/90 uppercase">
+                          <svg className="w-4 h-4 mr-2 text-yellow-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                          </svg>
+                          Room Type
+                        </label>
+                        <div className="relative">
+                          <select 
+                            value={roomType}
+                            onChange={(e) => setRoomType(e.target.value)}
+                            required
+                            className="w-full px-6 py-5 font-semibold text-center text-gray-800 transition-all duration-500 border-2 shadow-2xl appearance-none cursor-pointer bg-white/95 backdrop-blur-sm rounded-2xl border-white/30 focus:outline-none focus:ring-4 focus:ring-yellow-400/50 focus:border-yellow-400 focus:bg-white group-hover:shadow-yellow-400/20 group-hover:scale-105">
+                            <option value="" disabled>Choose Your Paradise</option>
+                            {categories.map((cat, index) => (
+                              <option key={cat.categoryId || index} value={cat.name}>{cat.name}</option>
+                            ))}
+                          </select>
+                          <div className="absolute inset-y-0 flex items-center pointer-events-none right-6">
+                            <svg className="w-6 h-6 text-gray-600 transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </div>
+                          <div className="absolute inset-0 transition-all duration-500 opacity-0 pointer-events-none rounded-2xl bg-gradient-to-r from-yellow-400/10 via-orange-400/10 to-yellow-400/10 group-hover:opacity-100 group-hover:animate-pulse"></div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                )}
+
+                    {/* Magical Search Button */}
+                    <div className="flex justify-center pt-8">
+                      <button
+                        type="submit"
+                        className="relative px-16 py-6 overflow-hidden font-black text-white transition-all duration-500 transform shadow-2xl group bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 rounded-3xl hover:shadow-blue-500/50 focus:outline-none focus:ring-4 focus:ring-white/40 hover:scale-110 hover:-translate-y-1"
+                      >
+                        {/* Magical Shimmer Effect */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
+                        
+                        {/* Magical Particles */}
+                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                          <div className="absolute top-2 left-4 w-1 h-1 bg-white rounded-full animate-ping"></div>
+                          <div className="absolute bottom-2 right-6 w-1 h-1 bg-blue-200 rounded-full animate-pulse delay-300"></div>
+                          <div className="absolute top-1/2 left-1/2 w-0.5 h-0.5 bg-purple-200 rounded-full animate-bounce delay-500"></div>
+                        </div>
+                        
+                        <span className="relative flex items-center space-x-4 text-xl tracking-widest">
+                          <svg className="w-6 h-6 transition-transform duration-500 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                          </svg>
+                          <span>DISCOVER RATES</span>
+                          <svg className="w-6 h-6 transition-transform duration-500 group-hover:translate-x-2 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5-5 5M6 12h12" />
+                          </svg>
+                        </span>
+                      </button>
+                    </div>
+                  </form>
+                  
+                  {/* Magical Pricing Display */}
+                  {calculatedPrice !== null && (
+                    <div className="mt-12 animate-fade-in-up">
+                      <div className="relative group">
+                        {/* Magical Glow */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-blue-400/30 via-purple-400/30 to-blue-400/30 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-700 animate-pulse"></div>
+                        
+                        <div className="relative overflow-hidden border-2 shadow-2xl bg-gradient-to-br from-white/98 via-blue-50/95 to-purple-50/95 backdrop-blur-xl rounded-3xl border-white/40">
+                          {/* Magical Background Elements */}
+                          <div className="absolute inset-0 overflow-hidden">
+                            <div className="absolute top-0 right-0 w-32 h-32 translate-x-16 -translate-y-16 rounded-full bg-gradient-to-bl from-blue-400/20 to-transparent animate-pulse"></div>
+                            <div className="absolute bottom-0 left-0 w-24 h-24 -translate-x-12 translate-y-12 rounded-full bg-gradient-to-tr from-purple-400/20 to-transparent animate-pulse delay-1000"></div>
+                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 rounded-full bg-gradient-to-r from-transparent via-white/10 to-transparent animate-spin-slow"></div>
+                          </div>
+                          
+                          <div className="relative z-10 p-8 md:p-12">
+                            <div className="flex flex-col items-center justify-between gap-8 lg:flex-row">
+                              {/* Magical Price Display */}
+                              <div className="text-center lg:text-left">
+                                <div className="flex items-center justify-center mb-4 lg:justify-start">
+                                  <div className="flex items-center justify-center w-12 h-12 mr-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full shadow-lg">
+                                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                                    </svg>
+                                  </div>
+                                  <p className="text-lg font-black tracking-widest text-transparent uppercase bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text">
+                                    Your Paradise Rate
+                                  </p>
+                                </div>
+                                
+                                <div className="mb-4">
+                                  <span className="text-2xl font-light text-gray-600">LKR</span>
+                                  <span className="ml-3 text-6xl font-black text-transparent lg:text-7xl bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text animate-pulse">
+                                    {calculatedPrice.toLocaleString()}
+                                  </span>
+                                </div>
+                                
+                                <div className="flex items-center justify-center space-x-6 text-sm font-semibold text-gray-700 lg:justify-start">
+                                  <span className="flex items-center px-3 py-1 bg-blue-100 rounded-full">
+                                    <svg className="w-4 h-4 mr-1 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                                    </svg>
+                                    {nights} night{nights !== 1 ? 's' : ''}
+                                  </span>
+                                  <span className="flex items-center px-3 py-1 bg-purple-100 rounded-full">
+                                    <svg className="w-4 h-4 mr-1 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
+                                    {guests} guest{guests !== 1 ? 's' : ''}
+                                  </span>
+                                  <span className="flex items-center px-3 py-1 bg-green-100 rounded-full">
+                                    <svg className="w-4 h-4 mr-1 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                    </svg>
+                                    {roomType}
+                                  </span>
+                                </div>
+                              </div>
+                              
+                              {/* Magical Book Button */}
+                              <div className="flex-shrink-0">
+                                <button 
+                                  onClick={handleBookNowClick}
+                                  className="relative px-12 py-6 overflow-hidden font-black text-white transition-all duration-500 transform shadow-2xl group bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 rounded-3xl hover:shadow-purple-500/50 focus:outline-none focus:ring-4 focus:ring-purple-300/50 hover:scale-110 hover:-translate-y-2"
+                                >
+                                  {/* Magical Effects */}
+                                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
+                                  
+                                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                                    <div className="absolute top-2 left-4 w-1 h-1 bg-white rounded-full animate-ping delay-100"></div>
+                                    <div className="absolute bottom-2 right-4 w-1 h-1 bg-blue-200 rounded-full animate-pulse delay-300"></div>
+                                    <div className="absolute top-1/2 right-6 w-0.5 h-0.5 bg-purple-200 rounded-full animate-bounce delay-500"></div>
+                                  </div>
+                                  
+                                  <span className="relative flex items-center space-x-4 text-xl tracking-widest">
+                                    <svg className="w-6 h-6 transition-transform duration-500 group-hover:scale-125 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    <span>BOOK YOUR ESCAPE</span>
+                                    <svg className="w-6 h-6 transition-transform duration-500 group-hover:translate-x-2 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                    </svg>
+                                  </span>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Features Section */}
-      <section className="px-4 py-16 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-50 to-indigo-50">
-        <div className="container mx-auto">
-          <h2 className="mb-10 text-2xl font-bold text-center text-blue-600 md:text-3xl">
-            Explore Our Attractions
-          </h2>
+      {/* Attractions Section - Completely Redesigned */}
+      <AttractionsSection />
 
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {/* Card 1 */}
-            <div className="overflow-hidden transition-transform duration-300 bg-white rounded-lg shadow-md hover:shadow-lg hover:-translate-y-1">
-              <img
-                src="https://tripjive.com/wp-content/uploads/2024/10/Galle-beach-tourism-1024x585.jpg"
-                alt="Beautiful Beaches"
-                className="object-cover w-full h-48"
-              />
-              <div className="p-4 sm:p-5">
-                <h3 className="mb-2 text-lg font-semibold text-blue-600">
-                  Beautiful Beaches
-                </h3>
-                <p className="text-gray-600">
-                  Relax on the stunning shores of Galle with crystal clear waters and golden sands.
-                </p>
-              </div>
-            </div>
-
-            {/* Card 2 */}
-            <div className="overflow-hidden transition-transform duration-300 bg-white rounded-lg shadow-md hover:shadow-lg hover:-translate-y-1">
-              <img
-                src="https://www.travelmapsrilanka.com/destinations/destinationimages/visit-to-galle-fort.jpg"
-                alt="Historic Forts"
-                className="object-cover w-full h-48"
-              />
-              <div className="p-4 sm:p-5">
-                <h3 className="mb-2 text-lg font-semibold text-blue-600">
-                  Historic Forts
-                </h3>
-                <p className="text-gray-600">
-                  Discover the rich history of Galle Fort, a UNESCO World Heritage site with centuries of stories.
-                </p>
-              </div>
-            </div>
-
-            {/* Card 3 */}
-            <div className="overflow-hidden transition-transform duration-300 bg-white rounded-lg shadow-md hover:shadow-lg hover:-translate-y-1">
-              <img
-                src="https://media.licdn.com/dms/image/v2/D4D22AQFK8AoyzFGJqA/feedshare-shrink_2048_1536/feedshare-shrink_2048_1536/0/1715534610402?e=2147483647&v=beta&t=B2z2in-u7Z9yRqfzi1AnjNg2KHyBrzNcT7g49_g0Gpk"
-                alt="Local Cuisine"
-                className="object-cover w-full h-48"
-              />
-              <div className="p-4 sm:p-5">
-                <h3 className="mb-2 text-lg font-semibold text-blue-600">
-                  Local Cuisine
-                </h3>
-                <p className="text-gray-600">
-                  Savor delicious dishes from our local chefs featuring fresh seafood and authentic Sri Lankan flavors.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Room Carousel Section */}
+      <RoomCarousel galleryItems={galleryItems} />
 
       {/* Testimonials Section */}
       <section className="px-4 py-16 bg-white sm:px-6 lg:px-8">
