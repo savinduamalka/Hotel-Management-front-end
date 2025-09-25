@@ -36,7 +36,6 @@ export default function HomePage() {
     axios
       .get(import.meta.env.VITE_BACKEND_URL + "api/feedback/public-visible-feedbacks")
       .then((res) => {
-        console.log(res.data);
         const visibleFeedbacks = res.data.feedbacks.filter(f => f.visibility);
         setFeedbacks(visibleFeedbacks);
         setIsLoadingFeedbacks(false);
