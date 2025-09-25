@@ -1,10 +1,11 @@
 import React from 'react';
+import { Link } from "react-router-dom";
+import { SeaAnimations } from "../animation/seaAnimations";
 
-const Footer = () => {
+export default function Footer() {
   return (
-    <footer className="relative overflow-hidden text-white bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 opacity-5">
+    <footer className="relative pt-20 pb-8 overflow-hidden text-white bg-gray-900">
+      <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 left-0 rounded-full w-72 h-72 bg-gradient-to-r from-cyan-400 to-blue-500 mix-blend-multiply filter blur-xl animate-pulse"></div>
         <div className="absolute top-0 right-0 rounded-full w-72 h-72 bg-gradient-to-r from-purple-400 to-pink-400 mix-blend-multiply filter blur-xl animate-pulse animation-delay-2000"></div>
         <div className="absolute rounded-full -bottom-8 left-20 w-72 h-72 bg-gradient-to-r from-yellow-400 to-pink-400 mix-blend-multiply filter blur-xl animate-pulse animation-delay-4000"></div>
@@ -191,5 +192,3 @@ const Footer = () => {
     </footer>
   );
 };
-
-export default Footer;

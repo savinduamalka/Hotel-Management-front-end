@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom"; 
 import NavBar from "./navBar";
 import LoginPage from "../../components/auth/login";
 import SignupPage from "../../components/auth/signup";
@@ -28,11 +29,14 @@ export default function HomePage() {
   const [categories, setCategories] = useState([]);
   const [galleryItems, setGalleryItems] = useState([]);
   const [isLoadingGallery, setIsLoadingGallery] = useState(true);
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
+  const [userUpdateKey, setUserUpdateKey] = useState(0);
 
   useEffect(() => {
     axios
       .get(import.meta.env.VITE_BACKEND_URL + "api/feedback/public-visible-feedbacks")
       .then((res) => {
+        console.log(res.data);
         const visibleFeedbacks = res.data.feedbacks.filter(f => f.visibility);
         setFeedbacks(visibleFeedbacks);
         setIsLoadingFeedbacks(false);
@@ -101,7 +105,7 @@ export default function HomePage() {
     setIsFeedbackModalOpen(false);
   };
 
-  const handleFeedbackSubmit = (feedbackData) => {
+  const handleFeedbackSubmit = async (feedbackData) => {
     const token = localStorage.getItem("token");
     axios
       .post(import.meta.env.VITE_BACKEND_URL + "api/feedback", feedbackData, {
@@ -178,45 +182,36 @@ export default function HomePage() {
     setCalculatedPrice(total);
   };
 
+  const handleEditProfileClick = () => {
+    setIsEditProfileOpen(true);
+  };
+
+  const handleProfileUpdate = () => {
+    setIsEditProfileOpen(false);
+    setUserUpdateKey(prevKey => prevKey + 1);
+  };
+
+  const handleCloseModals = () => {
+    setIsLoginModalOpen(false);
+    setIsSignupModalOpen(false);
+    setIsEditProfileOpen(false);
+  };
+
+  const switchToSignup = () => {
+    setIsLoginModalOpen(false);
+    setIsSignupModalOpen(true);
+  };
+
+  const switchToLogin = () => {
+    setIsSignupModalOpen(false);
+    setIsLoginModalOpen(true);
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
-      {/* Login Modal */}
-      <LoginPage
-        isOpen={isLoginModalOpen}
-        onClose={handleLoginClose}
-        onSignupClick={() => {
-          setIsLoginModalOpen(false);
-          setIsSignupModalOpen(true);
-        }}
-      />
-      {/* Signup Modal */}
-      <SignupPage
-        isOpen={isSignupModalOpen}
-        onClose={handleSignupClose}
-        onLoginClick={handleLoginClick}
-      />
-
-      {/* Book Now Modal */}
-      <BookNow
-        isOpen={isBookNowOpen}
-        onClose={handleBookNowClose}
-        onSubmit={handleBookNowSubmit}
-        initialData={{ checkIn, checkOut, guests, roomType }}
-        categories={categories}
-      />
-
-      {/* Feedback Modal */}
-      <FeedbackModal
-        isOpen={isFeedbackModalOpen}
-        onClose={handleFeedbackModalClose}
-        onSubmit={handleFeedbackSubmit}
-      />
-
-      {/* Navbar */}
-      <NavBar onLoginClick={handleLoginClick} />
+      <NavBar onLoginClick={handleLoginClick} onEditProfileClick={handleEditProfileClick} refreshKey={userUpdateKey} />
 
       {/* Hero Section */}
-            {/* Hero Section with Search - Magically Redesigned */}
       <div 
         className="relative min-h-screen pt-16 overflow-hidden bg-center bg-cover md:pt-20"
         style={{ backgroundImage: `url('/bag-home.jpg')` }}
@@ -512,6 +507,20 @@ export default function HomePage() {
 
       {/* Room Carousel Section */}
       <RoomCarousel galleryItems={galleryItems} />
+      <div className="flex justify-center pb-20 bg-white">
+        <Link
+          to="/gallery"
+          className="relative px-12 py-5 overflow-hidden font-semibold text-white transition-all duration-500 transform shadow-lg group bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl hover:shadow-blue-500/40 focus:outline-none focus:ring-4 focus:ring-white/40 hover:scale-105"
+        >
+          <span className="relative flex items-center space-x-3">
+            <span>Explore All Rooms</span>
+            <svg className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </span>
+        </Link>
+      </div>
+
 
       {/* Magical Testimonials Section */}
       <section className="relative py-20 overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
@@ -642,16 +651,9 @@ export default function HomePage() {
                                 <span className="text-2xl font-black text-white drop-shadow-lg">
                                   {feedback.email.charAt(0).toUpperCase()}
                                 </span>
-                                
-                                {/* Magical Ring Animation */}
                                 <div className="absolute inset-0 border-2 rounded-full border-white/30 animate-spin-slow"></div>
                               </div>
-                              
-                              {/* Floating Particles around Avatar */}
-                              <div className="absolute w-2 h-2 bg-blue-300 rounded-full -top-1 -right-1 animate-ping"></div>
-                              <div className="absolute -bottom-1 -left-1 w-1.5 h-1.5 bg-purple-300 rounded-full animate-pulse delay-500"></div>
                             </div>
-                            
                             <div className="ml-6">
                               {/* Enhanced Name */}
                               <h4 className="mb-2 text-xl font-bold text-transparent bg-gradient-to-r from-white to-blue-200 bg-clip-text">
@@ -669,12 +671,8 @@ export default function HomePage() {
                                     >
                                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                     </svg>
-                                    
-                                    {/* Magical Star Glow */}
-                                    <div className="absolute inset-0 transition-opacity duration-300 rounded-full opacity-0 bg-yellow-400/40 blur-sm group-hover/star:opacity-100"></div>
                                   </div>
                                 ))}
-                                {/* Empty Stars */}
                                 {[...Array(5 - feedback.rating)].map((_, j) => (
                                   <svg
                                     key={j}
@@ -688,7 +686,6 @@ export default function HomePage() {
                               </div>
                             </div>
                           </div>
-                          
                           {/* Enhanced Feedback Text */}
                           <div className="relative">
                             {/* Quote Icon */}
@@ -701,16 +698,6 @@ export default function HomePage() {
                             {/* Closing Quote */}
                             <div className="absolute font-serif text-6xl transform rotate-180 -bottom-6 -right-2 text-purple-400/30">"</div>
                           </div>
-                          
-                          {/* Magical Bottom Accent */}
-                          <div className="h-1 mt-6 rounded-full bg-gradient-to-r from-transparent via-blue-400/50 to-transparent"></div>
-                        </div>
-                        
-                        {/* Magical Floating Elements on Hover */}
-                        <div className="absolute inset-0 transition-opacity duration-700 opacity-0 pointer-events-none group-hover:opacity-100">
-                          <div className="absolute w-1 h-1 rounded-full top-4 right-6 bg-white/60 animate-ping"></div>
-                          <div className="absolute bottom-8 left-8 w-1.5 h-1.5 bg-blue-300/60 rounded-full animate-pulse delay-300"></div>
-                          <div className="absolute top-1/2 right-4 w-0.5 h-0.5 bg-purple-300/60 rounded-full animate-bounce delay-600"></div>
                         </div>
                       </div>
                     </div>
@@ -728,88 +715,59 @@ export default function HomePage() {
       {/* Footer */}
       <Footer />
 
-      {/* Floating Feedback Button */}
-      <button
-        onClick={handleFeedbackModalOpen}
-        className="fixed z-40 flex items-center p-3 text-white transition-all duration-300 bg-blue-600 rounded-full shadow-lg group bottom-8 right-8 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-        aria-label="Give Feedback"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.745A9.003 9.003 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-        </svg>
-        <span className="ml-0 overflow-hidden font-semibold transition-all duration-300 max-w-0 whitespace-nowrap group-hover:ml-2 group-hover:max-w-xs">
-          Give Feedback
-        </span>
-      </button>
-      <style>{`
-        @keyframes fade-in-up {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-fade-in-up {
-          animation: fade-in-up 0.5s ease-out forwards;
-        }
+      {/* Floating Feedback Button with Tooltip */}
+      <div className="fixed z-40 group bottom-8 right-8">
+        <button
+          onClick={handleFeedbackModalOpen}
+          className="flex items-center justify-center w-16 h-16 text-white transition-transform duration-300 transform bg-blue-600 rounded-full shadow-lg hover:bg-blue-700 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-blue-300"
+        >
+          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.745A9.003 9.003 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+        </button>
+        <div className="absolute px-3 py-2 mr-4 text-sm font-medium text-white transition-opacity translate-y-1/2 bg-gray-900 rounded-md shadow-sm opacity-0 bottom-1/2 right-full group-hover:opacity-100 whitespace-nowrap">
+          Add Feedback
+        </div>
+      </div>
 
-        @keyframes fade-in {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-fade-in {
-          animation: fade-in 0.8s ease-out forwards;
-        }
-
-        @keyframes spin-slow {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
-        }
-        .animate-spin-slow {
-          animation: spin-slow 8s linear infinite;
-        }
-
-        .bg-grid-pattern {
-          background-image: 
-            linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
-          background-size: 50px 50px;
-        }
-
-        /* Magical Scroll Animation */
-        @keyframes float {
-          0%, 100% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-20px);
-          }
-        }
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
-        }
-
-        /* Enhanced Glow Effects */
-        .glow-blue {
-          box-shadow: 0 0 20px rgba(59, 130, 246, 0.5), 0 0 60px rgba(59, 130, 246, 0.3);
-        }
-        .glow-purple {
-          box-shadow: 0 0 20px rgba(147, 51, 234, 0.5), 0 0 60px rgba(147, 51, 234, 0.3);
-        }
-      `}</style>
+      {/* Modals */}
+      {isLoginModalOpen && (
+        <LoginPage
+          isOpen={isLoginModalOpen}
+          onClose={handleLoginClose}
+          onSignupClick={switchToSignup}
+        />
+      )}
+      {isSignupModalOpen && (
+        <SignupPage
+          isOpen={isSignupModalOpen}
+          onClose={handleSignupClose}
+          onLoginClick={switchToLogin}
+        />
+      )}
+      {isBookNowOpen && (
+        <BookNow
+          isOpen={isBookNowOpen}
+          onClose={handleBookNowClose}
+          onSubmit={handleBookNowSubmit}
+          initialData={{ checkIn, checkOut, guests, roomType }}
+          categories={categories}
+        />
+      )}
+      {isFeedbackModalOpen && (
+        <FeedbackModal
+          isOpen={isFeedbackModalOpen}
+          onClose={handleFeedbackModalClose}
+          onSubmit={handleFeedbackSubmit}
+        />
+      )}
+      {isEditProfileOpen && (
+        <EditProfileModal
+          isOpen={isEditProfileOpen}
+          onClose={handleCloseModals}
+          onUpdate={handleProfileUpdate}
+        />
+      )}
     </div>
   );
 }
