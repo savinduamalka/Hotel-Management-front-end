@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import { SeaAnimations } from "../animation/seaAnimations";
-import axios from "axios";
+import axios from "../../config/axiosConfig";
 import toast from "react-hot-toast";
 
-export default function BookNow({ isOpen, onClose, onSubmit, categories: propCategories = [], initialData }) {
+export default function BookNow({ isOpen, onClose, onSubmit, categories: propCategories, initialData }) {
   const [email, setEmail] = useState("");
   const [roomType, setRoomType] = useState(initialData?.roomType || "");
   const [roomId, setRoomId] = useState("");
@@ -12,7 +12,7 @@ export default function BookNow({ isOpen, onClose, onSubmit, categories: propCat
   const [notes, setNotes] = useState("");
   const [error, setError] = useState("");
   const [availableRooms, setAvailableRooms] = useState([]);
-  const [categories, setCategories] = useState(propCategories);
+  const [categories, setCategories] = useState(propCategories || []);
   const modalRef = useRef(null);
 
   useEffect(() => {
@@ -24,9 +24,9 @@ export default function BookNow({ isOpen, onClose, onSubmit, categories: propCat
   useEffect(() => {
     if (isOpen) {
       if (!propCategories || propCategories.length === 0) {
-        axios.get(`${import.meta.env.VITE_BACKEND_URL}api/categories`)
+        axios.get(`api/categories`)
           .then(res => {
-            setCategories(res.data.categories);
+            setCategories(res.data.categories || []);
           })
           .catch(err => {
             toast.error("Could not load room categories.");
@@ -39,9 +39,9 @@ export default function BookNow({ isOpen, onClose, onSubmit, categories: propCat
 
   useEffect(() => {
     if (roomType) {
-      axios.get(`${import.meta.env.VITE_BACKEND_URL}api/room/by-category/${roomType}`)
+      axios.get(`api/room/by-category/${roomType}`)
         .then(res => {
-          setAvailableRooms(res.data.list);
+          setAvailableRooms(res.data.list || []);
         })
         .catch(err => {
           toast.error("Could not fetch rooms for this category.");
@@ -160,7 +160,7 @@ export default function BookNow({ isOpen, onClose, onSubmit, categories: propCat
                 required
               >
                 <option value="">Select a type</option>
-                {categories.map(cat => (
+                {categories && categories.map(cat => (
                   <option key={cat.categoryId} value={cat.name}>{cat.name}</option>
                 ))}
               </select>
@@ -175,7 +175,7 @@ export default function BookNow({ isOpen, onClose, onSubmit, categories: propCat
                 disabled={!roomType}
               >
                 <option value="">{roomType ? "Select a room" : "Select a room type first"}</option>
-                {availableRooms.map(room => (
+                {availableRooms && availableRooms.map(room => (
                   <option key={room.roomId} value={room.roomId}>{room.RoomId}</option>
                 ))}
               </select>

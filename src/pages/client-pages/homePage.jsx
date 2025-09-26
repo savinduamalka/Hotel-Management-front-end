@@ -7,7 +7,7 @@ import BookNow from "../../components/bookNow/bookNow";
 import FeedbackModal from "../../components/feedback/FeedbackModal";
 import Footer from "../../components/footer/Footer";
 import toast from "react-hot-toast";
-import axios from "axios";
+import axios from "../../config/axiosConfig";
 import Marquee from "react-fast-marquee";
 import { Skeleton } from "../../components/ui/skeleton";
 import RoomCarousel from "../../components/rooms/roomCarousel";
@@ -40,7 +40,7 @@ export default function HomePage() {
 
   useEffect(() => {
     axios
-      .get(import.meta.env.VITE_BACKEND_URL + "api/feedback/public-visible-feedbacks")
+      .get("api/feedback/public-visible-feedbacks")
       .then((res) => {
         const visibleFeedbacks = res.data.feedbacks.filter(f => f.visibility);
         setFeedbacks(visibleFeedbacks);
@@ -52,16 +52,16 @@ export default function HomePage() {
       });
 
     axios
-      .get(import.meta.env.VITE_BACKEND_URL + "api/categories")
+      .get("api/categories")
       .then((res) => {
-        setCategories(res.data.categories);
+        setCategories(res.data.categories || []);
       })
       .catch((err) => {
         toast.error("Could not load room categories.");
       });
 
     axios
-      .get(import.meta.env.VITE_BACKEND_URL + "api/gallery")
+      .get("api/gallery")
       .then((res) => {
         setGalleryItems(res.data.galleryItems);
         setIsLoadingGallery(false);
@@ -139,7 +139,7 @@ export default function HomePage() {
   const handleFeedbackSubmit = async (feedbackData) => {
     const token = localStorage.getItem("token");
     axios
-      .post(import.meta.env.VITE_BACKEND_URL + "api/feedback", feedbackData, {
+      .post("api/feedback", feedbackData, {
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
@@ -149,7 +149,7 @@ export default function HomePage() {
         toast.success("Thank you for your feedback!");
         handleFeedbackModalClose();
         axios
-          .get(import.meta.env.VITE_BACKEND_URL + "api/feedback/public-visible-feedbacks")
+          .get("api/feedback/public-visible-feedbacks")
           .then((res) => {
             const visibleFeedbacks = res.data.feedbacks.filter(f => f.visibility);
             setFeedbacks(visibleFeedbacks);
@@ -169,7 +169,7 @@ export default function HomePage() {
     }
 
     axios
-      .post(import.meta.env.VITE_BACKEND_URL + "api/booking", bookingData, {
+      .post("api/booking", bookingData, {
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
@@ -405,7 +405,7 @@ export default function HomePage() {
                             required
                             className="w-full px-6 py-5 font-semibold text-center text-gray-800 transition-all duration-500 border-2 shadow-2xl appearance-none cursor-pointer bg-white/95 backdrop-blur-sm rounded-2xl border-white/30 focus:outline-none focus:ring-4 focus:ring-yellow-400/50 focus:border-yellow-400 focus:bg-white group-hover:shadow-yellow-400/20 group-hover:scale-105">
                             <option value="" disabled>Choose Your Paradise</option>
-                            {categories.map((cat, index) => (
+                            {categories && categories.map((cat, index) => (
                               <option key={cat.categoryId || index} value={cat.name}>{cat.name}</option>
                             ))}
                           </select>
