@@ -188,12 +188,18 @@ const RoomCarousel = ({ galleryItems }) => {
 
       {/* Image Preview Modal */}
       {selectedImage && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm">
-          <div className="relative w-full h-full flex items-center justify-center p-4">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm"
+          onClick={closeModal}
+        >
+          <div
+            className="relative w-full max-w-5xl mx-auto p-6 flex items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
             {/* Close Button */}
             <button
               onClick={closeModal}
-              className="absolute top-6 right-6 w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300 z-10"
+              className="absolute -top-4 -right-4 w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300"
             >
               <X className="w-6 h-6" />
             </button>
@@ -201,36 +207,31 @@ const RoomCarousel = ({ galleryItems }) => {
             {/* Navigation Buttons */}
             <button
               onClick={() => navigateImage('prev')}
-              className="absolute left-6 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300 z-10"
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-16 w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300"
             >
               <ChevronLeft className="w-6 h-6" />
             </button>
 
             <button
               onClick={() => navigateImage('next')}
-              className="absolute right-6 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300 z-10"
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-16 w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300"
             >
               <ChevronRight className="w-6 h-6" />
             </button>
 
-            {/* Main Image */}
-            <div className="relative max-w-5xl max-h-[80vh] w-full">
+            {/* Main Image Container */}
+            <div className="relative w-full max-h-[80vh]">
               <img
                 src={selectedImage.image}
                 alt={selectedImage.name}
                 className="w-full h-full object-contain rounded-2xl shadow-2xl"
               />
-              
               {/* Image Info Overlay */}
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-8 rounded-b-2xl">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-3xl font-bold text-white mb-2">
-                      Room {selectedImage.name}
-                    </h3>
-                    <p className="text-white/90 text-lg">
-                      {selectedImage.description} Room Experience
-                    </p>
+                    <h3 className="text-3xl font-bold text-white mb-2">Room {selectedImage.name}</h3>
+                    <p className="text-white/90 text-lg">{selectedImage.description} Room Experience</p>
                     <div className="flex items-center space-x-1 mt-2">
                       {[...Array(5)].map((_, i) => (
                         <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
@@ -243,19 +244,12 @@ const RoomCarousel = ({ galleryItems }) => {
                   </div>
                 </div>
               </div>
-            </div>
-
-            {/* Image Counter */}
-            <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-white font-medium">
-              {currentIndex + 1} / {galleryItems.length}
+              {/* Image Counter */}
+              <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-white font-medium">
+                {currentIndex + 1} / {galleryItems.length}
+              </div>
             </div>
           </div>
-
-          {/* Click outside to close */}
-          <div 
-            className="absolute inset-0 -z-10" 
-            onClick={closeModal}
-          ></div>
         </div>
       )}
     </section>
