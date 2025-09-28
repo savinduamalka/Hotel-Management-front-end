@@ -44,7 +44,8 @@ export default function HomePage() {
     axios
       .get("api/feedback/public-visible-feedbacks")
       .then((res) => {
-        const visibleFeedbacks = res.data.feedbacks.filter(f => f.visibility);
+        const feedbacks = res.data.feedbacks || [];
+        const visibleFeedbacks = feedbacks.filter(f => f.visibility);
         setFeedbacks(visibleFeedbacks);
         setIsLoadingFeedbacks(false);
       })
