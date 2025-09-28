@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import axios from "../../config/axiosConfig";
+import toast from "react-hot-toast";
 import { Link } from "react-router-dom"; 
 import NavBar from "./navBar";
 import LoginPage from "../../components/auth/login";
@@ -6,8 +8,6 @@ import SignupPage from "../../components/auth/signup";
 import BookNow from "../../components/bookNow/bookNow";
 import FeedbackModal from "../../components/feedback/FeedbackModal";
 import Footer from "../../components/footer/Footer";
-import toast from "react-hot-toast";
-import axios from "../../config/axiosConfig";
 import Marquee from "react-fast-marquee";
 import { Skeleton } from "../../components/ui/skeleton";
 import RoomCarousel from "../../components/rooms/roomCarousel";
