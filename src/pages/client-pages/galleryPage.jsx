@@ -4,6 +4,7 @@ import LoginPage from "../../components/auth/login";
 import SignupPage from "../../components/auth/signup";
 import SeaAnimations from "../../components/animation/seaAnimations";
 import Footer from "../../components/footer/Footer";
+import EditProfileModal from "../../components/auth/editProfile";
 import { 
   Search, 
   Filter, 
@@ -31,11 +32,16 @@ const GalleryPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [viewMode, setViewMode] = useState("masonry");
   const [favorites, setFavorites] = useState(new Set());
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
+  const [userUpdateKey, setUserUpdateKey] = useState(0);
 
   const handleLoginClick = () => setIsLoginModalOpen(true);
   const handleLoginClose = () => setIsLoginModalOpen(false);
   const handleSignupClick = () => setIsSignupModalOpen(true);
   const handleSignupClose = () => setIsSignupModalOpen(false);
+  const handleEditProfileClick = () => setIsEditProfileOpen(true);
+  const handleProfileUpdate = () => { setIsEditProfileOpen(false); setUserUpdateKey(k => k + 1); };
+  const handleCloseModals = () => { setIsLoginModalOpen(false); setIsSignupModalOpen(false); setIsEditProfileOpen(false); };
 
   useEffect(() => {
     // Simulate loading
@@ -366,17 +372,14 @@ const GalleryPage = () => {
       <LoginPage
         isOpen={isLoginModalOpen}
         onClose={handleLoginClose}
-        onSignupClick={() => {
-          setIsLoginModalOpen(false);
-          setIsSignupModalOpen(true);
-        }}
+        onSignupClick={() => { setIsLoginModalOpen(false); setIsSignupModalOpen(true); }}
       />
       <SignupPage
         isOpen={isSignupModalOpen}
         onClose={handleSignupClose}
         onLoginClick={handleLoginClick}
       />
-      <NavbarDefault onLoginClick={handleLoginClick} />
+      <NavbarDefault onLoginClick={handleLoginClick} onEditProfileClick={handleEditProfileClick} refreshKey={userUpdateKey} />
 
       <main className="flex-1 pt-20">
         {/* Magical Hero Section */}
@@ -750,6 +753,10 @@ const GalleryPage = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {isEditProfileOpen && (
+        <EditProfileModal isOpen={isEditProfileOpen} onClose={handleCloseModals} onUpdate={handleProfileUpdate} />
       )}
 
       <Footer />

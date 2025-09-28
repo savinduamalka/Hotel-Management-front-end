@@ -64,7 +64,9 @@ export default function UserProfile({ onLoginClick, onEditProfileClick, refreshK
   };
 
   const handleEditProfile = () => {
-    onEditProfileClick();
+    if (onEditProfileClick) {
+      onEditProfileClick();
+    }
     setIsDropdownOpen(false);
   };
 
@@ -90,12 +92,12 @@ export default function UserProfile({ onLoginClick, onEditProfileClick, refreshK
               >
                 {user.image ? (
                   <img 
-                    className="object-cover w-8 h-8 border-2 rounded-full shadow-sm border-white/70 hover:border-white/90 transition-all duration-200"
+                    className="object-cover w-8 h-8 transition-all duration-200 border-2 rounded-full shadow-sm border-white/70 hover:border-white/90"
                     src={user.image} 
                     alt={`${user.firstName} ${user.lastName}` || "User"}
                   />
                 ) : (
-                  <div className="flex items-center justify-center w-8 h-8 border-2 rounded-full shadow-sm bg-white/20 border-white/70 backdrop-blur-sm hover:border-white/90 transition-all duration-200">
+                  <div className="flex items-center justify-center w-8 h-8 transition-all duration-200 border-2 rounded-full shadow-sm bg-white/20 border-white/70 backdrop-blur-sm hover:border-white/90">
                     <span className="text-sm font-semibold text-white">
                       {user.firstName ? user.firstName.charAt(0).toUpperCase() : "G"}
                     </span>
@@ -123,7 +125,7 @@ export default function UserProfile({ onLoginClick, onEditProfileClick, refreshK
                   </div>
                   <button
                     onClick={handleEditProfile}
-                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200"
+                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 transition-colors duration-200 hover:bg-blue-50 hover:text-blue-600"
                   >
                     <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -133,7 +135,7 @@ export default function UserProfile({ onLoginClick, onEditProfileClick, refreshK
                   <hr className="my-1 border-gray-100" />
                   <button
                     onClick={handleLogout}
-                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors duration-200"
+                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 transition-colors duration-200 hover:bg-red-50 hover:text-red-600"
                   >
                     <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />

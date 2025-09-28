@@ -6,6 +6,7 @@ import SignupPage from "../../components/auth/signup";
 import Footer from "../../components/footer/Footer";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+import EditProfileModal from "../../components/auth/editProfile";
 
 const ContactPage = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -15,6 +16,8 @@ const ContactPage = () => {
   const [phone, setPhone] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
+  const [userUpdateKey, setUserUpdateKey] = useState(0);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -37,6 +40,19 @@ const ContactPage = () => {
 
   const handleSignupClose = () => {
     setIsSignupModalOpen(false);
+  };
+
+  const handleEditProfileClick = () => setIsEditProfileOpen(true);
+
+  const handleProfileUpdate = () => {
+    setIsEditProfileOpen(false);
+    setUserUpdateKey((k) => k + 1);
+  };
+
+  const handleCloseModals = () => {
+    setIsLoginModalOpen(false);
+    setIsSignupModalOpen(false);
+    setIsEditProfileOpen(false);
   };
 
   const handleSubmit = (e) => {
@@ -103,7 +119,11 @@ const ContactPage = () => {
         onClose={handleSignupClose}
         onLoginClick={handleLoginClick}
       />
-      <NavbarDefault onLoginClick={handleLoginClick} />
+      <NavbarDefault
+        onLoginClick={handleLoginClick}
+        onEditProfileClick={handleEditProfileClick}
+        refreshKey={userUpdateKey}
+      />
       
       {/* Floating particles background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
@@ -392,6 +412,14 @@ const ContactPage = () => {
             </div>
           </div>
         </section>
+
+        {isEditProfileOpen && (
+          <EditProfileModal
+            isOpen={isEditProfileOpen}
+            onClose={handleCloseModals}
+            onUpdate={handleProfileUpdate}
+          />
+        )}
 
         <Footer />
       </div>
