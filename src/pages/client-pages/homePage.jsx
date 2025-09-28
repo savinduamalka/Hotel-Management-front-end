@@ -37,6 +37,8 @@ export default function HomePage() {
   const [isLoadingGallery, setIsLoadingGallery] = useState(true);
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [userUpdateKey, setUserUpdateKey] = useState(0);
+  const [hotItems, setHotItems] = useState([]);
+  const [isLoadingHotItems, setIsLoadingHotItems] = useState(true);
 
   useEffect(() => {
     axios
@@ -69,6 +71,18 @@ export default function HomePage() {
       .catch((err) => {
         toast.error("Could not load gallery items.");
         setIsLoadingGallery(false);
+      });
+
+    // Fetch hot/trending items
+    axios
+      .get("api/menu/hot")
+      .then((res) => {
+        setHotItems(res.data.hotItems || []);
+        setIsLoadingHotItems(false);
+      })
+      .catch((err) => {
+        toast.error("Could not load trending dishes.");
+        setIsLoadingHotItems(false);
       });
   }, []);
 
@@ -548,6 +562,212 @@ export default function HomePage() {
 
       {/* Attractions Section - Completely Redesigned */}
       <AttractionsSection onBookNowClick={handleBookNowClick} />
+
+      {/* Magical Trending Dishes Section */}
+      <section className="relative py-20 overflow-hidden bg-white">
+        {/* Magical Background Elements */}
+        <div className="absolute inset-0 -z-10">
+          {/* Subtle Sri Lankan patterns */}
+          <div className="absolute inset-0 opacity-[0.02] bg-repeat" style={{backgroundImage: "url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"100\" height=\"100\" viewBox=\"0 0 100 100\"><path d=\"M50 15c-19.3 0-35 15.7-35 35s15.7 35 35 35 35-15.7 35-35-15.7-35-35-35zm0 60c-13.8 0-25-11.2-25-25s11.2-25 25-25 25 11.2 25 25-11.2 25-25 25z\" fill=\"%23d97706\"/><circle cx=\"50\" cy=\"50\" r=\"8\" fill=\"%23d97706\"/></svg>')"}}></div>
+          
+          {/* Floating magical elements */}
+          <div className="absolute top-20 left-16 w-2 h-2 bg-amber-300 rounded-full animate-pulse opacity-40"></div>
+          <div className="absolute top-32 right-20 w-1 h-1 bg-red-400 rounded-full animate-ping opacity-30"></div>
+          <div className="absolute bottom-40 left-32 w-1.5 h-1.5 bg-orange-400 rounded-full animate-bounce opacity-35"></div>
+          <div className="absolute bottom-20 right-16 w-1 h-1 bg-amber-500 rounded-full animate-pulse opacity-25"></div>
+        </div>
+
+        <div className="container relative z-10 px-4 mx-auto sm:px-6 lg:px-8">
+          {/* Magical Header */}
+          <div className="mb-16 text-center">
+            {/* Trending Icon */}
+            <div className="relative inline-flex items-center justify-center mb-8">
+              <div className="absolute inset-0 w-20 h-20 rounded-full bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-indigo-500/20 blur-lg animate-pulse"></div>
+              <div className="relative flex items-center justify-center w-16 h-16 rounded-full shadow-2xl bg-gradient-to-br from-pink-500 via-purple-500 to-indigo-600 animate-bounce">
+                <span className="text-2xl animate-pulse">🔥</span>
+              </div>
+            </div>
+
+            {/* Magical Title */}
+            <div className="space-y-4">
+              <h2 className="text-5xl md:text-6xl lg:text-7xl font-extrabold bg-gradient-to-br from-amber-700 via-red-600 to-orange-700 bg-clip-text text-transparent leading-tight">
+                ප්‍රචලිත ආහාර
+              </h2>
+              <div className="relative">
+                <span className="text-4xl md:text-5xl lg:text-6xl font-light text-slate-700">
+                  Trending Delicacies
+                </span>
+                <div className="absolute w-32 h-1 transform -translate-x-1/2 rounded-full -bottom-3 left-1/2 bg-gradient-to-r from-transparent via-amber-500 to-transparent animate-pulse"></div>
+              </div>
+            </div>
+
+            <p className="mt-8 text-xl leading-relaxed text-slate-600 max-w-3xl mx-auto font-medium">
+              <span className="text-amber-700 font-semibold">"රසවත් කෑම"</span> •
+              Discover our most beloved dishes, crafted with authentic Ceylon spices and traditional recipes passed down through generations
+            </p>
+          </div>
+
+          {/* Magical Hot Items Display */}
+          {isLoadingHotItems ? (
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="relative group">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-amber-400 via-red-400 to-orange-400 rounded-3xl blur opacity-20 animate-pulse"></div>
+                  <div className="relative overflow-hidden bg-white rounded-3xl shadow-xl border border-amber-200/50">
+                    <div className="absolute inset-x-0 top-0 h-3 bg-gradient-to-r from-amber-400 via-red-500 to-orange-500"></div>
+                    <div className="p-6">
+                      <Skeleton className="w-full h-48 mb-4 bg-amber-200/50 rounded-2xl" />
+                      <Skeleton className="h-6 mb-2 bg-amber-200/50 rounded" />
+                      <Skeleton className="h-4 mb-4 w-2/3 bg-amber-200/30 rounded" />
+                      <div className="flex gap-2">
+                        <Skeleton className="h-8 flex-1 bg-amber-200/50 rounded-lg" />
+                        <Skeleton className="h-8 flex-1 bg-amber-200/50 rounded-lg" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : hotItems.length === 0 ? (
+            <div className="text-center py-16">
+              <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-amber-100 to-orange-100 rounded-full mb-6">
+                <span className="text-4xl">🍽️</span>
+              </div>
+              <h3 className="text-2xl font-bold text-amber-800 mb-2">No Trending Dishes Yet</h3>
+              <p className="text-amber-600">Check back soon for our hottest culinary creations!</p>
+            </div>
+          ) : (
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {hotItems.slice(0, 8).map((item, index) => (
+                <div
+                  key={`${item.category}-${item.id}`}
+                  className="group relative overflow-hidden bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 border border-amber-200/50 hover:border-amber-300"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  {/* Magical Top Border */}
+                  <div className="absolute inset-x-0 top-0 h-3 bg-gradient-to-r from-amber-400 via-red-500 to-orange-500"></div>
+                  <div className="absolute top-3 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-amber-300/60 to-transparent"></div>
+                  
+                  {/* Corner sparkles */}
+                  <div className="absolute top-2 left-2 w-1 h-1 bg-yellow-400 rounded-full animate-pulse"></div>
+                  <div className="absolute top-2 right-2 w-0.5 h-0.5 bg-pink-400 rounded-full animate-ping"></div>
+
+                  {/* Trending Badge */}
+                  <div className="absolute top-4 left-4 z-10 flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white rounded-full shadow-lg backdrop-blur-sm animate-pulse">
+                    <div className="relative">
+                      <span className="text-sm">🔥</span>
+                      <div className="absolute -inset-1 bg-pink-400/40 rounded-full animate-ping"></div>
+                    </div>
+                    <span className="text-xs font-bold tracking-wider">TRENDING</span>
+                    <div className="flex gap-1">
+                      <span className="w-1 h-1 bg-yellow-300 rounded-full animate-pulse"></span>
+                      <span className="w-1 h-1 bg-yellow-300 rounded-full animate-pulse" style={{animationDelay: '150ms'}}></span>
+                      <span className="w-1 h-1 bg-yellow-300 rounded-full animate-pulse" style={{animationDelay: '300ms'}}></span>
+                    </div>
+                  </div>
+
+                  {/* Image Section */}
+                  <div className="relative overflow-hidden">
+                    <img
+                      src={item.image || "/vite.svg"}
+                      alt={item.name}
+                      className="object-cover w-full h-48 transition-all duration-700 bg-gradient-to-br from-amber-50 to-orange-50 group-hover:scale-110"
+                      loading="lazy"
+                    />
+                    
+                    {/* Overlay Gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    
+                    {/* Magical Corner Decoration */}
+                    <div className="absolute top-4 right-4 w-8 h-8 border-2 border-white/80 rounded-full backdrop-blur-sm bg-white/30 flex items-center justify-center group-hover:rotate-180 transition-all duration-500">
+                      <span className="text-amber-600 text-xs animate-pulse">✨</span>
+                    </div>
+                  </div>
+
+                  {/* Content Section */}
+                  <div className="p-6 space-y-4">
+                    {/* Category & Title */}
+                    <div className="space-y-2">
+                      <span className="text-xs font-semibold text-amber-600 uppercase tracking-widest bg-amber-50 px-2 py-1 rounded-full">
+                        {item.category}
+                      </span>
+                      <h3 className="text-lg font-bold text-slate-800 group-hover:text-amber-700 transition-colors duration-300 leading-tight">
+                        {item.name}
+                      </h3>
+                      <div className="w-12 h-0.5 bg-gradient-to-r from-amber-400 to-red-400 rounded-full"></div>
+                    </div>
+
+                    {/* Pricing */}
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-xs font-semibold text-amber-700 tracking-widest uppercase">මිල • Price</span>
+                        <div className="flex-1 h-px bg-gradient-to-r from-amber-300 to-transparent"></div>
+                      </div>
+                      
+                      <div className="grid gap-2">
+                        <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gradient-to-r from-green-50 via-emerald-50 to-teal-50 border border-emerald-300 text-emerald-800 shadow-sm hover:shadow-md transition-all duration-300">
+                          <span className="text-sm">🥄</span>
+                          <span className="text-xs font-bold tracking-wide opacity-80">Small</span>
+                          <div className="flex-1 text-right">
+                            <span className="text-sm font-bold">Rs {item.smallPrice}</span>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gradient-to-r from-amber-50 via-orange-50 to-red-50 border border-amber-300 text-amber-800 shadow-sm hover:shadow-md transition-all duration-300">
+                          <span className="text-sm">🍽️</span>
+                          <span className="text-xs font-bold tracking-wide opacity-80">Large</span>
+                          <div className="flex-1 text-right">
+                            <span className="text-sm font-bold">Rs {item.largePrice}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Magical Footer */}
+                    <div className="flex items-center justify-center pt-3 border-t border-amber-100">
+                      <div className="flex items-center gap-2 text-amber-600 opacity-60 group-hover:opacity-100 transition-all duration-300">
+                        <span className="text-xs animate-bounce">🏺</span>
+                        <div className="w-6 h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent"></div>
+                        <span className="text-xs animate-pulse">✨</span>
+                        <div className="w-6 h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent"></div>
+                        <span className="text-xs animate-bounce" style={{animationDelay: '300ms'}}>🏺</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Magical Browse Menu Button */}
+          <div className="flex justify-center mt-16">
+            <Link
+              to="/menu"
+              className="relative px-12 py-6 overflow-hidden font-black text-white transition-all duration-500 transform shadow-2xl group bg-gradient-to-r from-amber-600 via-red-600 to-orange-700 rounded-3xl hover:shadow-amber-500/50 focus:outline-none focus:ring-4 focus:ring-amber-300/50 hover:scale-110 hover:-translate-y-2"
+            >
+              {/* Magical Shimmer Effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
+              
+              {/* Magical Particles */}
+              <div className="absolute inset-0 transition-opacity duration-500 opacity-0 group-hover:opacity-100">
+                <div className="absolute w-1 h-1 bg-white rounded-full top-2 left-4 animate-ping"></div>
+                <div className="absolute w-1 h-1 delay-300 bg-amber-200 rounded-full bottom-2 right-6 animate-pulse"></div>
+                <div className="absolute top-1/2 left-1/2 w-0.5 h-0.5 bg-orange-200 rounded-full animate-bounce delay-500"></div>
+              </div>
+              
+              <span className="relative flex items-center space-x-4 text-xl tracking-widest">
+                <svg className="w-6 h-6 transition-transform duration-500 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                <span>BROWSE FULL MENU</span>
+                <svg className="w-6 h-6 transition-transform duration-500 group-hover:translate-x-2 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5-5 5M6 12h12" />
+                </svg>
+              </span>
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* Room Carousel Section */}
       <RoomCarousel galleryItems={galleryItems} />

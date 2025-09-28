@@ -1,13 +1,10 @@
-import axios from 'axios';
-
-const baseURL = import.meta.env.VITE_BACKEND_URL;
-const isNgrok = /ngrok/i.test(baseURL || '');
+import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL,
+  baseURL: import.meta.env.VITE_BACKEND_URL,
   headers: {
-    'Content-Type': 'application/json',
-    ...(isNgrok ? { 'ngrok-skip-browser-warning': 'true' } : {}),
+    "Content-Type": "application/json",
+    "ngrok-skip-browser-warning": "true",
   },
 });
 
