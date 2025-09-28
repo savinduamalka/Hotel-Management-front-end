@@ -49,6 +49,7 @@ export default function HomePage() {
         setIsLoadingFeedbacks(false);
       })
       .catch((err) => {
+        console.log(err);
         toast.error("Could not load testimonials.");
         setIsLoadingFeedbacks(false);
       });
@@ -571,10 +572,10 @@ export default function HomePage() {
           <div className="absolute inset-0 opacity-[0.02] bg-repeat" style={{backgroundImage: "url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"100\" height=\"100\" viewBox=\"0 0 100 100\"><path d=\"M50 15c-19.3 0-35 15.7-35 35s15.7 35 35 35 35-15.7 35-35-15.7-35-35-35zm0 60c-13.8 0-25-11.2-25-25s11.2-25 25-25 25 11.2 25 25-11.2 25-25 25z\" fill=\"%23d97706\"/><circle cx=\"50\" cy=\"50\" r=\"8\" fill=\"%23d97706\"/></svg>')"}}></div>
           
           {/* Floating magical elements */}
-          <div className="absolute top-20 left-16 w-2 h-2 bg-amber-300 rounded-full animate-pulse opacity-40"></div>
-          <div className="absolute top-32 right-20 w-1 h-1 bg-red-400 rounded-full animate-ping opacity-30"></div>
+          <div className="absolute w-2 h-2 rounded-full top-20 left-16 bg-amber-300 animate-pulse opacity-40"></div>
+          <div className="absolute w-1 h-1 bg-red-400 rounded-full top-32 right-20 animate-ping opacity-30"></div>
           <div className="absolute bottom-40 left-32 w-1.5 h-1.5 bg-orange-400 rounded-full animate-bounce opacity-35"></div>
-          <div className="absolute bottom-20 right-16 w-1 h-1 bg-amber-500 rounded-full animate-pulse opacity-25"></div>
+          <div className="absolute w-1 h-1 rounded-full opacity-25 bottom-20 right-16 bg-amber-500 animate-pulse"></div>
         </div>
 
         <div className="container relative z-10 px-4 mx-auto sm:px-6 lg:px-8">
@@ -590,19 +591,19 @@ export default function HomePage() {
 
             {/* Magical Title */}
             <div className="space-y-4">
-              <h2 className="text-5xl md:text-6xl lg:text-7xl font-extrabold bg-gradient-to-br from-amber-700 via-red-600 to-orange-700 bg-clip-text text-transparent leading-tight">
+              <h2 className="text-5xl font-extrabold leading-tight text-transparent md:text-6xl lg:text-7xl bg-gradient-to-br from-amber-700 via-red-600 to-orange-700 bg-clip-text">
                 ප්‍රචලිත ආහාර
               </h2>
               <div className="relative">
-                <span className="text-4xl md:text-5xl lg:text-6xl font-light text-slate-700">
+                <span className="text-4xl font-light md:text-5xl lg:text-6xl text-slate-700">
                   Trending Delicacies
                 </span>
                 <div className="absolute w-32 h-1 transform -translate-x-1/2 rounded-full -bottom-3 left-1/2 bg-gradient-to-r from-transparent via-amber-500 to-transparent animate-pulse"></div>
               </div>
             </div>
 
-            <p className="mt-8 text-xl leading-relaxed text-slate-600 max-w-3xl mx-auto font-medium">
-              <span className="text-amber-700 font-semibold">"රසවත් කෑම"</span> •
+            <p className="max-w-3xl mx-auto mt-8 text-xl font-medium leading-relaxed text-slate-600">
+              <span className="font-semibold text-amber-700">"රසවත් කෑම"</span> •
               Discover our most beloved dishes, crafted with authentic Ceylon spices and traditional recipes passed down through generations
             </p>
           </div>
@@ -613,15 +614,15 @@ export default function HomePage() {
               {[...Array(8)].map((_, i) => (
                 <div key={i} className="relative group">
                   <div className="absolute -inset-1 bg-gradient-to-r from-amber-400 via-red-400 to-orange-400 rounded-3xl blur opacity-20 animate-pulse"></div>
-                  <div className="relative overflow-hidden bg-white rounded-3xl shadow-xl border border-amber-200/50">
+                  <div className="relative overflow-hidden bg-white border shadow-xl rounded-3xl border-amber-200/50">
                     <div className="absolute inset-x-0 top-0 h-3 bg-gradient-to-r from-amber-400 via-red-500 to-orange-500"></div>
                     <div className="p-6">
                       <Skeleton className="w-full h-48 mb-4 bg-amber-200/50 rounded-2xl" />
-                      <Skeleton className="h-6 mb-2 bg-amber-200/50 rounded" />
-                      <Skeleton className="h-4 mb-4 w-2/3 bg-amber-200/30 rounded" />
+                      <Skeleton className="h-6 mb-2 rounded bg-amber-200/50" />
+                      <Skeleton className="w-2/3 h-4 mb-4 rounded bg-amber-200/30" />
                       <div className="flex gap-2">
-                        <Skeleton className="h-8 flex-1 bg-amber-200/50 rounded-lg" />
-                        <Skeleton className="h-8 flex-1 bg-amber-200/50 rounded-lg" />
+                        <Skeleton className="flex-1 h-8 rounded-lg bg-amber-200/50" />
+                        <Skeleton className="flex-1 h-8 rounded-lg bg-amber-200/50" />
                       </div>
                     </div>
                   </div>
@@ -629,11 +630,11 @@ export default function HomePage() {
               ))}
             </div>
           ) : hotItems.length === 0 ? (
-            <div className="text-center py-16">
-              <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-amber-100 to-orange-100 rounded-full mb-6">
+            <div className="py-16 text-center">
+              <div className="inline-flex items-center justify-center w-24 h-24 mb-6 rounded-full bg-gradient-to-br from-amber-100 to-orange-100">
                 <span className="text-4xl">🍽️</span>
               </div>
-              <h3 className="text-2xl font-bold text-amber-800 mb-2">No Trending Dishes Yet</h3>
+              <h3 className="mb-2 text-2xl font-bold text-amber-800">No Trending Dishes Yet</h3>
               <p className="text-amber-600">Check back soon for our hottest culinary creations!</p>
             </div>
           ) : (
@@ -641,7 +642,7 @@ export default function HomePage() {
               {hotItems.slice(0, 8).map((item, index) => (
                 <div
                   key={`${item.category}-${item.id}`}
-                  className="group relative overflow-hidden bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 border border-amber-200/50 hover:border-amber-300"
+                  className="relative overflow-hidden transition-all duration-500 transform bg-white border shadow-xl group rounded-3xl hover:shadow-2xl hover:-translate-y-3 border-amber-200/50 hover:border-amber-300"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
                   {/* Magical Top Border */}
@@ -649,14 +650,14 @@ export default function HomePage() {
                   <div className="absolute top-3 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-amber-300/60 to-transparent"></div>
                   
                   {/* Corner sparkles */}
-                  <div className="absolute top-2 left-2 w-1 h-1 bg-yellow-400 rounded-full animate-pulse"></div>
+                  <div className="absolute w-1 h-1 bg-yellow-400 rounded-full top-2 left-2 animate-pulse"></div>
                   <div className="absolute top-2 right-2 w-0.5 h-0.5 bg-pink-400 rounded-full animate-ping"></div>
 
                   {/* Trending Badge */}
-                  <div className="absolute top-4 left-4 z-10 flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white rounded-full shadow-lg backdrop-blur-sm animate-pulse">
+                  <div className="absolute z-10 flex items-center gap-2 px-3 py-2 text-white rounded-full shadow-lg top-4 left-4 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 backdrop-blur-sm animate-pulse">
                     <div className="relative">
                       <span className="text-sm">🔥</span>
-                      <div className="absolute -inset-1 bg-pink-400/40 rounded-full animate-ping"></div>
+                      <div className="absolute rounded-full -inset-1 bg-pink-400/40 animate-ping"></div>
                     </div>
                     <span className="text-xs font-bold tracking-wider">TRENDING</span>
                     <div className="flex gap-1">
@@ -676,11 +677,11 @@ export default function HomePage() {
                     />
                     
                     {/* Overlay Gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div className="absolute inset-0 transition-opacity duration-500 opacity-0 bg-gradient-to-t from-black/20 via-transparent to-transparent group-hover:opacity-100"></div>
                     
                     {/* Magical Corner Decoration */}
-                    <div className="absolute top-4 right-4 w-8 h-8 border-2 border-white/80 rounded-full backdrop-blur-sm bg-white/30 flex items-center justify-center group-hover:rotate-180 transition-all duration-500">
-                      <span className="text-amber-600 text-xs animate-pulse">✨</span>
+                    <div className="absolute flex items-center justify-center w-8 h-8 transition-all duration-500 border-2 rounded-full top-4 right-4 border-white/80 backdrop-blur-sm bg-white/30 group-hover:rotate-180">
+                      <span className="text-xs text-amber-600 animate-pulse">✨</span>
                     </div>
                   </div>
 
@@ -688,10 +689,10 @@ export default function HomePage() {
                   <div className="p-6 space-y-4">
                     {/* Category & Title */}
                     <div className="space-y-2">
-                      <span className="text-xs font-semibold text-amber-600 uppercase tracking-widest bg-amber-50 px-2 py-1 rounded-full">
+                      <span className="px-2 py-1 text-xs font-semibold tracking-widest uppercase rounded-full text-amber-600 bg-amber-50">
                         {item.category}
                       </span>
-                      <h3 className="text-lg font-bold text-slate-800 group-hover:text-amber-700 transition-colors duration-300 leading-tight">
+                      <h3 className="text-lg font-bold leading-tight transition-colors duration-300 text-slate-800 group-hover:text-amber-700">
                         {item.name}
                       </h3>
                       <div className="w-12 h-0.5 bg-gradient-to-r from-amber-400 to-red-400 rounded-full"></div>
@@ -700,12 +701,12 @@ export default function HomePage() {
                     {/* Pricing */}
                     <div className="space-y-2">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="text-xs font-semibold text-amber-700 tracking-widest uppercase">මිල • Price</span>
+                        <span className="text-xs font-semibold tracking-widest uppercase text-amber-700">මිල • Price</span>
                         <div className="flex-1 h-px bg-gradient-to-r from-amber-300 to-transparent"></div>
                       </div>
                       
                       <div className="grid gap-2">
-                        <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gradient-to-r from-green-50 via-emerald-50 to-teal-50 border border-emerald-300 text-emerald-800 shadow-sm hover:shadow-md transition-all duration-300">
+                        <div className="flex items-center gap-2 px-3 py-2 transition-all duration-300 border rounded-lg shadow-sm bg-gradient-to-r from-green-50 via-emerald-50 to-teal-50 border-emerald-300 text-emerald-800 hover:shadow-md">
                           <span className="text-sm">🥄</span>
                           <span className="text-xs font-bold tracking-wide opacity-80">Small</span>
                           <div className="flex-1 text-right">
@@ -713,7 +714,7 @@ export default function HomePage() {
                           </div>
                         </div>
                         
-                        <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gradient-to-r from-amber-50 via-orange-50 to-red-50 border border-amber-300 text-amber-800 shadow-sm hover:shadow-md transition-all duration-300">
+                        <div className="flex items-center gap-2 px-3 py-2 transition-all duration-300 border rounded-lg shadow-sm bg-gradient-to-r from-amber-50 via-orange-50 to-red-50 border-amber-300 text-amber-800 hover:shadow-md">
                           <span className="text-sm">🍽️</span>
                           <span className="text-xs font-bold tracking-wide opacity-80">Large</span>
                           <div className="flex-1 text-right">
@@ -725,7 +726,7 @@ export default function HomePage() {
                     
                     {/* Magical Footer */}
                     <div className="flex items-center justify-center pt-3 border-t border-amber-100">
-                      <div className="flex items-center gap-2 text-amber-600 opacity-60 group-hover:opacity-100 transition-all duration-300">
+                      <div className="flex items-center gap-2 transition-all duration-300 text-amber-600 opacity-60 group-hover:opacity-100">
                         <span className="text-xs animate-bounce">🏺</span>
                         <div className="w-6 h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent"></div>
                         <span className="text-xs animate-pulse">✨</span>
@@ -751,7 +752,7 @@ export default function HomePage() {
               {/* Magical Particles */}
               <div className="absolute inset-0 transition-opacity duration-500 opacity-0 group-hover:opacity-100">
                 <div className="absolute w-1 h-1 bg-white rounded-full top-2 left-4 animate-ping"></div>
-                <div className="absolute w-1 h-1 delay-300 bg-amber-200 rounded-full bottom-2 right-6 animate-pulse"></div>
+                <div className="absolute w-1 h-1 delay-300 rounded-full bg-amber-200 bottom-2 right-6 animate-pulse"></div>
                 <div className="absolute top-1/2 left-1/2 w-0.5 h-0.5 bg-orange-200 rounded-full animate-bounce delay-500"></div>
               </div>
               
