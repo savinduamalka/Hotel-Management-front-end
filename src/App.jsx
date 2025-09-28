@@ -4,6 +4,7 @@ import HomePage from "./pages/client-pages/homePage";
 import { Toaster } from "react-hot-toast";
 import ContactPage from "./pages/contact/contacts";
 import GalleryPage from "./pages/client-pages/galleryPage";
+import MenuPage from "./pages/client-pages/menuPage";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/admin/*" element={<AdminPage />} />
           <Route path="/contacts" element={<ContactPage/>}/>
           <Route path="/gallery" element={<GalleryPage />} />
+          <Route path="/menu" element={<MenuPage />} />
           <Route
             path="/*"
             element={

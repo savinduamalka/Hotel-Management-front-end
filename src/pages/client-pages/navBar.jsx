@@ -37,6 +37,7 @@ export default function NavbarDefault({ onLoginClick, onEditProfileClick, refres
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Gallery", path: "/gallery" },
+    { name: "Menu", path: "/menu" },
     { name: "Contact us", path: "/contacts" },
   ];
 
