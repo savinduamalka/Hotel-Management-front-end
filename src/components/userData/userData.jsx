@@ -150,7 +150,7 @@ export default function UserProfile({ onLoginClick, onEditProfileClick, refreshK
       </div>
 
       {/* Add the animation styles */}
-      <style jsx>{`
+      <style>{`
         @keyframes fadeIn {
           0% { 
             opacity: 0; 
