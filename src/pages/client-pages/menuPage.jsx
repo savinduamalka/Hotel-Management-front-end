@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import NavBar from "./navBar";
 import Footer from "../../components/footer/Footer";
 import { Skeleton } from "../../components/ui/skeleton";
-import EditProfileModal from "../../components/modals/EditProfileModal";
+import EditProfileModal from "../../components/auth/editProfile";
 
 const MENU_ENDPOINT = "api/menu";
 
