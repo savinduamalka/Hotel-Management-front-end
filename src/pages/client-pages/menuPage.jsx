@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import NavBar from "./navBar";
 import Footer from "../../components/footer/Footer";
 import { Skeleton } from "../../components/ui/skeleton";
+import EditProfileModal from "../../components/modals/EditProfileModal";
 
 const MENU_ENDPOINT = "api/menu";
 
@@ -13,6 +14,8 @@ export default function MenuPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [sizeView, setSizeView] = useState("both");
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
+  const [userUpdateKey, setUserUpdateKey] = useState(0);
 
   const fetchMenu = async () => {
     try {
@@ -67,25 +70,35 @@ export default function MenuPage() {
     return cat ? cat.items || [] : [];
   }, [filteredCategories, activeCategory, categories, search]);
 
+  const handleEditProfileClick = () => setIsEditProfileOpen(true);
+  const handleProfileUpdate = () => {
+    setIsEditProfileOpen(false);
+    setUserUpdateKey((k) => k + 1);
+  };
+  const handleCloseModals = () => setIsEditProfileOpen(false);
+
   return (
     <div className="relative flex flex-col min-h-screen overflow-hidden bg-white text-slate-800">
       {/* Magical Sri Lankan Patterns on Pure White */}
       <div className="absolute inset-0 -z-10">
         {/* Subtle lotus pattern overlay */}
-        <div className="absolute inset-0 opacity-[0.015] bg-repeat" style={{backgroundImage: "url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\"><path d=\"M40 20c-11 0-20 9-20 20s9 20 20 20 20-9 20-20-9-20-20-20zm0 35c-8.3 0-15-6.7-15-15s6.7-15 15-15 15 6.7 15 15-6.7 15-15 15z\" fill=\"%23d97706\"/><circle cx=\"40\" cy=\"40\" r=\"3\" fill=\"%23d97706\"/></svg>')"}}></div>
-        
+        <div className="absolute inset-0 opacity-[0.015] bg-repeat" style={{ backgroundImage: "url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"80\" height=\"80\" viewBox=\"0 0 80 80\"><path d=\"M40 20c-11 0-20 9-20 20s9 20 20 20 20-9 20-20-9-20-20-20zm0 35c-8.3 0-15-6.7-15-15s6.7-15 15-15 15 6.7 15 15-6.7 15-15 15z\" fill=\"%23d97706\"/><circle cx=\"40\" cy=\"40\" r=\"3\" fill=\"%23d97706\"/></svg>')" }}></div>
+
         {/* Magical floating elements */}
         <div className="absolute w-2 h-2 rounded-full top-20 right-16 bg-amber-300 animate-pulse opacity-40"></div>
         <div className="absolute w-1 h-1 bg-red-400 rounded-full top-40 left-20 animate-ping opacity-30"></div>
         <div className="absolute bottom-32 right-32 w-1.5 h-1.5 bg-orange-400 rounded-full animate-bounce opacity-35"></div>
         <div className="absolute w-1 h-1 rounded-full opacity-25 bottom-60 left-16 bg-amber-500 animate-pulse"></div>
-        
+
         {/* Elegant corner decorations */}
         <div className="absolute top-0 left-0 w-32 h-32 opacity-[0.03] bg-gradient-to-br from-amber-500 to-transparent rounded-full blur-xl"></div>
         <div className="absolute bottom-0 right-0 w-40 h-40 opacity-[0.03] bg-gradient-to-tl from-red-500 to-transparent rounded-full blur-xl"></div>
       </div>
 
-      <NavBar />
+      <NavBar
+        onEditProfileClick={handleEditProfileClick}
+        refreshKey={userUpdateKey}
+      />
 
       <main className="flex-1 pb-16 pt-28">
         {/* Hero Section with Traditional Sri Lankan Design */}
@@ -94,7 +107,7 @@ export default function MenuPage() {
             {/* Decorative Traditional Border */}
             <div className="absolute w-32 h-1 transform -translate-x-1/2 -top-8 left-1/2 bg-gradient-to-r from-transparent via-amber-500 to-transparent"></div>
             <div className="absolute w-2 h-2 transform -translate-x-1/2 rounded-full -top-6 left-1/2 bg-amber-500"></div>
-            
+
             <div className="grid items-center gap-12 md:grid-cols-12">
               <div className="space-y-8 md:col-span-7">
                 {/* Magical Traditional Badge */}
@@ -148,7 +161,7 @@ export default function MenuPage() {
                       <div className="absolute inset-y-0 flex items-center pointer-events-none right-4">
                         <div className="flex items-center justify-center w-8 h-8 transition-transform duration-300 rounded-full bg-gradient-to-br from-amber-400 to-red-400 hover:rotate-12">
                           <svg width="16" height="16" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
-                            <circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/>
+                            <circle cx="11" cy="11" r="7" /><path d="m21 21-4.35-4.35" />
                           </svg>
                         </div>
                       </div>
@@ -163,17 +176,17 @@ export default function MenuPage() {
                     </span>
                     <div className="flex gap-1">
                       {[
-                        {val:"both", label:"Both", emoji:"🍽️"},
-                        {val:"small", label:"Small", emoji:"🥄"},
-                        {val:"large", label:"Large", emoji:"🍲"}
+                        { val: "both", label: "Both", emoji: "🍽️" },
+                        { val: "small", label: "Small", emoji: "🥄" },
+                        { val: "large", label: "Large", emoji: "🍲" }
                       ].map(o => (
                         <button
                           key={o.val}
                           type="button"
                           onClick={() => setSizeView(o.val)}
-                          className={`px-4 py-2 rounded-xl text-xs font-bold tracking-wide transition-all duration-300 flex items-center gap-1 hover:scale-105 ${sizeView===o.val?"bg-gradient-to-r from-amber-400 to-red-400 text-white shadow-lg transform scale-105 animate-pulse":"text-slate-700 hover:bg-gradient-to-r hover:from-amber-50 hover:to-red-50 hover:text-amber-800"}`}
+                          className={`px-4 py-2 rounded-xl text-xs font-bold tracking-wide transition-all duration-300 flex items-center gap-1 hover:scale-105 ${sizeView === o.val ? "bg-gradient-to-r from-amber-400 to-red-400 text-white shadow-lg transform scale-105 animate-pulse" : "text-slate-700 hover:bg-gradient-to-r hover:from-amber-50 hover:to-red-50 hover:text-amber-800"}`}
                         >
-                          <span className={sizeView===o.val ? "animate-bounce" : ""}>{o.emoji}</span>
+                          <span className={sizeView === o.val ? "animate-bounce" : ""}>{o.emoji}</span>
                           <span>{o.label}</span>
                         </button>
                       ))}
@@ -189,14 +202,14 @@ export default function MenuPage() {
                   <div className="relative p-8 h-full bg-gradient-to-br from-amber-600 via-red-600 to-orange-700 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-[1.02]">
                     {/* Magical Pattern Overlay */}
                     <div className="absolute inset-0 opacity-15">
-                      <div className="absolute inset-0" style={{backgroundImage: "url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"100\" height=\"100\" viewBox=\"0 0 100 100\"><path d=\"M50 10L60 40L90 40L68 58L78 88L50 70L22 88L32 58L10 40L40 40Z\" fill=\"%23ffffff\"/></svg>')", backgroundSize: '50px 50px'}}></div>
+                      <div className="absolute inset-0" style={{ backgroundImage: "url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"100\" height=\"100\" viewBox=\"0 0 100 100\"><path d=\"M50 10L60 40L90 40L68 58L78 88L50 70L22 88L32 58L10 40L40 40Z\" fill=\"%23ffffff\"/></svg>')", backgroundSize: '50px 50px' }}></div>
                     </div>
-                    
+
                     {/* Floating magical elements */}
                     <div className="absolute w-1 h-1 bg-yellow-300 rounded-full top-4 right-6 animate-ping"></div>
                     <div className="absolute bottom-8 left-6 w-0.5 h-0.5 bg-pink-300 rounded-full animate-pulse"></div>
                     <div className="absolute top-12 right-12 w-1.5 h-1.5 bg-white/30 rounded-full animate-bounce"></div>
-                    
+
                     {/* Content */}
                     <div className="relative z-10 flex flex-col justify-between h-full text-white">
                       <div>
@@ -209,7 +222,7 @@ export default function MenuPage() {
                             <p className="text-sm opacity-90">Heritage Cuisine</p>
                           </div>
                         </div>
-                        
+
                         <blockquote className="space-y-4">
                           <p className="text-lg italic leading-relaxed">
                             "From the royal kitchens of ancient Kandy to your table—each recipe carries the whispers of monsoon winds and the warmth of traditional hearths."
@@ -219,7 +232,7 @@ export default function MenuPage() {
                           </p>
                         </blockquote>
                       </div>
-                      
+
                       <div className="flex items-center justify-between pt-6 border-t border-white/20">
                         <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 backdrop-blur">
                           <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
@@ -246,11 +259,11 @@ export default function MenuPage() {
                   {/* Enchanted Border Pattern */}
                   <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-amber-400 via-red-500 to-orange-500"></div>
                   <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r from-orange-500 via-red-500 to-amber-400"></div>
-                  
+
                   {/* Magical sparkles */}
                   <div className="absolute w-1 h-1 bg-yellow-400 rounded-full top-4 right-4 animate-twinkle"></div>
                   <div className="absolute top-8 right-8 w-0.5 h-0.5 bg-pink-400 rounded-full animate-twinkle animation-delay-500"></div>
-                  
+
                   <div className="p-6 space-y-6">
                     {/* Elegant Header */}
                     <div className="space-y-3 text-center">
@@ -278,7 +291,7 @@ export default function MenuPage() {
                         ))}
                       </div>
                     )}
-                    
+
                     {/* No Results */}
                     {!loading && filteredCategories.length === 0 && (
                       <div className="py-8 space-y-3 text-center">
@@ -288,30 +301,28 @@ export default function MenuPage() {
                         <p className="text-sm text-amber-700">කිසිවක් හමු නොවීය • No results found</p>
                       </div>
                     )}
-                    
+
                     {/* Category Navigation */}
                     <nav className="space-y-3">
                       {!loading && filteredCategories.map((cat, index) => (
                         <button
                           key={cat.name}
                           onClick={() => setActiveCategory(cat.name)}
-                          className={`group w-full relative flex items-center gap-4 p-4 rounded-2xl border-2 text-left font-medium transition-all duration-300 overflow-hidden ${
-                            activeCategory === cat.name
+                          className={`group w-full relative flex items-center gap-4 p-4 rounded-2xl border-2 text-left font-medium transition-all duration-300 overflow-hidden ${activeCategory === cat.name
                               ? "border-amber-400 bg-gradient-to-r from-amber-50 to-red-50 text-amber-900 shadow-lg transform scale-[1.02]"
                               : "border-amber-200/50 text-slate-700 hover:border-amber-300 hover:bg-amber-50/50 hover:shadow-md"
-                          }`}
+                            }`}
                         >
                           {/* Decorative Icon */}
-                          <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${
-                            activeCategory === cat.name
+                          <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all ${activeCategory === cat.name
                               ? "bg-gradient-to-br from-amber-400 to-red-400 text-white shadow-lg"
                               : "bg-amber-100 text-amber-600 group-hover:bg-amber-200"
-                          }`}>
+                            }`}>
                             <span className="text-lg">
                               {index === 0 ? "🍛" : index === 1 ? "🍜" : index === 2 ? "🥘" : index === 3 ? "🍲" : "🥗"}
                             </span>
                           </div>
-                          
+
                           {/* Category Info */}
                           <div className="flex-1 min-w-0">
                             <div className="text-sm font-semibold truncate">{cat.name}</div>
@@ -319,7 +330,7 @@ export default function MenuPage() {
                               {cat.items?.length || 0} items
                             </div>
                           </div>
-                          
+
                           {/* Active Indicator */}
                           {activeCategory === cat.name && (
                             <div className="flex flex-col items-center gap-1">
@@ -327,13 +338,12 @@ export default function MenuPage() {
                               <span className="text-[9px] font-bold tracking-widest text-amber-600">ACTIVE</span>
                             </div>
                           )}
-                          
+
                           {/* Hover Arrow */}
-                          <div className={`transition-all duration-300 ${
-                            activeCategory === cat.name ? "opacity-100 translate-x-0" : "opacity-0 translate-x-2 group-hover:opacity-100 group-hover:translate-x-0"
-                          }`}>
+                          <div className={`transition-all duration-300 ${activeCategory === cat.name ? "opacity-100 translate-x-0" : "opacity-0 translate-x-2 group-hover:opacity-100 group-hover:translate-x-0"
+                            }`}>
                             <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
-                              <path d="m9 18 6-6-6-6"/>
+                              <path d="m9 18 6-6-6-6" />
                             </svg>
                           </div>
                         </button>
@@ -381,7 +391,7 @@ export default function MenuPage() {
                           <div className="w-12 h-0.5 bg-gradient-to-r from-red-500 to-amber-500"></div>
                         </div>
                       </div>
-                      
+
                       {/* Decorative Element */}
                       <div className="items-center hidden gap-2 px-4 py-2 border rounded-full md:flex bg-gradient-to-r from-amber-50 to-red-50 border-amber-200">
                         <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
@@ -389,7 +399,7 @@ export default function MenuPage() {
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Items Grid */}
                   <div className="grid gap-8 sm:grid-cols-2 xl:grid-cols-3">
                     {activeItems.map(item => (
@@ -404,6 +414,14 @@ export default function MenuPage() {
       </main>
 
       <Footer />
+      {/* Add EditProfileModal for profile editing */}
+      {isEditProfileOpen && (
+        <EditProfileModal
+          isOpen={isEditProfileOpen}
+          onClose={handleCloseModals}
+          onUpdate={handleProfileUpdate}
+        />
+      )}
     </div>
   );
 }
@@ -414,11 +432,11 @@ function MenuCard({ item, sizeView }) {
       {/* Magical Top Border Pattern */}
       <div className="absolute inset-x-0 top-0 h-3 bg-gradient-to-r from-amber-400 via-red-500 to-orange-500"></div>
       <div className="absolute top-3 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-amber-300/60 to-transparent"></div>
-      
+
       {/* Magical corner sparkles */}
       <div className="absolute w-1 h-1 bg-yellow-400 rounded-full top-2 left-2 animate-pulse"></div>
       <div className="absolute top-2 right-2 w-0.5 h-0.5 bg-pink-400 rounded-full animate-ping"></div>
-      
+
       {/* Image Section */}
       <div className="relative overflow-hidden">
         <img
@@ -427,10 +445,10 @@ function MenuCard({ item, sizeView }) {
           className="object-cover w-full transition-all duration-700 h-52 bg-gradient-to-br from-amber-50 to-orange-50 group-hover:scale-110"
           loading="lazy"
         />
-        
+
         {/* Overlay Gradient */}
         <div className="absolute inset-0 transition-opacity duration-500 opacity-0 bg-gradient-to-t from-black/20 via-transparent to-transparent group-hover:opacity-100"></div>
-        
+
         {/* Trending Badge */}
         {item.hot && (
           <div className="absolute flex items-center gap-2 px-4 py-2 text-white rounded-full shadow-lg top-4 left-4 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 backdrop-blur-sm animate-pulse">
@@ -447,7 +465,7 @@ function MenuCard({ item, sizeView }) {
             </div>
           </div>
         )}
-        
+
         {/* Magical Corner Decoration */}
         <div className="absolute flex items-center justify-center w-8 h-8 transition-all duration-500 border-2 rounded-full top-4 right-4 border-white/80 backdrop-blur-sm bg-white/30 group-hover:rotate-180 hover:scale-110">
           <span className="text-xs text-amber-600 animate-pulse">✨</span>
@@ -470,27 +488,27 @@ function MenuCard({ item, sizeView }) {
             <span className="text-xs font-semibold tracking-widest uppercase text-amber-700">මිල • Price</span>
             <div className="flex-1 h-px bg-gradient-to-r from-amber-300 to-transparent"></div>
           </div>
-          
+
           <div className="grid gap-3">
             {(sizeView === "both" || sizeView === "small") && (
-              <PricePill 
-                label="Small" 
-                value={item.smallPrice} 
-                accent="from-green-50 via-emerald-50 to-teal-50 border-emerald-300 text-emerald-800" 
+              <PricePill
+                label="Small"
+                value={item.smallPrice}
+                accent="from-green-50 via-emerald-50 to-teal-50 border-emerald-300 text-emerald-800"
                 icon="🥄"
               />
             )}
             {(sizeView === "both" || sizeView === "large") && (
-              <PricePill 
-                label="Large" 
-                value={item.largePrice} 
-                accent="from-amber-50 via-orange-50 to-red-50 border-amber-300 text-amber-800" 
+              <PricePill
+                label="Large"
+                value={item.largePrice}
+                accent="from-amber-50 via-orange-50 to-red-50 border-amber-300 text-amber-800"
                 icon="🍽️"
               />
             )}
           </div>
         </div>
-        
+
         {/* Magical Footer Decoration */}
         <div className="flex items-center justify-center pt-4 border-t border-amber-100">
           <div className="flex items-center gap-2 transition-all duration-300 text-amber-600 opacity-60 group-hover:opacity-100 hover:scale-105">
