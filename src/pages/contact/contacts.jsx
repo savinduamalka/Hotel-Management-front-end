@@ -7,6 +7,7 @@ import Footer from "../../components/footer/Footer";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import EditProfileModal from "../../components/auth/editProfile";
+import ForgotPasswordModal from "../../components/auth/ForgotPasswordModal";
 
 const ContactPage = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -18,6 +19,7 @@ const ContactPage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [userUpdateKey, setUserUpdateKey] = useState(0);
+  const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -54,6 +56,10 @@ const ContactPage = () => {
     setIsSignupModalOpen(false);
     setIsEditProfileOpen(false);
   };
+
+  const handleForgotPasswordClick = () => setIsForgotPasswordOpen(true);
+
+  const handleCloseForgotPassword = () => setIsForgotPasswordOpen(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -113,6 +119,7 @@ const ContactPage = () => {
           setIsLoginModalOpen(false);
           setIsSignupModalOpen(true);
         }}
+        onForgotPasswordClick={handleForgotPasswordClick}
       />
       <SignupPage
         isOpen={isSignupModalOpen}
@@ -418,6 +425,13 @@ const ContactPage = () => {
             isOpen={isEditProfileOpen}
             onClose={handleCloseModals}
             onUpdate={handleProfileUpdate}
+          />
+        )}
+
+        {isForgotPasswordOpen && (
+          <ForgotPasswordModal
+            isOpen={isForgotPasswordOpen}
+            onClose={handleCloseForgotPassword}
           />
         )}
 

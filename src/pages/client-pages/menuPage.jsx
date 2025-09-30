@@ -5,6 +5,7 @@ import NavBar from "./navBar";
 import Footer from "../../components/footer/Footer";
 import { Skeleton } from "../../components/ui/skeleton";
 import EditProfileModal from "../../components/auth/editProfile";
+import ForgotPasswordModal from "../../components/auth/ForgotPasswordModal";
 
 const MENU_ENDPOINT = "api/menu";
 
@@ -16,6 +17,7 @@ export default function MenuPage() {
   const [sizeView, setSizeView] = useState("both");
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [userUpdateKey, setUserUpdateKey] = useState(0);
+  const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false);
 
   const fetchMenu = async () => {
     try {
@@ -76,6 +78,8 @@ export default function MenuPage() {
     setUserUpdateKey((k) => k + 1);
   };
   const handleCloseModals = () => setIsEditProfileOpen(false);
+  const handleForgotPasswordClick = () => setIsForgotPasswordOpen(true);
+  const handleCloseForgotPassword = () => setIsForgotPasswordOpen(false);
 
   return (
     <div className="relative flex flex-col min-h-screen overflow-hidden bg-white text-slate-800">
@@ -420,6 +424,13 @@ export default function MenuPage() {
           isOpen={isEditProfileOpen}
           onClose={handleCloseModals}
           onUpdate={handleProfileUpdate}
+        />
+      )}
+      {/* Add ForgotPasswordModal for password reset */}
+      {isForgotPasswordOpen && (
+        <ForgotPasswordModal
+          isOpen={isForgotPasswordOpen}
+          onClose={handleCloseForgotPassword}
         />
       )}
     </div>

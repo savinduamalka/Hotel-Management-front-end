@@ -5,6 +5,7 @@ import SignupPage from "../../components/auth/signup";
 import SeaAnimations from "../../components/animation/seaAnimations";
 import Footer from "../../components/footer/Footer";
 import EditProfileModal from "../../components/auth/editProfile";
+import ForgotPasswordModal from "../../components/auth/ForgotPasswordModal";
 import { 
   Search, 
   Filter, 
@@ -34,6 +35,7 @@ const GalleryPage = () => {
   const [favorites, setFavorites] = useState(new Set());
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [userUpdateKey, setUserUpdateKey] = useState(0);
+  const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false);
 
   const handleLoginClick = () => setIsLoginModalOpen(true);
   const handleLoginClose = () => setIsLoginModalOpen(false);
@@ -42,6 +44,8 @@ const GalleryPage = () => {
   const handleEditProfileClick = () => setIsEditProfileOpen(true);
   const handleProfileUpdate = () => { setIsEditProfileOpen(false); setUserUpdateKey(k => k + 1); };
   const handleCloseModals = () => { setIsLoginModalOpen(false); setIsSignupModalOpen(false); setIsEditProfileOpen(false); };
+  const handleForgotPasswordClick = () => setIsForgotPasswordOpen(true);
+  const handleCloseForgotPassword = () => setIsForgotPasswordOpen(false);
 
   useEffect(() => {
     // Simulate loading
@@ -373,6 +377,7 @@ const GalleryPage = () => {
         isOpen={isLoginModalOpen}
         onClose={handleLoginClose}
         onSignupClick={() => { setIsLoginModalOpen(false); setIsSignupModalOpen(true); }}
+        onForgotPasswordClick={handleForgotPasswordClick}
       />
       <SignupPage
         isOpen={isSignupModalOpen}
@@ -757,6 +762,13 @@ const GalleryPage = () => {
 
       {isEditProfileOpen && (
         <EditProfileModal isOpen={isEditProfileOpen} onClose={handleCloseModals} onUpdate={handleProfileUpdate} />
+      )}
+
+      {isForgotPasswordOpen && (
+        <ForgotPasswordModal
+          isOpen={isForgotPasswordOpen}
+          onClose={handleCloseForgotPassword}
+        />
       )}
 
       <Footer />
