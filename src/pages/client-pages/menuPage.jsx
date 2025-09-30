@@ -121,6 +121,7 @@ export default function MenuPage() {
 
       <NavBar
         onEditProfileClick={handleEditProfileClick}
+        onLoginClick={handleLoginClick}
         refreshKey={userUpdateKey}
       />
 
