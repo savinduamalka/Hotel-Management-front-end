@@ -28,21 +28,22 @@ const ContactPage = () => {
     }
   }, []);
 
+  // Modal open/close handlers
   const handleLoginClick = () => {
     setIsLoginModalOpen(true);
+    setIsSignupModalOpen(false);
+    setIsForgotPasswordOpen(false);
   };
 
-  const handleLoginClose = () => {
-    setIsLoginModalOpen(false);
-  };
+  const handleLoginClose = () => setIsLoginModalOpen(false);
 
   const handleSignupClick = () => {
     setIsSignupModalOpen(true);
+    setIsLoginModalOpen(false);
+    setIsForgotPasswordOpen(false);
   };
 
-  const handleSignupClose = () => {
-    setIsSignupModalOpen(false);
-  };
+  const handleSignupClose = () => setIsSignupModalOpen(false);
 
   const handleEditProfileClick = () => setIsEditProfileOpen(true);
 
@@ -57,7 +58,11 @@ const ContactPage = () => {
     setIsEditProfileOpen(false);
   };
 
-  const handleForgotPasswordClick = () => setIsForgotPasswordOpen(true);
+  const handleForgotPasswordClick = () => {
+    setIsForgotPasswordOpen(true);
+    setIsLoginModalOpen(false);
+    setIsSignupModalOpen(false);
+  };
 
   const handleCloseForgotPassword = () => setIsForgotPasswordOpen(false);
 
@@ -115,16 +120,14 @@ const ContactPage = () => {
       <LoginPage
         isOpen={isLoginModalOpen}
         onClose={handleLoginClose}
-        onSignupClick={() => {
-          setIsLoginModalOpen(false);
-          setIsSignupModalOpen(true);
-        }}
+        onSignupClick={handleSignupClick}
         onForgotPasswordClick={handleForgotPasswordClick}
       />
       <SignupPage
         isOpen={isSignupModalOpen}
         onClose={handleSignupClose}
         onLoginClick={handleLoginClick}
+        onForgotPasswordClick={handleForgotPasswordClick}
       />
       <NavbarDefault
         onLoginClick={handleLoginClick}

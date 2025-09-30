@@ -6,6 +6,8 @@ import Footer from "../../components/footer/Footer";
 import { Skeleton } from "../../components/ui/skeleton";
 import EditProfileModal from "../../components/auth/editProfile";
 import ForgotPasswordModal from "../../components/auth/ForgotPasswordModal";
+import LoginPage from "../../components/auth/login";
+import SignupPage from "../../components/auth/signup";
 
 const MENU_ENDPOINT = "api/menu";
 
@@ -18,6 +20,8 @@ export default function MenuPage() {
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [userUpdateKey, setUserUpdateKey] = useState(0);
   const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
 
   const fetchMenu = async () => {
     try {
@@ -78,7 +82,23 @@ export default function MenuPage() {
     setUserUpdateKey((k) => k + 1);
   };
   const handleCloseModals = () => setIsEditProfileOpen(false);
-  const handleForgotPasswordClick = () => setIsForgotPasswordOpen(true);
+  const handleLoginClick = () => {
+    setIsLoginModalOpen(true);
+    setIsSignupModalOpen(false);
+    setIsForgotPasswordOpen(false);
+  };
+  const handleLoginClose = () => setIsLoginModalOpen(false);
+  const handleSignupClick = () => {
+    setIsSignupModalOpen(true);
+    setIsLoginModalOpen(false);
+    setIsForgotPasswordOpen(false);
+  };
+  const handleSignupClose = () => setIsSignupModalOpen(false);
+  const handleForgotPasswordClick = () => {
+    setIsForgotPasswordOpen(true);
+    setIsLoginModalOpen(false);
+    setIsSignupModalOpen(false);
+  };
   const handleCloseForgotPassword = () => setIsForgotPasswordOpen(false);
 
   return (
@@ -424,6 +444,24 @@ export default function MenuPage() {
           isOpen={isEditProfileOpen}
           onClose={handleCloseModals}
           onUpdate={handleProfileUpdate}
+        />
+      )}
+      {/* Add LoginPage modal */}
+      {isLoginModalOpen && (
+        <LoginPage
+          isOpen={isLoginModalOpen}
+          onClose={handleLoginClose}
+          onSignupClick={handleSignupClick}
+          onForgotPasswordClick={handleForgotPasswordClick}
+        />
+      )}
+      {/* Add SignupPage modal */}
+      {isSignupModalOpen && (
+        <SignupPage
+          isOpen={isSignupModalOpen}
+          onClose={handleSignupClose}
+          onLoginClick={handleLoginClick}
+          onForgotPasswordClick={handleForgotPasswordClick}
         />
       )}
       {/* Add ForgotPasswordModal for password reset */}

@@ -37,14 +37,26 @@ const GalleryPage = () => {
   const [userUpdateKey, setUserUpdateKey] = useState(0);
   const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false);
 
-  const handleLoginClick = () => setIsLoginModalOpen(true);
+  const handleLoginClick = () => {
+    setIsLoginModalOpen(true);
+    setIsSignupModalOpen(false);
+    setIsForgotPasswordOpen(false);
+  };
   const handleLoginClose = () => setIsLoginModalOpen(false);
-  const handleSignupClick = () => setIsSignupModalOpen(true);
+  const handleSignupClick = () => {
+    setIsSignupModalOpen(true);
+    setIsLoginModalOpen(false);
+    setIsForgotPasswordOpen(false);
+  };
   const handleSignupClose = () => setIsSignupModalOpen(false);
   const handleEditProfileClick = () => setIsEditProfileOpen(true);
   const handleProfileUpdate = () => { setIsEditProfileOpen(false); setUserUpdateKey(k => k + 1); };
   const handleCloseModals = () => { setIsLoginModalOpen(false); setIsSignupModalOpen(false); setIsEditProfileOpen(false); };
-  const handleForgotPasswordClick = () => setIsForgotPasswordOpen(true);
+  const handleForgotPasswordClick = () => {
+    setIsForgotPasswordOpen(true);
+    setIsLoginModalOpen(false);
+    setIsSignupModalOpen(false);
+  };
   const handleCloseForgotPassword = () => setIsForgotPasswordOpen(false);
 
   useEffect(() => {
@@ -376,13 +388,14 @@ const GalleryPage = () => {
       <LoginPage
         isOpen={isLoginModalOpen}
         onClose={handleLoginClose}
-        onSignupClick={() => { setIsLoginModalOpen(false); setIsSignupModalOpen(true); }}
+        onSignupClick={handleSignupClick}
         onForgotPasswordClick={handleForgotPasswordClick}
       />
       <SignupPage
         isOpen={isSignupModalOpen}
         onClose={handleSignupClose}
         onLoginClick={handleLoginClick}
+        onForgotPasswordClick={handleForgotPasswordClick}
       />
       <NavbarDefault onLoginClick={handleLoginClick} onEditProfileClick={handleEditProfileClick} refreshKey={userUpdateKey} />
 
