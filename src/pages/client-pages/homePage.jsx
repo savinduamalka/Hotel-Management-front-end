@@ -566,7 +566,7 @@ export default function HomePage() {
       <AttractionsSection onBookNowClick={handleBookNowClick} />
 
       {/* Magical Trending Dishes Section */}
-      <section className="relative py-20 overflow-hidden bg-white">
+      <section className="relative py-24 overflow-hidden bg-white">
         {/* Magical Background Elements */}
         <div className="absolute inset-0 -z-10">
           {/* Subtle Sri Lankan patterns */}
@@ -581,7 +581,7 @@ export default function HomePage() {
 
         <div className="container relative z-10 px-4 mx-auto sm:px-6 lg:px-8">
           {/* Magical Header */}
-          <div className="mb-16 text-center">
+          <div className="mb-20 text-center">
             {/* Trending Icon */}
             <div className="relative inline-flex items-center justify-center mb-8">
               <div className="absolute inset-0 w-20 h-20 rounded-full bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-indigo-500/20 blur-lg animate-pulse"></div>
@@ -595,7 +595,7 @@ export default function HomePage() {
               <h2 className="text-5xl font-extrabold leading-tight text-transparent md:text-6xl lg:text-7xl bg-gradient-to-br from-amber-700 via-red-600 to-orange-700 bg-clip-text">
                 ප්‍රචලිත ආහාර
               </h2>
-              <div className="relative">
+              <div className="relative mb-8">
                 <span className="text-4xl font-light md:text-5xl lg:text-6xl text-slate-700">
                   Trending Delicacies
                 </span>
