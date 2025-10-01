@@ -267,6 +267,34 @@ export default function HomePage() {
     setIsForgotPasswordModalOpen(false);
   };
 
+  // Dynamically size feedback testimonial cards based on text length
+  const getFeedbackSizing = (text = "") => {
+    const len = text.length;
+    let widthClass;
+    if (len < 60) { // very short => narrower card
+      widthClass = "w-64";
+    } else if (len < 140) { // medium
+      widthClass = "w-80";
+    } else if (len < 260) { // default
+      widthClass = "w-96";
+    } else { // very long => a bit wider to reduce height
+      widthClass = "w-[28rem]";
+    }
+
+    let paddingClass;
+    if (len < 60) {
+      paddingClass = "p-5";
+    } else if (len < 140) {
+      paddingClass = "p-6";
+    } else if (len < 260) {
+      paddingClass = "p-7";
+    } else {
+      paddingClass = "p-8";
+    }
+
+    return { widthClass, paddingClass };
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       <NavBar onLoginClick={handleLoginClick} onEditProfileClick={handleEditProfileClick} refreshKey={userUpdateKey} />
@@ -885,89 +913,65 @@ export default function HomePage() {
               
               <Marquee pauseOnHover={true} speed={50} className="overflow-hidden">
                 <div className="flex space-x-8">
-                  {feedbacks.map((feedback, index) => (
-                    <div
-                      key={feedback.feedbackId}
-                      className="relative transition-all duration-500 transform group w-96 hover:scale-105"
-                      style={{ animationDelay: `${index * 200}ms` }}
-                    >
-                      {/* Magical Card Glow */}
-                      <div className="absolute inset-0 transition-all duration-700 opacity-0 bg-gradient-to-r from-blue-400/0 via-purple-400/20 to-cyan-400/0 rounded-3xl blur-xl group-hover:opacity-100 group-hover:blur-2xl"></div>
-                      
-                      {/* Magical Card */}
-                      <div className="relative overflow-hidden transition-all duration-500 border-2 shadow-2xl bg-white/5 backdrop-blur-xl rounded-3xl border-white/10 group-hover:border-white/20">
-                        {/* Magical Background Pattern */}
-                        <div className="absolute inset-0 opacity-30">
-                          <div className="absolute top-0 right-0 w-32 h-32 translate-x-16 -translate-y-16 rounded-full bg-gradient-to-bl from-blue-400/20 to-transparent animate-pulse"></div>
-                          <div className="absolute bottom-0 left-0 w-24 h-24 delay-1000 -translate-x-12 translate-y-12 rounded-full bg-gradient-to-tr from-purple-400/15 to-transparent animate-pulse"></div>
-                        </div>
-                        
-                        {/* Magical Shimmer Effect */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1500"></div>
-                        
-                        <div className="relative z-10 p-8">
-                          {/* Enhanced Avatar Section */}
-                          <div className="flex items-center mb-6">
-                            <div className="relative">
-                              {/* Avatar Glow */}
-                              <div className="absolute inset-0 w-16 h-16 rounded-full bg-gradient-to-br from-blue-400/40 to-purple-400/40 blur-md animate-pulse"></div>
-                              
-                              {/* Magical Avatar */}
-                              <div className="relative flex items-center justify-center w-16 h-16 border-2 rounded-full shadow-2xl bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-600 border-white/20">
-                                <span className="text-2xl font-black text-white drop-shadow-lg">
-                                  {feedback.email.charAt(0).toUpperCase()}
-                                </span>
-                                <div className="absolute inset-0 border-2 rounded-full border-white/30 animate-spin-slow"></div>
+                  {feedbacks.map((feedback, index) => {
+                    const { widthClass, paddingClass } = getFeedbackSizing(feedback.feedback);
+                    return (
+                      <div
+                        key={feedback.feedbackId}
+                        className={`relative transition-all duration-500 transform group ${widthClass} hover:scale-105`}
+                        style={{ animationDelay: `${index * 200}ms` }}
+                      >
+                        {/* Magical Card Glow */}
+                        <div className="absolute inset-0 transition-all duration-700 opacity-0 bg-gradient-to-r from-blue-400/0 via-purple-400/20 to-cyan-400/0 rounded-3xl blur-xl group-hover:opacity-100 group-hover:blur-2xl"></div>
+                        {/* Magical Card */}
+                        <div className="relative overflow-hidden transition-all duration-500 border-2 shadow-2xl bg-white/5 backdrop-blur-xl rounded-3xl border-white/10 group-hover:border-white/20">
+                          {/* Background Pattern */}
+                          <div className="absolute inset-0 opacity-30">
+                            <div className="absolute top-0 right-0 w-32 h-32 translate-x-16 -translate-y-16 rounded-full bg-gradient-to-bl from-blue-400/20 to-transparent animate-pulse"></div>
+                            <div className="absolute bottom-0 left-0 w-24 h-24 delay-1000 -translate-x-12 translate-y-12 rounded-full bg-gradient-to-tr from-purple-400/15 to-transparent animate-pulse"></div>
+                          </div>
+                          {/* Shimmer */}
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1500"></div>
+                          <div className={`relative z-10 flex flex-col ${paddingClass} gap-4`}> 
+                            {/* Avatar & Meta */}
+                            <div className="flex items-center">
+                              <div className="relative">
+                                <div className="absolute inset-0 w-16 h-16 rounded-full bg-gradient-to-br from-blue-400/40 to-purple-400/40 blur-md animate-pulse"></div>
+                                <div className="relative flex items-center justify-center w-14 h-14 border-2 rounded-full shadow-2xl sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-600 border-white/20">
+                                  <span className="text-xl font-black text-white drop-shadow-lg sm:text-2xl">
+                                    {feedback.email.charAt(0).toUpperCase()}
+                                  </span>
+                                  <div className="absolute inset-0 border-2 rounded-full border-white/30 animate-spin-slow"></div>
+                                </div>
                               </div>
-                            </div>
-                            <div className="ml-6">
-                              {/* Enhanced Name */}
-                              <h4 className="mb-2 text-xl font-bold text-transparent bg-gradient-to-r from-white to-blue-200 bg-clip-text">
-                                {feedback.email}
-                              </h4>
-                              
-                              {/* Magical Star Rating */}
-                              <div className="flex space-x-1">
-                                {[...Array(feedback.rating)].map((_, j) => (
-                                  <div key={j} className="relative group/star">
-                                    <svg
-                                      className="w-6 h-6 text-yellow-400 transition-all duration-300 transform drop-shadow-lg hover:scale-125 hover:rotate-12"
-                                      viewBox="0 0 20 20"
-                                      fill="currentColor"
-                                    >
+                              <div className="ml-5 sm:ml-6">
+                                <h4 className="mb-1 text-base font-bold text-transparent sm:text-lg bg-gradient-to-r from-white to-blue-200 bg-clip-text truncate max-w-[10rem] sm:max-w-[12rem]" title={feedback.email}>
+                                  {feedback.email}
+                                </h4>
+                                <div className="flex space-x-1">
+                                  {[...Array(feedback.rating)].map((_, j) => (
+                                    <svg key={j} className="w-5 h-5 text-yellow-400 drop-shadow" viewBox="0 0 20 20" fill="currentColor">
+                                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                  ))}
+                                  {[...Array(5 - feedback.rating)].map((_, j) => (
+                                    <svg key={j} className="w-5 h-5 text-gray-400/50" viewBox="0 0 20 20" fill="currentColor">
                                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                     </svg>
-                                  </div>
-                                ))}
-                                {[...Array(5 - feedback.rating)].map((_, j) => (
-                                  <svg
-                                    key={j}
-                                    className="w-6 h-6 text-gray-400/50"
-                                    viewBox="0 0 20 20"
-                                    fill="currentColor"
-                                  >
-                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                  </svg>
-                                ))}
+                                  ))}
+                                </div>
                               </div>
                             </div>
-                          </div>
-                          {/* Enhanced Feedback Text */}
-                          <div className="relative">
-                            {/* Quote Icon */}
-                            <div className="absolute font-serif text-6xl -top-2 -left-2 text-blue-400/30">"</div>
-                            
-                            <p className="relative pl-8 pr-4 text-lg italic font-light leading-relaxed text-white/90">
-                              {feedback.feedback}
-                            </p>
-                            
-                            {/* Closing Quote */}
-                            <div className="absolute font-serif text-6xl transform rotate-180 -bottom-6 -right-2 text-purple-400/30">"</div>
+                            {/* Feedback Text */}
+                            <div className="relative text-sm leading-relaxed text-white/90 sm:text-base">
+                              <p className="whitespace-pre-wrap break-words">
+                                {feedback.feedback}
+                              </p>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </Marquee>
             </div>
