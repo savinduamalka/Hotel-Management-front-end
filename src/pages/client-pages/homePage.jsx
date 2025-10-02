@@ -267,34 +267,6 @@ export default function HomePage() {
     setIsForgotPasswordModalOpen(false);
   };
 
-  // Dynamically size feedback testimonial cards based on text length
-  const getFeedbackSizing = (text = "") => {
-    const len = text.length;
-    let widthClass;
-    if (len < 60) { // very short => narrower card
-      widthClass = "w-64";
-    } else if (len < 140) { // medium
-      widthClass = "w-80";
-    } else if (len < 260) { // default
-      widthClass = "w-96";
-    } else { // very long => a bit wider to reduce height
-      widthClass = "w-[28rem]";
-    }
-
-    let paddingClass;
-    if (len < 60) {
-      paddingClass = "p-5";
-    } else if (len < 140) {
-      paddingClass = "p-6";
-    } else if (len < 260) {
-      paddingClass = "p-7";
-    } else {
-      paddingClass = "p-8";
-    }
-
-    return { widthClass, paddingClass };
-  };
-
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       <NavBar onLoginClick={handleLoginClick} onEditProfileClick={handleEditProfileClick} refreshKey={userUpdateKey} />
@@ -914,11 +886,10 @@ export default function HomePage() {
               <Marquee pauseOnHover={true} speed={50} className="overflow-hidden">
                 <div className="flex space-x-8">
                   {feedbacks.map((feedback, index) => {
-                    const { widthClass, paddingClass } = getFeedbackSizing(feedback.feedback);
                     return (
                       <div
                         key={feedback.feedbackId}
-                        className={`relative transition-all duration-500 transform group ${widthClass} hover:scale-105`}
+                        className="relative transition-all duration-500 transform group w-96 hover:scale-105"
                         style={{ animationDelay: `${index * 200}ms` }}
                       >
                         {/* Card Glow */}
@@ -931,12 +902,12 @@ export default function HomePage() {
                           </div>
                           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1500" />
 
-                          <div className={`relative z-10 flex flex-col gap-4 ${paddingClass}`}>
+                          <div className="relative z-10 flex flex-col gap-4 p-6">
                             {/* Avatar & Meta */}
                             <div className="flex items-center">
                               <div className="relative">
                                 <div className="absolute inset-0 w-16 h-16 rounded-full bg-gradient-to-br from-blue-400/40 to-purple-400/40 blur-md animate-pulse" />
-                                <div className="relative flex items-center justify-center w-14 h-14 border-2 rounded-full shadow-2xl sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-600 border-white/20">
+                                <div className="relative flex items-center justify-center border-2 rounded-full shadow-2xl w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-600 border-white/20">
                                   <span className="text-xl font-black text-white drop-shadow-lg sm:text-2xl">
                                     {feedback.email.charAt(0).toUpperCase()}
                                   </span>
@@ -945,7 +916,7 @@ export default function HomePage() {
                               </div>
                               <div className="ml-5 sm:ml-6">
                                 <h4
-                                  className="mb-1 text-base font-bold text-transparent truncate sm:text-lg bg-gradient-to-r from-white to-blue-200 bg-clip-text max-w-[10rem] sm:max-w-[12rem]"
+                                  className="mb-1 text-base font-bold text-transparent truncate sm:text-lg bg-gradient-to-r from-white to-blue-200 bg-clip-text max-w-[12rem]"
                                   title={feedback.email}
                                 >
                                   {feedback.email}
@@ -966,7 +937,7 @@ export default function HomePage() {
                             </div>
                             {/* Feedback Text */}
                             <div className="relative text-sm leading-relaxed text-white/90 sm:text-base">
-                              <p className="whitespace-pre-wrap break-words">{feedback.feedback}</p>
+                              <p className="break-words whitespace-pre-wrap">{feedback.feedback}</p>
                             </div>
                           </div>
                         </div>
