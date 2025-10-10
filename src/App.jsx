@@ -11,12 +11,17 @@ function App() {
     <>
       <Router>
         <Toaster
+          position="top-center"
+          containerStyle={{
+            zIndex: 100000,
+          }}
           toastOptions={{
             className: "",
             style: {
               border: "1px solid #713200",
               padding: "16px",
               color: "#713200",
+              zIndex: 100000,
             },
           }}
         />
